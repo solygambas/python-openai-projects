@@ -2,6 +2,16 @@
 
 Some projects using OpenAI APIs with Python.
 
+## Features
+
+- setting up a dev environment to run Jupyter Notebooks in VS Code.
+- hiding our API key.
+- defining max_tokens.
+- stopping sequences.
+- generating N choices and echoing the prompt.
+- understanding the various completion models.
+- comparing model performance and pricing.
+
 ## Setup
 
 You need to create a virtual env and install the packages listed in `requirements.txt`. You can then run Jupyter Notebooks in VS Code.
