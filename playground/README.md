@@ -1,6 +1,6 @@
-# OpenAI Projects
+# Playground
 
-Some projects using OpenAI APIs with Python.
+Some basic examples using OpenAI APIs with Python.
 
 ## Setup
 
@@ -33,12 +33,5 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 - writing the color palette generator prompt.
 - writing a color-swatch rendering function.
-- setting up the Flask server.
-- integrating OpenAI with server.
-- writing the palette endpoint.
-- creating the form.
-- rendering the colors in the browser.
-- styling the color blocks and the form.
-- refactoring our front-end code.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
