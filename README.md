@@ -20,6 +20,8 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 - understanding the various completion models.
 - comparing model performance and pricing.
 
+[Check the playground](playground/02-getting-started.ipynb)
+
 ### Prompt design
 
 - controlling the output format.
@@ -28,6 +30,8 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 - analyzing sentiments.
 - thinking step by step.
 - transforming text.
+
+[Check the playground](playground/03-prompt-design.ipynb)
 
 ### Color palette generator
 
@@ -40,5 +44,7 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 - rendering the colors in the browser.
 - styling the color blocks and the form.
 - refactoring our front-end code.
+
+[Check the 01-color-palette-generator folder](01-color-palette-generator)
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
