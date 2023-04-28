@@ -40,9 +40,9 @@ def get_colors(msg):
 def prompt_to_palette():
     query = request.form.get("query")
     # fetch OpenAI
-    # colors = get_colors(query)
+    colors = get_colors(query)
     # test locally
-    colors = ["#FDE3A7", "#F9BF3B", "#FF9800", "#F44336", "#795548"]
+    # colors = ["#FDE3A7", "#F9BF3B", "#FF9800", "#F44336", "#795548"]
     return {"colors": colors}
 
 
