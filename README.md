@@ -47,4 +47,8 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 [Check the 01-color-palette-generator folder](01-color-palette-generator)
 
+<p align="center">
+    <img src="01-color-palette-generator/screenshot.png">
+</p>
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).

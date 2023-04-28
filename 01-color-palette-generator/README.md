@@ -2,6 +2,10 @@
 
 A visual tool to generate color palettes using OpenAI APIs with Python.
 
+<p align="center">
+    <img src="screenshot.png">
+</p>
+
 ## Setup
 
 You need to create a virtual env and install the packages listed in `requirements.txt`. You can then run Jupyter Notebooks in VS Code.
@@ -13,6 +17,7 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 To run the Flask server:
 
 ```
+source .venv/bin/activate
 cd 01-color-palette-generator && flask run --debug
 ```
 
