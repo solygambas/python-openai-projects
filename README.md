@@ -61,4 +61,13 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 [Check the playground](playground/05-important-api-parameters.ipynb)
 
+### The Chat API & GPT-4
+
+- writing a request to the Chat API.
+- prompting with system, assistant, and user messages.
+- rewriting a completion prompt in chat format.
+- using Chat API parameters.
+
+[Check the playground](playground/06-chat-api-gpt-4.ipynb)
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
