@@ -53,4 +53,12 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
     </a>
 </p>
 
+### Important API parameters
+
+- understanding temperature and top P.
+- using frequency penalty and presence penalty.
+- streaming responses.
+
+[Check the playground](playground/05-important-api-parameters.ipynb)
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
