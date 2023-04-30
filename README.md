@@ -79,10 +79,10 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 [Check the 02-gpt-4-chatbot folder](02-gpt-4-chatbot)
 
-<!-- <p align="center">
+<p align="center">
     <a href="02-gpt-4-chatbot">
         <img src="02-gpt-4-chatbot/screenshot.png">
     </a>
-</p> -->
+</p>
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).

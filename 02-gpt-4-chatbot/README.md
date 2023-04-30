@@ -1,10 +1,10 @@
 # GPT-4 Chatbot
 
-A CLI chatbot using ChatGPT-4.
+A simple command line chatbot with ChatGPT-4.
 
-<!-- <p align="center">
+<p align="center">
     <img src="screenshot.png">
-</p> -->
+</p>
 
 ## Setup
 
@@ -21,6 +21,12 @@ cd 02-gpt-4-chatbot
 python3 chatbot.py
 ```
 
+You can define the personality of your chatbot, it is friendly and helpful by default:
+
+```
+python3 chatbot.py --personality "funny"
+```
+
 You can quit by typing `ctrl + C` (Mac) or `cmd + C` (Windows).
 
 ## Features
@@ -31,3 +37,7 @@ You can quit by typing `ctrl + C` (Mac) or `cmd + C` (Windows).
 - colorizing the chatbot output.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
+
+```
+
+```
