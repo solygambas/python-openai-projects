@@ -8,32 +8,19 @@ You need to create a virtual env and install the packages listed in `requirement
 
 Follow these steps: [How to Work with Python Virtual Environments, Jupyter Notebooks and VS Code](https://python.plainenglish.io/how-to-work-with-python-virtual-environments-jupyter-notebooks-and-vs-code-536fac3d93a1).
 
-## Features
+## Color palette generator
 
-### Getting started
+A visual tool to generate color palettes using OpenAI Completion API with Python.
 
-- setting up a dev environment to run Jupyter Notebooks in VS Code.
-- hiding our API key.
-- defining max_tokens.
-- stopping sequences.
-- generating N choices and echoing the prompt.
-- understanding the various completion models.
-- comparing model performance and pricing.
+[Check the 01-color-palette-generator folder](01-color-palette-generator)
 
-[Check the playground](playground/02-getting-started.ipynb)
+<p align="center">
+    <a href="01-color-palette-generator">
+        <img src="01-color-palette-generator/screenshot.png">
+    </a>
+</p>
 
-### Prompt design
-
-- controlling the output format.
-- summarizing text.
-- extracting data.
-- analyzing sentiments.
-- thinking step by step.
-- transforming text.
-
-[Check the playground](playground/03-prompt-design.ipynb)
-
-### Color palette generator
+### Features
 
 - writing the color palette generator prompt.
 - writing a color-swatch rendering function.
@@ -45,37 +32,9 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 - styling the color blocks and the form.
 - refactoring our front-end code.
 
-[Check the 01-color-palette-generator folder](01-color-palette-generator)
+## GPT-4 Chatbot
 
-<p align="center">
-    <a href="01-color-palette-generator">
-        <img src="01-color-palette-generator/screenshot.png">
-    </a>
-</p>
-
-### Important API parameters
-
-- understanding temperature and top P.
-- using frequency penalty and presence penalty.
-- streaming responses.
-
-[Check the playground](playground/05-important-api-parameters.ipynb)
-
-### The Chat API & GPT-4
-
-- writing a request to the Chat API.
-- prompting with system, assistant, and user messages.
-- rewriting a completion prompt in chat format.
-- using Chat API parameters.
-
-[Check the playground](playground/06-chat-api-gpt-4.ipynb)
-
-### GPT-4 Chatbot
-
-- writing the basic chatbot structure.
-- persisting messages accross requests.
-- adding optional personalities.
-- colorizing the chatbot output.
+A simple command line chatbot with ChatGPT-4.
 
 [Check the 02-gpt-4-chatbot folder](02-gpt-4-chatbot)
 
@@ -84,5 +43,16 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
         <img src="02-gpt-4-chatbot/screenshot.png">
     </a>
 </p>
+
+### Features
+
+- writing the basic chatbot structure.
+- persisting messages accross requests.
+- adding optional personalities.
+- colorizing the chatbot output.
+
+## Playground
+
+[Check the playground](playground/) to understand the basics.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).

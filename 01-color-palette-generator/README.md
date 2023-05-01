@@ -1,6 +1,6 @@
 # Color palette generator
 
-A visual tool to generate color palettes using OpenAI APIs with Python.
+A visual tool to generate color palettes using OpenAI Completion API with Python.
 
 <p align="center">
     <img src="screenshot.png">
