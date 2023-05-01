@@ -1,4 +1,4 @@
-# GPT-4 AI Spotify Playlist Generator Project
+# GPT-4 AI Spotify Playlist Generator
 
 A playlist generator for Spotify with OpenAI's GPT-4.
 
@@ -11,6 +11,8 @@ A playlist generator for Spotify with OpenAI's GPT-4.
 You need to create a virtual env and install the packages listed in `requirements.txt`. You can then run Jupyter Notebooks in VS Code.
 
 Follow these steps: [How to Work with Python Virtual Environments, Jupyter Notebooks and VS Code](https://python.plainenglish.io/how-to-work-with-python-virtual-environments-jupyter-notebooks-and-vs-code-536fac3d93a1).
+
+You need to create a `.env` file with your `OPENAI_API_KEY`, `SPOTIFY_CLIENT_ID`, and `SPOTIFY_CLIENT_SECRET`.
 
 ## Usage
 
