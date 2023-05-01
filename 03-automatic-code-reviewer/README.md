@@ -1,4 +1,4 @@
-# Automatic code reviewer
+# Automatic Code Reviewer
 
 A simple command-line-based code reviewer.
 
@@ -36,6 +36,12 @@ To run the CLI:
 ```
 cd 03-automatic-code-reviewer/interactive-code-reviewer
 python3 interactive_review.py sort.py
+```
+
+You can define the model you want to use:
+
+```
+python3 interactive_review.py sort.py --model gpt-4
 ```
 
 You can quit by typing `ctrl + C` (Mac) or `cmd + C` (Windows).

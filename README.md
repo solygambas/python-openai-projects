@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-Some projects using OpenAI APIs with Python.
+4 projects using OpenAI APIs with Python.
 
 ## Setup
 
@@ -51,7 +51,7 @@ A simple command line chatbot with ChatGPT-4.
 - adding optional personalities.
 - colorizing the chatbot output.
 
-## Automatic code reviewer
+## Automatic Code Reviewer
 
 A simple command-line-based code reviewer.
 
@@ -67,6 +67,28 @@ A simple command-line-based code reviewer.
 
 - building a basic code reviewer.
 - adding an interactive code reviewer.
+
+## GPT-4 AI Spotify Playlist Generator Project
+
+A playlist generator for Spotify with OpenAI's GPT-4.
+
+[Check the 04-gpt-4-ai-spotify-playlist-generator folder](04-gpt-4-ai-spotify-playlist-generator)
+
+<!-- <p align="center">
+    <a href="04-gpt-4-ai-spotify-playlist-generator">
+        <img src="04-gpt-4-ai-spotify-playlist-generator/screenshot.png">
+    </a>
+</p> -->
+
+### Features
+
+- writing the playlist generating prompt.
+- adding Spotify developer credentials.
+- using Spotify authentication via Python.
+- searching for Spotify tracks via Python.
+- creating Spotify playlists programmatically.
+- adding in OpenAI.
+- accepting command line arguments.
 
 ## Playground
 
