@@ -31,9 +31,7 @@ def make_code_review_request(filecontent, model):
         {"role": "user", "content": f"Code review the following file: {filecontent}"},
     ]
 
-    response = openai.ChatCompletion.create(
-        model=model, messages=messages, max_tokens=10
-    )
+    response = openai.ChatCompletion.create(model=model, messages=messages)
 
     return response.choices[0].message.content
 
@@ -41,7 +39,11 @@ def make_code_review_request(filecontent, model):
 def main():
     parser = argparse.ArgumentParser(description="Simple code reviewer for a file")
     parser.add_argument("file")
-    parser.add_argument("--model", default="gpt-3.5-turbo")
+    parser.add_argument(
+        "--model",
+        default="gpt-3.5-turbo",
+        help="The chat model to use for code review (default: gpt-3.5-turbo)",
+    )
     args = parser.parse_args()
     code_review(args.file, args.model)
 

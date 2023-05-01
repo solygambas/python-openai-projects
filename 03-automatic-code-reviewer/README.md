@@ -2,9 +2,9 @@
 
 A simple command-line-based code reviewer.
 
-<!-- <p align="center">
+<p align="center">
     <img src="screenshot.png">
-</p> -->
+</p>
 
 ## Setup
 
@@ -14,10 +14,12 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 ## Usage
 
+### Basic Code Reviewer
+
 To run the CLI:
 
 ```
-cd 03-automatic-code-reviewer
+cd 03-automatic-code-reviewer/basic-code-reviewer
 python3 reviewer.py tree.py
 ```
 
@@ -26,6 +28,17 @@ You can define the model you want to use:
 ```
 python3 reviewer.py tree.py --model gpt-4
 ```
+
+### Interactive Code Reviewer
+
+To run the CLI:
+
+```
+cd 03-automatic-code-reviewer/interactive-code-reviewer
+python3 interactive_review.py sort.py
+```
+
+You can quit by typing `ctrl + C` (Mac) or `cmd + C` (Windows).
 
 ## Features
 

@@ -57,11 +57,11 @@ A simple command-line-based code reviewer.
 
 [Check the 03-automatic-code-reviewer folder](03-automatic-code-reviewer)
 
-<!-- <p align="center">
+<p align="center">
     <a href="03-automatic-code-reviewer">
         <img src="03-automatic-code-reviewer/screenshot.png">
     </a>
-</p> -->
+</p>
 
 ### Features
 
