@@ -64,4 +64,11 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 [Check the notebook](08-working-with-gpt-4-and-code.ipynb)
 
+## Cost estimation with TikToken
+
+- counting tokens with TikToken.
+- counting GPT-4 message tokens.
+
+[Check the notebook](09-cost-estimation-with-tiktoken.ipynb)
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
