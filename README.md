@@ -8,7 +8,7 @@ You need to create a virtual env and install the packages listed in `requirement
 
 Follow these steps: [How to Work with Python Virtual Environments, Jupyter Notebooks and VS Code](https://python.plainenglish.io/how-to-work-with-python-virtual-environments-jupyter-notebooks-and-vs-code-536fac3d93a1).
 
-## Color palette generator
+## Color Palette Generator
 
 A visual tool to generate color palettes using OpenAI Completion API with Python.
 
@@ -50,6 +50,23 @@ A simple command line chatbot with ChatGPT-4.
 - persisting messages accross requests.
 - adding optional personalities.
 - colorizing the chatbot output.
+
+## Automatic code reviewer
+
+A simple command-line-based code reviewer.
+
+[Check the 03-automatic-code-reviewer folder](03-automatic-code-reviewer)
+
+<!-- <p align="center">
+    <a href="03-automatic-code-reviewer">
+        <img src="03-automatic-code-reviewer/screenshot.png">
+    </a>
+</p> -->
+
+### Features
+
+- building a basic code reviewer.
+- adding an interactive code reviewer.
 
 ## Playground
 

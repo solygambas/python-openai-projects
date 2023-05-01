@@ -1,10 +1,10 @@
-# Color Palette Generator
+# Automatic code reviewer
 
-A visual tool to generate color palettes using OpenAI Completion API with Python.
+A simple command-line-based code reviewer.
 
-<p align="center">
+<!-- <p align="center">
     <img src="screenshot.png">
-</p>
+</p> -->
 
 ## Setup
 
@@ -14,23 +14,22 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 ## Usage
 
-To run the Flask server:
+To run the CLI:
 
 ```
-source .venv/bin/activate
-cd 01-color-palette-generator && flask run --debug
+cd 03-automatic-code-reviewer
+python3 reviewer.py tree.py
+```
+
+You can define the model you want to use:
+
+```
+python3 reviewer.py tree.py --model gpt-4
 ```
 
 ## Features
 
-- writing the color palette generator prompt.
-- writing a color-swatch rendering function.
-- setting up the Flask server.
-- integrating OpenAI with server.
-- writing the palette endpoint.
-- creating the form.
-- rendering the colors in the browser.
-- styling the color blocks and the form.
-- refactoring our front-end code.
+- building a basic code reviewer.
+- adding an interactive code reviewer.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
