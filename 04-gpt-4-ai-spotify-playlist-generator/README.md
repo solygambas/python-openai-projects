@@ -2,9 +2,9 @@
 
 A playlist generator for Spotify with OpenAI's GPT-4.
 
-<!-- <p align="center">
+<p align="center">
     <img src="screenshot.png">
-</p> -->
+</p>
 
 ## Setup
 
@@ -20,8 +20,13 @@ To run the CLI:
 
 ```
 cd 04-gpt-4-ai-spotify-playlist-generator
-python3 app.py
+python3 app.py -p "songs for a happy day" -n 10
 ```
+
+Parameters:
+
+- `-p`: the prompt to describe the playlist (optional, `fun songs` by default).
+- `-n`: the number of songs to add to the playlist (optional, `5` by default).
 
 ## Features
 

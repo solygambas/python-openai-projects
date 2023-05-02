@@ -76,11 +76,11 @@ A playlist generator for Spotify with OpenAI's GPT-4.
 
 [Check the 04-gpt-4-ai-spotify-playlist-generator folder](04-gpt-4-ai-spotify-playlist-generator)
 
-<!-- <p align="center">
+<p align="center">
     <a href="04-gpt-4-ai-spotify-playlist-generator">
         <img src="04-gpt-4-ai-spotify-playlist-generator/screenshot.png">
     </a>
-</p> -->
+</p>
 
 ### Features
 
