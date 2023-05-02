@@ -34,15 +34,6 @@ def main():
         help="The number of songs to add to the playlist (optional)",
     )
     args = parser.parse_args()
-    if any(
-        [
-            x not in os.environ
-            for x in ("SPOTIFY_CLIENT_ID", "SPOTIFY_CLIENT_SECRET", "OPENAI_API_KEY")
-        ]
-    ):
-        raise ValueError(
-            "Error: missing environment variables. Please check your env file."
-        )
     if args.n not in range(1, 50):
         raise ValueError("Error: n should be between 0 and 50")
 
