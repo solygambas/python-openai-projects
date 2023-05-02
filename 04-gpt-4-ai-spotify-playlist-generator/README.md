@@ -16,11 +16,12 @@ You need to create a `.env` file with your `OPENAI_API_KEY`, `SPOTIFY_CLIENT_ID`
 
 ## Usage
 
-<!-- To run the CLI:
+To run the CLI:
 
 ```
 cd 04-gpt-4-ai-spotify-playlist-generator
-``` -->
+python3 app.py
+```
 
 ## Features
 
