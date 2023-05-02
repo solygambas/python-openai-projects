@@ -73,4 +73,10 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 [Check the notebook](09-cost-estimation-with-tiktoken.ipynb)
 
+## GPT-4 AI Spotify Playlist Generator
+
+- writing the playlist generating prompt.
+
+[Check the notebook](12-gpt-4-ai-spotify-playlist-generator.ipynb)
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
