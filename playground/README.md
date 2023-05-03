@@ -82,11 +82,10 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 ## Embeddings
 
 - generating a single embedding.
-- creating a movie embedding visualization with Atlas.
 - getting our movie data.
 - getting our movie data ready.
-- generating embeddings for 5000 movies.
-- visualizing our embeddings with atlas.
+- generating embeddings for 50 movies.
+- visualizing our embeddings with Atlas.
 - recommending movies using our embeddings.
 
 [Check the notebook](12-embeddings.ipynb)
