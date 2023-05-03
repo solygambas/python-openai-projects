@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-4 projects using OpenAI APIs with Python.
+5 projects using OpenAI APIs with Python.
 
 ## Setup
 
@@ -91,6 +91,26 @@ A playlist generator for Spotify with OpenAI's GPT-4.
 - creating Spotify playlists programmatically.
 - adding in OpenAI.
 - accepting command line arguments.
+
+## Movie Recommendation System
+
+An embedding-powered movie recommendation algorithm using Nomic Atlas.
+
+[Check the 05-movie-recommendation-system folder](05-movie-recommendation-system)
+
+<p align="center">
+    <a href="05-movie-recommendation-system">
+        <img src="05-movie-recommendation-system/screenshot.png">
+    </a>
+</p>
+
+### Features
+
+- getting our movie data.
+- getting our movie data ready.
+- generating embeddings for 50 movies.
+- visualizing our embeddings with Atlas.
+- recommending movies using our embeddings.
 
 ## Playground
 
