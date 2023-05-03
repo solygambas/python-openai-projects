@@ -77,6 +77,18 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 - writing the playlist generating prompt.
 
-[Check the notebook](12-gpt-4-ai-spotify-playlist-generator.ipynb)
+[Check the notebook](11-gpt-4-ai-spotify-playlist-generator.ipynb)
+
+## Embeddings
+
+- generating a single embedding.
+- creating a movie embedding visualization with Atlas.
+- getting our movie data.
+- getting our movie data ready.
+- generating embeddings for 5000 movies.
+- visualizing our embeddings with atlas.
+- recommending movies using our embeddings.
+
+[Check the notebook](12-embeddings.ipynb)
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
