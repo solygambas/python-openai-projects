@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-5 projects using OpenAI APIs with Python.
+6 projects using OpenAI APIs with Python.
 
 ## Setup
 
@@ -111,6 +111,26 @@ An embedding-powered movie recommendation algorithm using Nomic Atlas.
 - generating embeddings for 50 movies.
 - visualizing our embeddings with Atlas.
 - recommending movies using our embeddings.
+
+## Q&A Bot
+
+A dynamic Q&A Bot using GPT-4.
+
+[Check the 06-qa-bot folder](06-qa-bot)
+
+<p align="center">
+    <a href="06-qa-bot">
+        <img src="06-qa-bot/screenshot.png">
+    </a>
+</p>
+
+### Features
+
+- scraping data from Wikipedia.
+- generating a bunch of embeddings on the last Formula One season.
+- turning the questions from users into embeddings.
+- finding the K nearest neighbors to that embedding.
+- including the matching texts in the prompt to expand GPT-4 knowledge.
 
 ## Playground
 
