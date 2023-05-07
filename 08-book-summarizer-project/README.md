@@ -2,9 +2,9 @@
 
 A tool to summarize books of any size into a couple of paragraphs.
 
-<!-- <p align="center">
+<p align="center">
     <img src="screenshot.png">
-</p> -->
+</p>
 
 ## Setup
 
@@ -16,14 +16,19 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 # Usage
 
-<!-- Open `F1_QA_Assistant.ipynb`. -->
+To run the script:
+
+```
+cd 08-book-summarizer-project
+python3 summarize.py
+```
 
 ## Features
 
 - preparing book text for summarization.
-- handling context window math.
+- handling context window math to respect the max tokens limit.
 - adding summarization logic.
-- caching results.
+- caching results with hashing keys.
 - performing a "meta-summary" with GPT-4.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
