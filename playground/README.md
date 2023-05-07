@@ -85,4 +85,13 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 [Check the notebook](12-embeddings.ipynb)
 
+## The DALL-E API
+
+- making a DALL-E API request.
+- saving DALL-E images.
+- requesting image variations.
+- editing DALL-E images.
+
+[Check the notebook](16-dall-e-api.ipynb)
+
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
