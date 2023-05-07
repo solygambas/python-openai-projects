@@ -27,7 +27,7 @@ python3 summarize.py
 
 - preparing book text for summarization.
 - handling context window math to respect the max tokens limit.
-- adding summarization logic.
+- adding summarization logic using recursion.
 - caching results with hashing keys.
 - performing a "meta-summary" with GPT-4.
 
