@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-6 projects using OpenAI APIs with Python.
+7 projects using OpenAI APIs with Python.
 
 ## Setup
 
@@ -131,6 +131,24 @@ A dynamic Q&A Bot using GPT-4.
 - turning the questions from users into embeddings.
 - finding the K nearest neighbors to that embedding.
 - including the matching texts in the prompt to expand GPT-4 knowledge.
+
+## Sentiment Analysis Project
+
+A tool to analyze the sentiment of Reddit comments using GPT-4.
+
+[Check the 07-sentiment-analysis-project folder](07-sentiment-analysis-project)
+
+<p align="center">
+    <a href="07-sentiment-analysis-project">
+        <img src="07-sentiment-analysis-project/screenshot.png">
+    </a>
+</p>
+
+### Features
+
+- collecting comments from Reddit.
+- analyzing sentiment in the comments.
+- plotting the results.
 
 ## Playground
 
