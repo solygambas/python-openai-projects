@@ -88,7 +88,7 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 ## The DALL-E API
 
 - making a DALL-E API request.
-- saving DALL-E images.
+- saving DALL-E images from the generated URL and from JSON.
 - requesting image variations.
 - editing DALL-E images.
 
