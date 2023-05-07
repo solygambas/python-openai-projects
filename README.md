@@ -1,6 +1,17 @@
 # OpenAI Projects
 
-7 projects using OpenAI APIs with Python.
+8 projects using OpenAI APIs with Python.
+
+| #   | Project                                                                           | Description                                                                       |
+| --- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 01  | [**Color Palette Generator**](01-color-palette-generator)                         | A visual tool to generate color palettes using OpenAI Completion API with Python. |
+| 02  | [**GPT-4 Chatbot**](02-gpt-4-chatbot)                                             | A simple command line chatbot with ChatGPT-4.                                     |
+| 03  | [**Automatic Code Reviewer**](03-automatic-code-reviewer)                         | A simple command-line-based code reviewer.                                        |
+| 04  | [**GPT-4 AI Spotify Playlist Generator**](04-gpt-4-ai-spotify-playlist-generator) | A playlist generator for Spotify with OpenAI's GPT-4.                             |
+| 05  | [**Movie Recommendation System**](05-movie-recommendation-system)                 | An embedding-powered movie recommendation algorithm using Nomic Atlas.            |
+| 06  | [**Q&A Bot**](06-qa-bot)                                                          | A dynamic Q&A Bot using GPT-4.                                                    |
+| 07  | [**Sentiment Analysis Project**](07-sentiment-analysis-project)                   | A tool to analyze the sentiment of Reddit comments using GPT-4.                   |
+| 08  | [**Book Summarizer Project**](08-book-summarizer-project)                         | A tool to summarize books of any size into a couple of paragraphs.                |
 
 ## Setup
 
@@ -9,146 +20,6 @@ You need to create a virtual env and install the packages listed in `requirement
 Follow these steps: [How to Work with Python Virtual Environments, Jupyter Notebooks and VS Code](https://python.plainenglish.io/how-to-work-with-python-virtual-environments-jupyter-notebooks-and-vs-code-536fac3d93a1).
 
 You need to create a `.env` file with your `OPENAI_API_KEY`.
-
-## Color Palette Generator
-
-A visual tool to generate color palettes using OpenAI Completion API with Python.
-
-[Check the 01-color-palette-generator folder](01-color-palette-generator)
-
-<p align="center">
-    <a href="01-color-palette-generator">
-        <img src="01-color-palette-generator/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- writing the color palette generator prompt.
-- writing a color-swatch rendering function.
-- setting up the Flask server.
-- integrating OpenAI with server.
-- writing the palette endpoint.
-- creating the form.
-- rendering the colors in the browser.
-- styling the color blocks and the form.
-- refactoring our front-end code.
-
-## GPT-4 Chatbot
-
-A simple command line chatbot with ChatGPT-4.
-
-[Check the 02-gpt-4-chatbot folder](02-gpt-4-chatbot)
-
-<p align="center">
-    <a href="02-gpt-4-chatbot">
-        <img src="02-gpt-4-chatbot/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- writing the basic chatbot structure.
-- persisting messages accross requests.
-- adding optional personalities.
-- colorizing the chatbot output.
-
-## Automatic Code Reviewer
-
-A simple command-line-based code reviewer.
-
-[Check the 03-automatic-code-reviewer folder](03-automatic-code-reviewer)
-
-<p align="center">
-    <a href="03-automatic-code-reviewer">
-        <img src="03-automatic-code-reviewer/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- building a basic code reviewer.
-- adding an interactive code reviewer.
-
-## GPT-4 AI Spotify Playlist Generator
-
-A playlist generator for Spotify with OpenAI's GPT-4.
-
-[Check the 04-gpt-4-ai-spotify-playlist-generator folder](04-gpt-4-ai-spotify-playlist-generator)
-
-<p align="center">
-    <a href="04-gpt-4-ai-spotify-playlist-generator">
-        <img src="04-gpt-4-ai-spotify-playlist-generator/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- writing the playlist generating prompt.
-- adding Spotify developer credentials.
-- using Spotify authentication via Python.
-- searching for Spotify tracks via Python.
-- creating Spotify playlists programmatically.
-- adding in OpenAI.
-- accepting command line arguments.
-
-## Movie Recommendation System
-
-An embedding-powered movie recommendation algorithm using Nomic Atlas.
-
-[Check the 05-movie-recommendation-system folder](05-movie-recommendation-system)
-
-<p align="center">
-    <a href="05-movie-recommendation-system">
-        <img src="05-movie-recommendation-system/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- getting our movie data.
-- getting our movie data ready.
-- generating embeddings for 50 movies.
-- visualizing our embeddings with Atlas.
-- recommending movies using our embeddings.
-
-## Q&A Bot
-
-A dynamic Q&A Bot using GPT-4.
-
-[Check the 06-qa-bot folder](06-qa-bot)
-
-<p align="center">
-    <a href="06-qa-bot">
-        <img src="06-qa-bot/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- scraping data from Wikipedia.
-- generating a bunch of embeddings on the last Formula One season.
-- turning the questions from users into embeddings.
-- finding the K nearest neighbors to that embedding.
-- including the matching texts in the prompt to expand GPT-4 knowledge.
-
-## Sentiment Analysis Project
-
-A tool to analyze the sentiment of Reddit comments using GPT-4.
-
-[Check the 07-sentiment-analysis-project folder](07-sentiment-analysis-project)
-
-<p align="center">
-    <a href="07-sentiment-analysis-project">
-        <img src="07-sentiment-analysis-project/screenshot.png">
-    </a>
-</p>
-
-### Features
-
-- collecting comments from Reddit.
-- analyzing sentiment in the comments.
-- plotting the results.
 
 ## Playground
 
