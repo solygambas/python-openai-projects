@@ -1,10 +1,10 @@
-# GPT-4 Chatbot
+# Choose Your Own Adventure App
 
-A simple command line chatbot with GPT-4.
+A gamebook app with Stable Diffusion and GPT-4.
 
-<p align="center">
+<!-- <p align="center">
     <img src="screenshot.png">
-</p>
+</p> -->
 
 ## Setup
 
@@ -14,28 +14,20 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 You need to create a `.env` file with your `OPENAI_API_KEY`.
 
+For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it in your [DreamStudio account](https://dreamstudio.ai/account) once it's created.
+
 ## Usage
 
-To run the CLI:
+<!-- To run the app:
 
 ```
 cd 02-gpt-4-chatbot
 python3 chatbot.py
-```
-
-You can define the personality of your chatbot, it is friendly and helpful by default:
-
-```
-python3 chatbot.py --personality "funny"
-```
-
-You can quit by typing `ctrl + C` (Mac) or `cmd + C` (Windows).
+``` -->
 
 ## Features
 
-- writing the basic chatbot structure.
-- persisting messages accross requests.
-- adding optional personalities.
-- colorizing the chatbot output.
+- generating text with GPT-4.
+- generating images with Stable Diffusion.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
