@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-9 projects using OpenAI APIs with Python.
+9 projects using ChatGPT API, Whisper, Embeddings, and DALL-E with Python.
 
 | #   | Project                                                                           | Description                                                                       |
 | --- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
@@ -12,7 +12,7 @@
 | 06  | [**Q&A Bot**](06-qa-bot)                                                          | A dynamic Q&A Bot using GPT-4.                                                    |
 | 07  | [**Sentiment Analysis Project**](07-sentiment-analysis-project)                   | A tool to analyze the sentiment of Reddit comments using GPT-4.                   |
 | 08  | [**Book Summarizer Project**](08-book-summarizer-project)                         | A tool to summarize books of any size into a couple of paragraphs.                |
-| 09  | [**Choose Your Own Adventure App**](09-choose-your-own-adventure)                 | A gamebook app with Stable Diffusion and GPT-4.                                   |
+| 09  | [**Choose Your Own Adventure App**](09-choose-your-own-adventure)                 | A gamebook app with DALL-E, Stable Diffusion, and GPT-4.                          |
 
 ## Setup
 

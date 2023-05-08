@@ -1,10 +1,10 @@
 # Choose Your Own Adventure App
 
-A gamebook app with Stable Diffusion and GPT-4.
+A gamebook app with DALL-E, Stable Diffusion, and GPT-4.
 
-<!-- <p align="center">
+<p align="center">
     <img src="screenshot.png">
-</p> -->
+</p>
 
 ## Setup
 
@@ -18,16 +18,16 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Usage
 
-<!-- To run the app:
+To run the Flask server:
 
 ```
-cd 02-gpt-4-chatbot
-python3 chatbot.py
-``` -->
+source .venv/bin/activate
+cd 09-choose-your-own-adventure && flask run --debug
+```
 
 ## Features
 
 - generating text with GPT-4.
-- generating images with Stable Diffusion.
+- generating images with DALL-E and Stable Diffusion REST API.
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
