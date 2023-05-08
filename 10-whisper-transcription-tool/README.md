@@ -28,7 +28,7 @@ To run the CLI:
 
 ```
 cd 10-whisper-transcription-tool/local-whisper
-python3 -m venv .venv
+python3 -m venv venv
 source venv/bin/activate
 pip3 install
 ```
