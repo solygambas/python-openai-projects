@@ -1,18 +1,19 @@
 # OpenAI Projects
 
-9 projects using ChatGPT API, Whisper, Embeddings, and DALL-E with Python.
+10 projects using ChatGPT API, Whisper, Embeddings, and DALL-E with Python.
 
-| #   | Project                                                                           | Description                                                                       |
-| --- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| 01  | [**Color Palette Generator**](01-color-palette-generator)                         | A visual tool to generate color palettes using OpenAI Completion API with Python. |
-| 02  | [**GPT-4 Chatbot**](02-gpt-4-chatbot)                                             | A simple command line chatbot with GPT-4.                                         |
-| 03  | [**Automatic Code Reviewer**](03-automatic-code-reviewer)                         | A simple command-line-based code reviewer.                                        |
-| 04  | [**GPT-4 AI Spotify Playlist Generator**](04-gpt-4-ai-spotify-playlist-generator) | A playlist generator for Spotify with OpenAI's GPT-4.                             |
-| 05  | [**Movie Recommendation System**](05-movie-recommendation-system)                 | An embedding-powered movie recommendation algorithm using Nomic Atlas.            |
-| 06  | [**Q&A Bot**](06-qa-bot)                                                          | A dynamic Q&A Bot using GPT-4.                                                    |
-| 07  | [**Sentiment Analysis Project**](07-sentiment-analysis-project)                   | A tool to analyze the sentiment of Reddit comments using GPT-4.                   |
-| 08  | [**Book Summarizer Project**](08-book-summarizer-project)                         | A tool to summarize books of any size into a couple of paragraphs.                |
-| 09  | [**Choose Your Own Adventure App**](09-choose-your-own-adventure)                 | A gamebook app with DALL-E, Stable Diffusion, and GPT-4.                          |
+| #   | Project                                                                           | Description                                                                                  |
+| --- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| 01  | [**Color Palette Generator**](01-color-palette-generator)                         | A visual tool to generate color palettes using OpenAI Completion API with Python.            |
+| 02  | [**GPT-4 Chatbot**](02-gpt-4-chatbot)                                             | A simple command line chatbot with GPT-4.                                                    |
+| 03  | [**Automatic Code Reviewer**](03-automatic-code-reviewer)                         | A simple command-line-based code reviewer.                                                   |
+| 04  | [**GPT-4 AI Spotify Playlist Generator**](04-gpt-4-ai-spotify-playlist-generator) | A playlist generator for Spotify with OpenAI's GPT-4.                                        |
+| 05  | [**Movie Recommendation System**](05-movie-recommendation-system)                 | An embedding-powered movie recommendation algorithm using Nomic Atlas.                       |
+| 06  | [**Q&A Bot**](06-qa-bot)                                                          | A dynamic Q&A Bot using GPT-4.                                                               |
+| 07  | [**Sentiment Analysis Project**](07-sentiment-analysis-project)                   | A tool to analyze the sentiment of Reddit comments using GPT-4.                              |
+| 08  | [**Book Summarizer Project**](08-book-summarizer-project)                         | A tool to summarize books of any size into a couple of paragraphs.                           |
+| 09  | [**Choose Your Own Adventure App**](09-choose-your-own-adventure)                 | A gamebook app with DALL-E, Stable Diffusion, and GPT-4.                                     |
+| 10  | [**Whisper Transcription Tool**](10-whisper-transcription-tool)                   | A tool to convert spoken audio into accurate transcriptions and translations, using Whisper. |
 
 ## Setup
 
