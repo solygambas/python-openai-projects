@@ -10,6 +10,8 @@ Follow these steps: [How to Work with Python Virtual Environments, Jupyter Noteb
 
 You need to create a `.env` file with your `OPENAI_API_KEY`.
 
+For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it in your [DreamStudio account](https://dreamstudio.ai/account) once it's created.
+
 ## Getting started
 
 - setting up a dev environment to run Jupyter Notebooks in VS Code.
@@ -93,5 +95,11 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 - editing DALL-E images.
 
 [Check the notebook](16-dall-e-api.ipynb)
+
+## Stable Diffusion
+
+- using the Stability SDK.
+
+[Check the notebook](17-stability-ai-sdk.ipynb)
 
 Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
