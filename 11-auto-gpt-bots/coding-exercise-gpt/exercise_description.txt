@@ -1,0 +1,5 @@
+Write a Python class called 'Person' that has the following attributes:
+- name (string)
+- age (integer)
+- gender (string)
+The class should have a constructor that initializes these attributes, as well as methods to get and set each attribute. Write tests to verify that the class works as expected.
