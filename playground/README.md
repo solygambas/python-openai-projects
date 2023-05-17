@@ -99,7 +99,9 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Prompt Engineering
 
 - generating a [Python script](18-delete-images.py) to delete images.
-- generating a [CV website](18-cv-website.html) with HTML and CSS.
+- creating a [CV website](19-cv-website.html) with HTML and CSS.
+- writing a [newsletter email](20-tech-newsletter.html).
+- using [Python](21-encode.py) and [Node](21-encode.js) to encode a string.
 
 These examples are based on two courses:
 
