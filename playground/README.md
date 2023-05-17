@@ -96,10 +96,12 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 [Check the notebook](16-dall-e-api.ipynb)
 
-## Stable Diffusion
+## Prompt Engineering
 
-- using the Stability SDK.
+- generating a [Python script](18-delete-images.py) to delete images.
+- generating a [CV website](18-cv-website.html) with HTML and CSS.
 
-[Check the notebook](17-stability-ai-sdk.ipynb)
+These examples are based on two courses:
 
-Based on [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
+- [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
+- [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
