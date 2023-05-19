@@ -103,6 +103,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - writing a [newsletter email](20-tech-newsletter.html).
 - using [Python](21-encode.py) and [Node](21-encode.js) to encode a string.
 
+## Utility Scripts
+
+- renaming [files](22-rename.py) in a folder.
+
 These examples are based on two courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
