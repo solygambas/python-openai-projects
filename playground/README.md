@@ -105,7 +105,11 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Utility Scripts
 
-- renaming [files](22-rename.py) in a folder.
+- [renaming files](22-rename.py) in a folder.
+
+## Using ChatGPT for Programming Development
+
+- [classifying files](23-classifying-files.py) in different folders according to their formats.
 
 These examples are based on two courses:
 
