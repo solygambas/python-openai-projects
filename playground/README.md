@@ -110,6 +110,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Using ChatGPT for Programming Development
 
 - [classifying files](23-classifying-files.py) in different folders according to their formats.
+- creating a [basic website](24-website/index.html).
 
 These examples are based on two courses:
 
