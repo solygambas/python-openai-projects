@@ -113,6 +113,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - creating a [basic website](24-website/index.html).
 - debugging [code](25-debugging-code.py).
 
+## ChatGPT for Non-Developers & Developers
+
+- creating a [Monster Slayer game](26-monster-slayer.py).
+
 These examples are based on two courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
