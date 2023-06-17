@@ -1,6 +1,6 @@
 # OpenAI Projects
 
-11 projects using ChatGPT API, Whisper, Embeddings, and DALL-E with Python.
+12 projects using ChatGPT API, Whisper, Embeddings, and DALL-E with Python.
 
 | #   | Project                                                                           | Description                                                                                  |
 | --- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
@@ -15,6 +15,7 @@
 | 09  | [**Choose Your Own Adventure App**](09-choose-your-own-adventure)                 | A gamebook app with DALL-E, Stable Diffusion, and GPT-4.                                     |
 | 10  | [**Whisper Transcription Tool**](10-whisper-transcription-tool)                   | A tool to convert spoken audio into accurate transcriptions and translations, using Whisper. |
 | 11  | [**Auto-GPT Bots**](11-auto-gpt-bots)                                             | Two AI assistants to scrape emails and teach code with Auto-GPT.                             |
+| 12  | [**LangChain Bots**](12-langchain-bots)                                           | Two automated AI tools to generate emails and search Wikipedia with LangChain.               |
 
 ## Setup
 
