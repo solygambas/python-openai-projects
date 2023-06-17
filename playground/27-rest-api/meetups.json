@@ -4,5 +4,11 @@
     "title": "Dummy Meetup",
     "summary": "An updated dummy meetup for testing purposes",
     "address": "456 Elm St"
+  },
+  {
+    "id": "5091638d-d616-4d95-9570-0e8f16fabea2",
+    "title": "Tech Conference",
+    "summary": "A conference for tech enthusiasts and professionals",
+    "address": "123 Main St"
   }
 ]

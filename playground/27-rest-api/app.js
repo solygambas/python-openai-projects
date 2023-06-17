@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const Joi = require("joi");
 const fs = require("fs");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const app = express();
@@ -145,10 +146,13 @@ app.post("/signup", (req, res) => {
     return res.status(400).json({ error: "Username already taken" });
   }
 
+  // Hash the password
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   const newUser = {
     id: crypto.randomUUID(),
     username,
-    password,
+    password: hashedPassword,
   };
 
   users.push(newUser);
@@ -159,11 +163,9 @@ app.post("/signup", (req, res) => {
 
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
+  const user = users.find((u) => u.username === username);
 
-  if (!user) {
+  if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
