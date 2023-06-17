@@ -118,6 +118,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - creating a [Monster Slayer game](26-monster-slayer.py).
 - building a [NodeJS REST API](27-rest-api/app.js).
 
+## Using GPT APIs
+
+- recreating a [simple ChatGPT clone](28-simple-chatgpt-clone.ipynb).
+
 These examples are based on two courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
