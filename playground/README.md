@@ -122,6 +122,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - recreating a [simple ChatGPT clone](28-simple-chatgpt-clone.ipynb).
 - creating a [text summarization tool](29-text-summarization-tool.ipynb).
+- [processing text](30-processing-text-files.ipynb) from a file and creating a new file.
 
 These examples are based on two courses:
 
