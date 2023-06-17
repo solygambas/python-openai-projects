@@ -116,6 +116,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## ChatGPT for Non-Developers & Developers
 
 - creating a [Monster Slayer game](26-monster-slayer.py).
+- building a [NodeJS REST API](27-rest-api/app.js).
 
 These examples are based on two courses:
 
