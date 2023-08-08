@@ -107,6 +107,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - [renaming files](22-rename.py) in a folder.
 - [reorganizing files](31-reorganizing-files.ipynb).
+- [calculating and displaying the total size of files](32-space.sh) modified today using a Bash script.
 
 ## Using ChatGPT for Programming Development
 
