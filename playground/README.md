@@ -113,6 +113,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - [classifying files](23-classifying-files.py) in different folders according to their formats.
 - creating a [basic website](24-website/index.html).
+- recreating the [bouncing DVD logo screen](33-bouncing-logo/index.html).
 - debugging [code](25-debugging-code.py).
 
 ## ChatGPT for Non-Developers & Developers

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bouncing DVD Logo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+      #dvd-logo {
+        position: absolute;
+        width: 187.09px;
+        height: 82.68px;
+        background-color: transparent;
+        background-image: url("dvd-logo.svg"); /* Replace with your logo image */
+        background-size: cover;
+        background-repeat: no-repeat;
+        animation: moveX 4s linear 0s infinite alternate,
+          moveY 6.8s linear 0s infinite alternate;
+      }
+      @keyframes moveX {
+        from {
+          left: 0;
+        }
+        to {
+          left: calc(100vw - 187.09px);
+        } /* Adjust the distance */
+      }
+      @keyframes moveY {
+        from {
+          top: 0;
+        }
+        to {
+          top: calc(100vh - 82.68px);
+        } /* Adjust the distance */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dvd-logo"></div>
+  </body>
+</html>
