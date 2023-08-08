@@ -106,6 +106,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Utility Scripts
 
 - [renaming files](22-rename.py) in a folder.
+- [reorganizing files](31-reorganizing-files.ipynb).
 
 ## Using ChatGPT for Programming Development
 
@@ -124,7 +125,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - creating a [text summarization tool](29-text-summarization-tool.ipynb).
 - [processing text](30-processing-text-files.ipynb) from a file and creating a new file.
 
-These examples are based on two courses:
+These examples are based on three courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
+- [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
