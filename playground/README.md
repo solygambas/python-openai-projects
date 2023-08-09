@@ -109,6 +109,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [reorganizing files](31-reorganizing-files.ipynb).
 - [calculating and displaying the total size of files](32-space.sh) modified today using a Bash script.
 - [calculating total duration of video files](34-video-duration.sh) in a directory.
+- [creating a URL shortener](35-url-shortener/app.py) using Flask and SQLite.
 
 ## Using ChatGPT for Programming Development
 
