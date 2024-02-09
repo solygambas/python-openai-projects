@@ -129,8 +129,18 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - creating a [text summarization tool](29-text-summarization-tool.ipynb).
 - [processing text](30-processing-text-files.ipynb) from a file and creating a new file.
 
-These examples are based on three courses:
+## Using LangChain
+
+- understanding [models, prompts, and parsers](36-langchain/L1-Model_prompt_parser.ipynb).
+- managing [memory](36-langchain/L2-Memory.ipynb) to provide context.
+- [chaining and routing prompts](36-langchain/L3-Chains.ipynb).
+- [using embeddings](36-langchain/L4-QnA.ipynb) to answer questions.
+- [evaluating](36-langchain/L5-Evaluation.ipynb) the LLM app performances.
+- helping the LLM with specific [agents](36-langchain/L6-Agents.ipynb).
+
+These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
+- [LangChain for LLM Application Development](https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/) by Harrison Chase and Andrew Ng (2023).
