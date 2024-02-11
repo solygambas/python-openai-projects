@@ -28,7 +28,7 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 ## Playground
 
-[Check the playground](playground/) to understand the basics.
+[Check the playground](00-playground/) to understand the basics.
 
 These projects are based on five courses:
 
