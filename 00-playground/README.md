@@ -138,9 +138,23 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [evaluating](36-langchain/L5-Evaluation.ipynb) the LLM app performances.
 - helping the LLM with specific [agents](36-langchain/L6-Agents.ipynb).
 
-These examples are based on four courses:
+## Chatting with data using LangChain
+
+- [loading documents](37-langchain-chat-data/01_document_loading.ipynb).
+- [splitting documents](37-langchain-chat-data/02_document_splitting.ipynb).
+- using a [vector store](37-langchain-chat-data/03_vectorstores_and_embeddings.ipynb) with Chroma and generating embeddings.
+- understanding [retrieval techniques](37-langchain-chat-data/04_retrieval.ipynb) to address diversity and specificity issues.
+- [sending questions](37-langchain-chat-data/05_question_answering.ipynb) with the retrieved documents and getting an answer from the LLM.
+- [building a chat UI](37-langchain-chat-data/06_chat.ipynb).
+
+These examples are based on three courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
+
+We are also relying on three short courses:
+
+- [Vector Databases: from Embeddings to Applications](https://www.deeplearning.ai/short-courses/vector-databases-embeddings-applications/) by Sebastian Witalec (2023).
 - [LangChain for LLM Application Development](https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/) by Harrison Chase and Andrew Ng (2023).
+- [LangChain: Chat with Your Data](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) by Harrison Chase (2023).
