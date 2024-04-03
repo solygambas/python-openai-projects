@@ -18,6 +18,10 @@
 | 12  | [**LangChain Bots**](12-langchain-bots)                                           | Two automated AI tools to generate emails and search Wikipedia with LangChain.                |
 | 13  | [**Multilingual RAG Search**](13-multilingual-rag-search)                         | A multilingual search tool based on Wikipedia data, utilizing the RAG approach to prompt GPT. |
 
+## Get Inspired
+
+Check out our [collection of articles](https://www.onbusinessplan.com/) for those beginning their Generative AI journey. Find tips, tricks, and motivational content to keep you engaged and motivated throughout your learning process.
+
 ## Setup
 
 You need to create a virtual env and install the packages listed in `requirements.txt`. You can then run Jupyter Notebooks in VS Code.
@@ -30,6 +34,8 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 [Check the playground](00-playground/) to understand the basics.
 
+## Acknowledgments
+
 These projects are based on three courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -41,3 +47,7 @@ We are also relying on three short courses:
 - [Vector Databases: from Embeddings to Applications](https://www.deeplearning.ai/short-courses/vector-databases-embeddings-applications/) by Sebastian Witalec (2023).
 - [LangChain for LLM Application Development](https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/) by Harrison Chase and Andrew Ng (2023).
 - [LangChain: Chat with Your Data](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) by Harrison Chase (2023).
+
+## Show Your Support
+
+If you find these projects helpful or interesting, please consider starring the repository. It's a simple gesture that helps to boost the visibility of the project and show appreciation for the effort put into creating it. Thank you!
