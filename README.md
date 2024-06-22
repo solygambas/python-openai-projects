@@ -20,7 +20,7 @@
 
 ## Get Inspired
 
-Check out our [collection of articles](https://www.onbusinessplan.com/) for those beginning their Generative AI journey. Find tips, tricks, and motivational content to keep you engaged and motivated throughout your learning process.
+Check out our [**collection of articles**](https://www.onbusinessplan.com/) for those beginning their Generative AI journey. Find tips, tricks, and motivational content to keep you engaged and motivated throughout your learning process.
 
 ## Setup
 
