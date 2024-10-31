@@ -147,11 +147,17 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [sending questions](37-langchain-chat-data/05_question_answering.ipynb) with the retrieved documents and getting an answer from the LLM.
 - [building a chat UI](37-langchain-chat-data/06_chat.ipynb).
 
+## Leveraging GitHub Copilot Suggestions & Chat
+
+- using [AI powered code suggestions](38-github-copilot-intro/intro.py) to write code.
+- writing a [short Python script](38-github-copilot-intro/db_backup.py) with suggestions.
+
 These examples are based on three courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
+- [AI For Developers With GitHub Copilot, Cursor AI & ChatGPT](https://www.udemy.com/course/ai-for-developers-with-github-copilot-cursor-ai-chatgpt/) by Maximilian Schwarzmüller (2024).
 
 We are also relying on three short courses:
 
