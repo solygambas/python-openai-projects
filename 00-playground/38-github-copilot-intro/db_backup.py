@@ -4,10 +4,10 @@ import logging
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-active_db_file = 'app.db'
-backup_db_file = 'backup.db'
-
-def backup_db():
+def backup_db(active_db_file, backup_db_file):
+    """
+    Create a backup of the active database file.
+    """
     try:
         shutil.copy(active_db_file, backup_db_file)
         logging.info(f'Backup created: {backup_db_file}')
@@ -19,6 +19,9 @@ def backup_db():
         logging.error(f'An unexpected error occurred: {e}')
 
 def restore_db(backup_db_file, active_db_file):
+    """
+    Restore the active database file from the backup.
+    """
     try:
         shutil.copy(backup_db_file, active_db_file)
         logging.info(f'Restored backup: {active_db_file}')
@@ -31,9 +34,9 @@ def main():
     print('3. Exit')
     choice = input('Enter your choice: ')
     if choice == '1':
-        backup_db()
+        backup_db('app.db', 'backup.db')
     elif choice == '2':
-        restore_db(backup_db_file, active_db_file)
+        restore_db('backup.db', 'app.db')
     elif choice == '3':
         logging.info('Exiting...')
     else:
