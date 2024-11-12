@@ -150,9 +150,9 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Leveraging GitHub Copilot Suggestions & Chat
 
 - using [AI powered code suggestions](38-github-copilot-intro/intro.py) to write code.
-- writing a [short Python script](38-github-copilot-intro/db_backup.py) with suggestions.
+- writing a [short Python script](38-github-copilot-intro/db_backup.py) with suggestions and sidebar chat.
 
-These examples are based on three courses:
+These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
