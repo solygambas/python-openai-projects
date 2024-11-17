@@ -151,6 +151,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - using [AI powered code suggestions](38-github-copilot-intro/intro.py) to write code.
 - writing a [short Python script](38-github-copilot-intro/db_backup.py) with suggestions and sidebar chat.
+- generating an [Express app](39-node-demo-project).
 
 These examples are based on four courses:
 
