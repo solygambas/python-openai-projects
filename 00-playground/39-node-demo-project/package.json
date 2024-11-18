@@ -1,5 +1,6 @@
 {
   "name": "my-nodejs-express-app",
+  "type": "module",
   "version": "1.0.0",
   "description": "A Node.js Express application",
   "main": "src/app.js",

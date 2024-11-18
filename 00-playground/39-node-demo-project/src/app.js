@@ -1,4 +1,7 @@
-const express = require("express");
+import express from "express";
+// import indexController from "./controllers/index.js";
+import tablesRoutes from "./routes/tables.js";
+
 const app = express();
 
 // Middleware setup
@@ -6,11 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes setup
-const indexController = require("./controllers/index");
-app.use("/", indexController);
-
-const tablesRoutes = require("./routes/tables");
-app.use("/api", tablesRoutes);
+// app.use("/", indexController);
+app.use("/tables", tablesRoutes);
 
 // Start the server
 const port = process.env.PORT || 3000;
