@@ -153,6 +153,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - writing a [short Python script](38-github-copilot-intro/db_backup.py) with suggestions and sidebar chat.
 - generating an [Express app](39-node-demo-project) with input validation.
 
+## Introducing Cursor AI: Smart Suggestions, Chat & Composer
+
+- writing a [Python script](40-cursor-ai-intro/writer.py) with Cursor AI.
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
