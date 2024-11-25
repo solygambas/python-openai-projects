@@ -158,6 +158,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - writing a [Python script](40-cursor-ai-intro/writer.py) with Cursor AI.
 - adding authentication to an [Express app](39-node-demo-project) with Composer.
 
+## Creating a REST API with AI
+
+- setting up an [Express app](41-event-rest-api) with Cursor AI.
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
