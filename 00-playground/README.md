@@ -156,6 +156,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Introducing Cursor AI: Smart Suggestions, Chat & Composer
 
 - writing a [Python script](40-cursor-ai-intro/writer.py) with Cursor AI.
+- adding authentication to an [Express app](39-node-demo-project) with Composer.
 
 These examples are based on four courses:
 

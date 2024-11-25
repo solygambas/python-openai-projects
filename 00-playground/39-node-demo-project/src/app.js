@@ -1,6 +1,8 @@
 import express from "express";
-// import indexController from "./controllers/index.js";
 import tablesRoutes from "./routes/tables.js";
+import userRoutes from "./routes/users.js";
+import { authenticateToken } from "./middleware/auth.js";
+import { initializeDatabase } from "./config/database.js";
 
 const app = express();
 
@@ -8,9 +10,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Initialize database
+initializeDatabase().catch((error) => {
+  console.error("Failed to initialize database:", error);
+  process.exit(1);
+});
+
 // Routes setup
-// app.use("/", indexController);
-app.use("/tables", tablesRoutes);
+app.use("/users", userRoutes);
+// Protect tables routes with authentication
+app.use("/tables", authenticateToken, tablesRoutes);
+
+// Serve static files from public folder
+app.use(express.static("public"));
 
 // Start the server
 const port = process.env.PORT || 3000;
