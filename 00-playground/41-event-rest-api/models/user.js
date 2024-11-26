@@ -1,13 +1,21 @@
-// Helper function to create a new user object
+import { getDb } from "../database.js";
+
 export function createUser({ email, password }) {
+  const id = Math.random().toString(36).substring(2);
+  const db = getDb();
+
+  const stmt = db.prepare(
+    "INSERT INTO users (id, email, password) VALUES (?, ?, ?)"
+  );
+  stmt.run(id, email, password);
+
   return {
-    id: Math.random().toString(36).substring(2), // Simple ID generation
-    email: email,
-    password: password, // Note: In real app, this should be hashed
+    id,
+    email,
+    password, // Note: In real app, this should be hashed
   };
 }
 
-// Helper function to validate user data
 export function validateUser({ email, password }) {
   if (!email || !email.includes("@")) {
     throw new Error("Invalid email");
@@ -16,4 +24,16 @@ export function validateUser({ email, password }) {
     throw new Error("Password must be at least 6 characters");
   }
   return true;
+}
+
+export function findUserByEmail(email) {
+  const db = getDb();
+  const stmt = db.prepare("SELECT * FROM users WHERE email = ?");
+  return stmt.get(email);
+}
+
+export function findUserById(id) {
+  const db = getDb();
+  const stmt = db.prepare("SELECT * FROM users WHERE id = ?");
+  return stmt.get(id);
 }
