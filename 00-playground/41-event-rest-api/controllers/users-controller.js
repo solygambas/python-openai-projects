@@ -1,9 +1,13 @@
-import { createUser, validateUser } from "../models/user.js";
+import {
+  createUser,
+  validateUser,
+  verifyUserCredentials,
+} from "../models/user.js";
 
 // In-memory storage for users (temporary solution)
 const users = [];
 
-export function signup(req, res) {
+export async function signup(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -17,7 +21,7 @@ export function signup(req, res) {
     }
 
     // Create new user
-    const newUser = createUser({ email, password });
+    const newUser = await createUser({ email, password });
     users.push(newUser);
 
     res.status(201).json({ message: "User created", userId: newUser.id });
@@ -26,7 +30,7 @@ export function signup(req, res) {
   }
 }
 
-export function login(req, res) {
+export async function login(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -36,14 +40,9 @@ export function login(req, res) {
         .json({ message: "Email and password are required" });
     }
 
-    // Find user
-    const user = users.find((user) => user.email === email);
+    // Verify user credentials
+    const user = await verifyUserCredentials({ email, password });
     if (!user) {
-      return res.status(401).json({ message: "Authentication failed" });
-    }
-
-    // Check password
-    if (user.password !== password) {
       return res.status(401).json({ message: "Authentication failed" });
     }
 
