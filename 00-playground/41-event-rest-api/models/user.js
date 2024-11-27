@@ -17,10 +17,11 @@ export function createUser({ email, password }) {
 }
 
 export function validateUser({ email, password }) {
-  if (!email || !email.includes("@")) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !email.trim() || !emailRegex.test(email)) {
     throw new Error("Invalid email");
   }
-  if (!password || password.length < 6) {
+  if (!password || !password.trim() || password.length < 6) {
     throw new Error("Password must be at least 6 characters");
   }
   return true;

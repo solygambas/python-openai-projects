@@ -30,6 +30,12 @@ export function login(req, res) {
   try {
     const { email, password } = req.body;
 
+    if (!email || !email.trim() || !password || !password.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
     // Find user
     const user = users.find((user) => user.email === email);
     if (!user) {

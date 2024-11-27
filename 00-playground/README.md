@@ -161,6 +161,9 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Creating a REST API with AI
 
 - setting up an [Express app](41-event-rest-api) with Cursor AI.
+- adding [authentication](41-event-rest-api/controllers/users-controller.js) with Composer.
+- adding a [SQLite database](41-event-rest-api/database.js) to the REST API.
+- testing the REST API with Postman.
 
 These examples are based on four courses:
 
