@@ -6,12 +6,14 @@ const db = getDb();
 
 // Create a new event
 export function create(event) {
+  const id = Math.random().toString(36).substring(2);
   const { title, description, address, date } = event;
   const stmt = db.prepare(
-    "INSERT INTO events (title, description, address, date) VALUES (?, ?, ?, ?)"
+    "INSERT INTO events (id, title, description, address, date) VALUES (?, ?, ?, ?, ?)"
   );
-  const info = stmt.run(title, description, address, date);
-  return { id: info.lastInsertRowid, title, description, address, date };
+  const info = stmt.run(id, title, description, address, date);
+
+  return { id, title, description, address, date };
 }
 
 // Edit an event by ID
@@ -47,4 +49,10 @@ export function find() {
 export function findById(id) {
   const stmt = db.prepare("SELECT * FROM events WHERE id = ?");
   return stmt.get(id);
+}
+
+// Validate event data
+export function validate(event) {
+  const { title, date } = event;
+  return Boolean(title?.trim() && date?.trim());
 }

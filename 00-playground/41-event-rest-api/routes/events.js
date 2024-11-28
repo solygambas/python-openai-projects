@@ -6,11 +6,12 @@ import {
   getAllEvents,
   getEventById,
 } from "../controllers/events-controller.js";
+import { authenticateJWT } from "../util/auth.js";
 
 const router = express.Router();
 
 // Create a new event
-router.post("/", createEvent);
+router.post("/", authenticateJWT, createEvent);
 
 // Get all events
 router.get("/", getAllEvents);
@@ -19,9 +20,9 @@ router.get("/", getAllEvents);
 router.get("/:id", getEventById);
 
 // Edit an event by ID
-router.put("/:id", editEvent);
+router.put("/:id", authenticateJWT, editEvent);
 
 // Delete an event by ID
-router.delete("/:id", deleteEvent);
+router.delete("/:id", authenticateJWT, deleteEvent);
 
 export default router;
