@@ -5,11 +5,12 @@ import {
   find,
   findById,
   validate,
+  register,
+  unregister,
 } from "../models/event.js";
 
 export const createEvent = async (req, res) => {
   try {
-    console.log(req.user);
     const { title, description, address, date } = req.body;
     const eventData = {
       title,
@@ -105,6 +106,37 @@ export const getEventById = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
     res.status(200).json(event);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const registerToEvent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const event = await findById(id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    const registration = await register(req.user.userId, id);
+    res.status(200).json({ message: "Registered to event", registration });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const unregisterFromEvent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const event = await findById(id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    const result = await unregister(req.user.userId, id);
+    if (!result) {
+      return res.status(404).json({ message: "Registration not found" });
+    }
+    res.status(200).json({ message: "Unregistered from event" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

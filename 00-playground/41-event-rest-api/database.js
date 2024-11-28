@@ -31,6 +31,17 @@ export function initDb() {
     )
   `);
 
+  // Create registrations table
+  db.exec(`
+  CREATE TABLE IF NOT EXISTS registrations (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    event_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (event_id) REFERENCES events (id)
+  )
+ `);
+
   return db;
 }
 

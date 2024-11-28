@@ -5,6 +5,8 @@ import {
   deleteEvent,
   getAllEvents,
   getEventById,
+  registerToEvent,
+  unregisterFromEvent,
 } from "../controllers/events-controller.js";
 import { authenticateJWT } from "../util/auth.js";
 
@@ -24,5 +26,11 @@ router.put("/:id", authenticateJWT, editEvent);
 
 // Delete an event by ID
 router.delete("/:id", authenticateJWT, deleteEvent);
+
+// Register to an event
+router.post("/:id/register", authenticateJWT, registerToEvent);
+
+// Unregister from an event
+router.delete("/:id/unregister", authenticateJWT, unregisterFromEvent);
 
 export default router;

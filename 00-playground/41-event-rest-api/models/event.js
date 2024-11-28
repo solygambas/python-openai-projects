@@ -62,3 +62,26 @@ export function validate(event) {
   const { title, date } = event;
   return Boolean(title?.trim() && date?.trim());
 }
+
+// Register to an event
+export function register(userId, eventId) {
+  const id = Math.random().toString(36).substring(2);
+  const stmt = db.prepare(
+    "INSERT INTO registrations (id, user_id, event_id) VALUES (?, ?, ?)"
+  );
+  const info = stmt.run(id, userId, eventId);
+
+  return { id, userId, eventId };
+}
+
+// Unregister from an event
+export function unregister(userId, eventId) {
+  const stmt = db.prepare(
+    "DELETE FROM registrations WHERE user_id = ? AND event_id = ?"
+  );
+  const info = stmt.run(userId, eventId);
+  if (info.changes > 0) {
+    return { userId, eventId };
+  }
+  return null;
+}
