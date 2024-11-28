@@ -9,8 +9,15 @@ import {
 
 export const createEvent = async (req, res) => {
   try {
+    console.log(req.user);
     const { title, description, address, date } = req.body;
-    const eventData = { title, description, address, date };
+    const eventData = {
+      title,
+      description,
+      address,
+      date,
+      userId: req.user.userId,
+    };
 
     // Validate event data
     const isValid = validate(eventData);
@@ -45,6 +52,16 @@ export const editEvent = async (req, res) => {
     if (!updatedEvent) {
       return res.status(404).json({ message: "Event not found" });
     }
+    // Check if the user owns the event
+    const existingEvent = await findById(id);
+    if (!existingEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    if (existingEvent.user_id !== req.user.userId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to edit this event" });
+    }
     res.status(200).json(updatedEvent);
   } catch (error) {
     // Use 400 for validation errors
@@ -55,9 +72,15 @@ export const editEvent = async (req, res) => {
 export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
+    // Check if the user owns the event
     const deletedEvent = await findByIdAndDelete(id);
     if (!deletedEvent) {
       return res.status(404).json({ message: "Event not found" });
+    }
+    if (deletedEvent.user_id !== req.user.userId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this event" });
     }
     res.status(204).send();
   } catch (error) {

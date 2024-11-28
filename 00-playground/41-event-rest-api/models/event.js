@@ -7,13 +7,13 @@ const db = getDb();
 // Create a new event
 export function create(event) {
   const id = Math.random().toString(36).substring(2);
-  const { title, description, address, date } = event;
+  const { title, description, address, date, userId } = event;
   const stmt = db.prepare(
-    "INSERT INTO events (id, title, description, address, date) VALUES (?, ?, ?, ?, ?)"
+    "INSERT INTO events (id, title, description, address, date, user_id) VALUES (?, ?, ?, ?, ?, ?)"
   );
-  const info = stmt.run(id, title, description, address, date);
+  const info = stmt.run(id, title, description, address, date, userId);
 
-  return { id, title, description, address, date };
+  return { id, title, description, address, date, userId };
 }
 
 // Edit an event by ID
@@ -24,17 +24,23 @@ export function findByIdAndUpdate(id, update) {
   );
   const info = stmt.run(title, description, address, date, id);
   if (info.changes > 0) {
-    return { id, title, description, address, date };
+    // Get the updated event to include user_id
+    const updatedEvent = findById(id);
+    return updatedEvent;
   }
   return null;
 }
 
 // Delete an event by ID
 export function findByIdAndDelete(id) {
+  // Get the event before deletion to return user_id
+  const event = findById(id);
+  if (!event) return null;
+
   const stmt = db.prepare("DELETE FROM events WHERE id = ?");
   const info = stmt.run(id);
   if (info.changes > 0) {
-    return { id };
+    return { id, user_id: event.user_id };
   }
   return null;
 }

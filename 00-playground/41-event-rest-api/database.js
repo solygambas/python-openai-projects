@@ -25,7 +25,9 @@ export function initDb() {
       title TEXT NOT NULL,
       description TEXT,
       address TEXT,
-      date TEXT NOT NULL
+      date TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users (id) 
     )
   `);
 
