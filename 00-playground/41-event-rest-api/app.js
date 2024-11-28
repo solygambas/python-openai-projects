@@ -1,5 +1,6 @@
 import express from "express";
 import usersRoutes from "./routes/users.js";
+import eventsRoutes from "./routes/events.js";
 import { initDb } from "./database.js";
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // Routes
 app.use("/users", usersRoutes);
+app.use("/events", eventsRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

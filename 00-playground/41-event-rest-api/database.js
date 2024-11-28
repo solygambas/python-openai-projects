@@ -18,6 +18,17 @@ export function initDb() {
     )
   `);
 
+  // Create events table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS events (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT,
+      address TEXT,
+      date TEXT NOT NULL
+    )
+  `);
+
   return db;
 }
 
