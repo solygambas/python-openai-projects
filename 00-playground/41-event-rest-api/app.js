@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import usersRoutes from "./routes/users.js";
 import eventsRoutes from "./routes/events.js";
 import { initDb } from "./database.js";
@@ -6,8 +7,13 @@ import { initDb } from "./database.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware to enable CORS
+app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Serve static files
+app.use(express.static("public"));
 
 // Routes
 app.use("/users", usersRoutes);

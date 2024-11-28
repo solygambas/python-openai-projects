@@ -165,6 +165,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - adding a [SQLite database](41-event-rest-api/database.js) to the REST API.
 - testing the REST API with Postman.
 - protecting some routes with [JWT](41-event-rest-api/routes/events.js).
+- handling registration to events.
+- handling [image uploads](41-event-rest-api/util/upload.js) with Multer.
 
 These examples are based on four courses:
 

@@ -12,20 +12,23 @@ import {
 export const createEvent = async (req, res) => {
   try {
     const { title, description, address, date } = req.body;
+    const image = req.file;
+
     const eventData = {
       title,
       description,
       address,
       date,
+      image: image.filename,
       userId: req.user.userId,
     };
 
     // Validate event data
     const isValid = validate(eventData);
-    if (!isValid) {
-      return res
-        .status(400)
-        .json({ message: "Invalid event data. Title and date are required." });
+    if (!isValid || !image) {
+      return res.status(400).json({
+        message: "Invalid event data. Title, date and image are required.",
+      });
     }
 
     const event = await create(eventData);
@@ -39,14 +42,21 @@ export const editEvent = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, address, date } = req.body;
-    const eventData = { title, description, address, date };
+    const image = req.file;
+    const eventData = {
+      title,
+      description,
+      address,
+      date,
+      image: image.filename,
+    };
 
     // Validate event data
     const isValid = validate(eventData);
-    if (!isValid) {
-      return res
-        .status(400)
-        .json({ message: "Invalid event data. Title and date are required." });
+    if (!isValid || !image) {
+      return res.status(400).json({
+        message: "Invalid event data. Title, date and image are required.",
+      });
     }
 
     const updatedEvent = await findByIdAndUpdate(id, eventData);

@@ -9,11 +9,12 @@ import {
   unregisterFromEvent,
 } from "../controllers/events-controller.js";
 import { authenticateJWT } from "../util/auth.js";
+import { upload } from "../util/upload.js";
 
 const router = express.Router();
 
 // Create a new event
-router.post("/", authenticateJWT, createEvent);
+router.post("/", authenticateJWT, upload.single("image"), createEvent);
 
 // Get all events
 router.get("/", getAllEvents);
@@ -22,7 +23,7 @@ router.get("/", getAllEvents);
 router.get("/:id", getEventById);
 
 // Edit an event by ID
-router.put("/:id", authenticateJWT, editEvent);
+router.put("/:id", authenticateJWT, upload.single("image"), editEvent);
 
 // Delete an event by ID
 router.delete("/:id", authenticateJWT, deleteEvent);
