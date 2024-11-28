@@ -3,6 +3,7 @@ import {
   validateUser,
   verifyUserCredentials,
 } from "../models/user.js";
+import { generateJWT } from "../util/auth.js";
 
 // In-memory storage for users (temporary solution)
 const users = [];
@@ -24,7 +25,14 @@ export async function signup(req, res) {
     const newUser = await createUser({ email, password });
     users.push(newUser);
 
-    res.status(201).json({ message: "User created", userId: newUser.id });
+    // Generate JWT token
+    const token = generateJWT(newUser);
+
+    res.status(201).json({
+      message: "User created",
+      userId: newUser.id,
+      token: token,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -46,7 +54,14 @@ export async function login(req, res) {
       return res.status(401).json({ message: "Authentication failed" });
     }
 
-    res.json({ message: "Login successful", userId: user.id });
+    // Generate JWT token
+    const token = generateJWT(user);
+
+    res.json({
+      message: "Login successful",
+      userId: user.id,
+      token: token,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
