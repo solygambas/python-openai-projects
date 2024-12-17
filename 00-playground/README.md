@@ -171,6 +171,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Functions, Tools and Agents with LangChain
 
 - using [OpenAI function calling capability](42-functions-tools-agents-langchain/L1-openai_functions_student.ipynb).
+- chaining operations with [LangChain Expression Language (LCEL)](42-functions-tools-agents-langchain/L2-lcel-student.ipynb).
 
 These examples are based on four courses:
 
