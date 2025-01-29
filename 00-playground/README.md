@@ -174,6 +174,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - chaining operations with [LangChain Expression Language (LCEL)](42-functions-tools-agents-langchain/L2-lcel-student.ipynb).
 - calling functions with [Pydantic syntax](42-functions-tools-agents-langchain/L3-function-calling-student.ipynb).
 - [tagging and extracting data](42-functions-tools-agents-langchain/L4-tagging-and-extraction-student.ipynb).
+- [creating tools and handling routes](42-functions-tools-agents-langchain/L5-tools-routing-apis-student.ipynb).
 
 These examples are based on four courses:
 
