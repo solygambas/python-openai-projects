@@ -175,7 +175,11 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - calling functions with [Pydantic syntax](42-functions-tools-agents-langchain/L3-function-calling-student.ipynb).
 - [tagging and extracting data](42-functions-tools-agents-langchain/L4-tagging-and-extraction-student.ipynb).
 - [creating tools and handling routes](42-functions-tools-agents-langchain/L5-tools-routing-apis-student.ipynb).
-- [creating a conversational agent](42-functions-tools-agents-langchain/L6-functional_conversation-student.ipynb)
+- [creating a conversational agent](42-functions-tools-agents-langchain/L6-functional_conversation-student.ipynb).
+
+## Building LLM Apps with LangChain.js
+
+- [building pipes](43-langchain-js/L1_student.ipynb) with LangChain.js.
 
 These examples are based on four courses:
 
@@ -184,9 +188,10 @@ These examples are based on four courses:
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
 - [AI For Developers With GitHub Copilot, Cursor AI & ChatGPT](https://www.udemy.com/course/ai-for-developers-with-github-copilot-cursor-ai-chatgpt/) by Maximilian Schwarzmüller (2024).
 
-We are also relying on four short courses:
+We are also relying on five short courses:
 
 - [Vector Databases: from Embeddings to Applications](https://www.deeplearning.ai/short-courses/vector-databases-embeddings-applications/) by Sebastian Witalec (2023).
 - [LangChain for LLM Application Development](https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/) by Harrison Chase and Andrew Ng (2023).
 - [LangChain: Chat with Your Data](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) by Harrison Chase (2023).
 - [Functions, Tools and Agents with LangChain](https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/) by Harrison Chase (2023).
+- [Build LLM Apps with LangChain.js](https://www.deeplearning.ai/short-courses/build-llm-apps-with-langchain-js/) by Jacob Lee (2024).
