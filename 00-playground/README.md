@@ -180,6 +180,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Building LLM Apps with LangChain.js
 
 - [building pipes](43-langchain-js/L1_student.ipynb) with LangChain.js.
+- [loading and preparing data](43-langchain-js/L2_student.ipynb).
 
 These examples are based on four courses:
 
