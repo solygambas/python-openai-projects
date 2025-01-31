@@ -182,6 +182,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [building pipes](43-langchain-js/L1_student.ipynb) with LangChain.js.
 - [loading and preparing data](43-langchain-js/L2_student.ipynb).
 - [creating embeddings and retrieving data](43-langchain-js/L3_student.ipynb) from a vector database.
+- [generating answers with RAG](43-langchain-js/L4_student.ipynb).
 
 These examples are based on four courses:
 
