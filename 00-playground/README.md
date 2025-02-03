@@ -189,6 +189,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 # Building Towards Computer Use with Anthropic
 
 - [working with the API](44-computer-use-anthropic/Lesson_2.ipynb).
+- [sending image requests and streaming responses](44-computer-use-anthropic/Lesson_3.ipynb).
 
 These examples are based on four courses:
 
