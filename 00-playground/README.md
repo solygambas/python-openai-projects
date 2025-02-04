@@ -198,6 +198,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 # AI Agents in LangGraph
 
 - [building an agent from scratch](45-ai-agents-langgraph/Lesson_1_Student.ipynb).
+- [creating an agent with LangGraph components](45-ai-agents-langgraph/Lesson_2_Student.ipynb).
+-
 
 These examples are based on four courses:
 
