@@ -192,6 +192,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [sending image requests and streaming responses](44-computer-use-anthropic/Lesson_3.ipynb).
 - [writing structured prompts](44-computer-use-anthropic/Lesson_4.ipynb).
 - [caching prompts](44-computer-use-anthropic/Lesson_5.ipynb).
+- [creating tools to query a database](44-computer-use-anthropic/Lesson_6.ipynb).
 
 These examples are based on four courses:
 
