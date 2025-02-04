@@ -193,6 +193,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [writing structured prompts](44-computer-use-anthropic/Lesson_4.ipynb).
 - [caching prompts](44-computer-use-anthropic/Lesson_5.ipynb).
 - [creating tools to query a database](44-computer-use-anthropic/Lesson_6.ipynb).
+- [experimenting with computer use](https://github.com/anthropics/anthropic-quickstarts/tree/main/computer-use-demo).
 
 These examples are based on four courses:
 
