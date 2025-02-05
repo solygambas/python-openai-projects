@@ -202,6 +202,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [discovering agentic search with Tavily](45-ai-agents-langgraph/Lesson_3_Student.ipynb).
 - [handling persistence and streaming](45-ai-agents-langgraph/Lesson_4_Student.ipynb).
 - [leveraging human-in-the-loop patterns](45-ai-agents-langgraph/Lesson_5_Student.ipynb).
+- [building an essay writer](45-ai-agents-langgraph/Lesson_6_Student.ipynb).
 
 These examples are based on four courses:
 
