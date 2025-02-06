@@ -204,6 +204,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [leveraging human-in-the-loop patterns](45-ai-agents-langgraph/Lesson_5_Student.ipynb).
 - [building an essay writer](45-ai-agents-langgraph/Lesson_6_Student.ipynb).
 
+# ChatGPT Prompt Engineering
+
+- [following general guidelines](46-chatgpt-prompt-engineering/l2-guidelines.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -220,3 +224,4 @@ We are also relying on several short courses:
 - [Build LLM Apps with LangChain.js](https://www.deeplearning.ai/short-courses/build-llm-apps-with-langchain-js/) by Jacob Lee (2024).
 - [Building Towards Computer Use with Anthropic](https://www.deeplearning.ai/short-courses/building-towards-computer-use-with-anthropic/) by Colt Steele (2025).
 - [AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) by Harrison Chase and Rotem Weiss (2024).
+- [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).

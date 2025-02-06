@@ -56,6 +56,7 @@ We are also relying on several short courses:
 - [Build LLM Apps with LangChain.js](https://www.deeplearning.ai/short-courses/build-llm-apps-with-langchain-js/) by Jacob Lee (2024).
 - [Building Towards Computer Use with Anthropic](https://www.deeplearning.ai/short-courses/building-towards-computer-use-with-anthropic/) by Colt Steele (2025).
 - [AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) by Harrison Chase and Rotem Weiss (2024).
+- [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).
 
 ## Show Your Support
 
