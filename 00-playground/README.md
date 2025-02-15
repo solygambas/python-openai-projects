@@ -207,6 +207,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 # ChatGPT Prompt Engineering
 
 - [following general guidelines](46-chatgpt-prompt-engineering/l2-guidelines.ipynb).
+- [iterating to analyze and refine prompts](46-chatgpt-prompt-engineering/l3-iterative-prompt-development.ipynb).
 
 These examples are based on four courses:
 
