@@ -212,6 +212,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [inferring sentiment and topics](46-chatgpt-prompt-engineering/l5-inferring.ipynb).
 - [translating and converting texts](46-chatgpt-prompt-engineering/l6-transforming.ipynb).
 - [expanding texts](46-chatgpt-prompt-engineering/l7-expanding.ipynb).
+- [building a chatbot](46-chatgpt-prompt-engineering/l8-chatbot.ipynb).
 
 These examples are based on four courses:
 
