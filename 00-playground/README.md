@@ -217,7 +217,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 # Reasoning with o1
 
 - [prompting o1](47-reasoning-with-o1/L2.ipynb).
-- planning with o1.
+- [planning with o1](47-reasoning-with-o1/L3.ipynb).
 - coding with o1.
 - reasoning with images.
 - optimizing prompts.
