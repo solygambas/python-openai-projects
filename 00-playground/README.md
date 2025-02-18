@@ -214,6 +214,14 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [expanding texts](46-chatgpt-prompt-engineering/l7-expanding.ipynb).
 - [building a chatbot](46-chatgpt-prompt-engineering/l8-chatbot.ipynb).
 
+# Reasoning with o1
+
+- [prompting o1](47-reasoning-with-o1/L2.ipynb).
+- planning with o1.
+- coding with o1.
+- reasoning with images.
+- optimizing prompts.
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -231,3 +239,4 @@ We are also relying on several short courses:
 - [Building Towards Computer Use with Anthropic](https://www.deeplearning.ai/short-courses/building-towards-computer-use-with-anthropic/) by Colt Steele (2025).
 - [AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) by Harrison Chase and Rotem Weiss (2024).
 - [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).
+- [Reasoning with o1](https://www.deeplearning.ai/short-courses/reasoning-with-o1/) by Colin Jarvis (2024).
