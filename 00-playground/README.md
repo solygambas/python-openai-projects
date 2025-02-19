@@ -186,7 +186,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [adding conversation history](43-langchain-js/L5_student.ipynb).
 - [shipping as a web API](43-langchain-js/L6_student.ipynb).
 
-# Building Towards Computer Use with Anthropic
+## Building Towards Computer Use with Anthropic
 
 - [working with the API](44-computer-use-anthropic/Lesson_2.ipynb).
 - [sending image requests and streaming responses](44-computer-use-anthropic/Lesson_3.ipynb).
@@ -195,7 +195,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [creating tools to query a database](44-computer-use-anthropic/Lesson_6.ipynb).
 - [experimenting with computer use](https://github.com/anthropics/anthropic-quickstarts/tree/main/computer-use-demo).
 
-# AI Agents in LangGraph
+## AI Agents in LangGraph
 
 - [building an agent from scratch](45-ai-agents-langgraph/Lesson_1_Student.ipynb).
 - [creating an agent with LangGraph components](45-ai-agents-langgraph/Lesson_2_Student.ipynb).
@@ -204,7 +204,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [leveraging human-in-the-loop patterns](45-ai-agents-langgraph/Lesson_5_Student.ipynb).
 - [building an essay writer](45-ai-agents-langgraph/Lesson_6_Student.ipynb).
 
-# ChatGPT Prompt Engineering
+## ChatGPT Prompt Engineering
 
 - [following general guidelines](46-chatgpt-prompt-engineering/l2-guidelines.ipynb).
 - [iterating to analyze and refine prompts](46-chatgpt-prompt-engineering/l3-iterative-prompt-development.ipynb).
@@ -214,13 +214,15 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [expanding texts](46-chatgpt-prompt-engineering/l7-expanding.ipynb).
 - [building a chatbot](46-chatgpt-prompt-engineering/l8-chatbot.ipynb).
 
-# Reasoning with o1
+## Reasoning with o1
 
 - [prompting o1](47-reasoning-with-o1/L2.ipynb).
 - [planning with o1](47-reasoning-with-o1/L3.ipynb).
 - [coding with o1](47-reasoning-with-o1/L4.ipynb).
 - [reasoning with images](47-reasoning-with-o1/L5.ipynb).
 - [optimizing prompts](47-reasoning-with-o1/L6.ipynb).
+
+## Building Systems with the ChatGPT API
 
 These examples are based on four courses:
 
@@ -240,3 +242,4 @@ We are also relying on several short courses:
 - [AI Agents in LangGraph](https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/) by Harrison Chase and Rotem Weiss (2024).
 - [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).
 - [Reasoning with o1](https://www.deeplearning.ai/short-courses/reasoning-with-o1/) by Colin Jarvis (2024).
+- [Building Systems with the ChatGPT API](https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/) by Isa Fulford and Andrew Ng (2023).
