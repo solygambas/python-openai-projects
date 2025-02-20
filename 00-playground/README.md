@@ -225,6 +225,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Building Systems with the ChatGPT API
 
 - [understanding the chat format](48-building-systems-chatgpt-api/L1_student.ipynb).
+- [classifying data](48-building-systems-chatgpt-api/L2_student.ipynb).
 
 These examples are based on four courses:
 
