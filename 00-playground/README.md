@@ -231,6 +231,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [chaining prompts](48-building-systems-chatgpt-api/L5_student.ipynb).
 - [checking outputs](48-building-systems-chatgpt-api/L6_student.ipynb).
 - [building an end-to-end system](48-building-systems-chatgpt-api/L7_student.ipynb).
+- [evaluating responses](48-building-systems-chatgpt-api/L8_student.ipynb) when there is a single "right answer".
 
 These examples are based on four courses:
 
