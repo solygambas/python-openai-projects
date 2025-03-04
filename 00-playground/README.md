@@ -237,6 +237,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Multi AI Agent Systems with crewAI
 
 - [researching and writing an article](49-multi-ai-agent-systems/L2_research_write_article.ipynb).
+- [providing customer support](49-multi-ai-agent-systems/L3_customer_support.ipynb).
 
 These examples are based on four courses:
 
