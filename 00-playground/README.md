@@ -238,6 +238,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - [researching and writing an article](49-multi-ai-agent-systems/L2_research_write_article.ipynb).
 - [providing customer support](49-multi-ai-agent-systems/L3_customer_support.ipynb).
+- [using tools for a customer outreach campaign](49-multi-ai-agent-systems/L4_tools_customer_outreach.ipynb).
 
 These examples are based on four courses:
 
