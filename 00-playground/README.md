@@ -241,6 +241,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [using tools for a customer outreach campaign](49-multi-ai-agent-systems/L4_tools_customer_outreach.ipynb).
 - [defining tasks to organize an event](49-multi-ai-agent-systems/L5_tasks_event_planning.ipynb).
 - [making agents collaborate with each other](49-multi-ai-agent-systems/L6_collaboration_financial_analysis.ipynb).
+- [building a crew to tailor job applications](49-multi-ai-agent-systems/L7_job_application_crew.ipynb).
 
 These examples are based on four courses:
 
