@@ -234,6 +234,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [evaluating responses](48-building-systems-chatgpt-api/L8_student.ipynb) when there is a single "right answer".
 - [evaluating responses](48-building-systems-chatgpt-api/L9_student.ipynb) against a human baseline or a set of criteria.
 
+## Multi AI Agent Systems with crewAI
+
+- [researching and writing an article](49-multi-ai-agent-systems/L2_research_write_article.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -253,3 +257,4 @@ We are also relying on several short courses:
 - [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).
 - [Reasoning with o1](https://www.deeplearning.ai/short-courses/reasoning-with-o1/) by Colin Jarvis (2024).
 - [Building Systems with the ChatGPT API](https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/) by Isa Fulford and Andrew Ng (2023).
+- [Multi AI Agent Systems with crewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) by João Moura (2024).

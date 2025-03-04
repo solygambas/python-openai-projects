@@ -59,6 +59,7 @@ We are also relying on several short courses:
 - [ChatGPT Prompt Engineering for Developers](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) by Isa Fulford and Andrew Ng (2023).
 - [Reasoning with o1](https://www.deeplearning.ai/short-courses/reasoning-with-o1/) by Colin Jarvis (2024).
 - [Building Systems with the ChatGPT API](https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/) by Isa Fulford and Andrew Ng (2023).
+- [Multi AI Agent Systems with crewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) by João Moura (2024).
 
 ## Show Your Support
 
