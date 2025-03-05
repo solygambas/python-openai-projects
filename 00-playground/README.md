@@ -243,6 +243,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [making agents collaborate with each other](49-multi-ai-agent-systems/L6_collaboration_financial_analysis.ipynb).
 - [building a crew to tailor job applications](49-multi-ai-agent-systems/L7_job_application_crew.ipynb).
 
+## Practical Multi AI Agents and Advanced Use Cases with crewAI
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -263,3 +265,4 @@ We are also relying on several short courses:
 - [Reasoning with o1](https://www.deeplearning.ai/short-courses/reasoning-with-o1/) by Colin Jarvis (2024).
 - [Building Systems with the ChatGPT API](https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/) by Isa Fulford and Andrew Ng (2023).
 - [Multi AI Agent Systems with crewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) by João Moura (2024).
+- [Practical Multi AI Agents and Advanced Use Cases with crewAI](https://www.deeplearning.ai/short-courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai/) by João Moura (2024).
