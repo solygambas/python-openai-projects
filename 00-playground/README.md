@@ -245,6 +245,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Practical Multi AI Agents and Advanced Use Cases with crewAI
 
+- [breaking down tasks and estimating the time needed to complete a project](50-practical-multi-ai-agents/L_1.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
