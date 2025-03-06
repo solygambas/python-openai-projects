@@ -249,6 +249,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [building a project progress report](50-practical-multi-ai-agents/L_2.ipynb) based on a Trello board.
 - [defining a workflow for running an agentic sales pipeline](50-practical-multi-ai-agents/L_3.ipynb).
 - [optimizing consistency with training and testing](50-practical-multi-ai-agents/L_4.ipynb).
+- [combining models to generate marketing content](50-practical-multi-ai-agents/L_5.ipynb).
 
 These examples are based on four courses:
 
