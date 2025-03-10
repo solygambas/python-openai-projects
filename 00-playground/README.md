@@ -252,6 +252,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [combining models to generate marketing content](50-practical-multi-ai-agents/L_5.ipynb).
 - [using CrewAI CLI](50-practical-multi-ai-agents/L_6.ipynb).
 
+## Building and Evaluating Advanced RAG Applications
+
+- [setting up basic and advanced RAG pipelines](51-building-evaluating-advanced-rag/L1-Advanced_RAG_Pipeline.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -273,3 +277,4 @@ We are also relying on several short courses:
 - [Building Systems with the ChatGPT API](https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/) by Isa Fulford and Andrew Ng (2023).
 - [Multi AI Agent Systems with crewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) by João Moura (2024).
 - [Practical Multi AI Agents and Advanced Use Cases with crewAI](https://www.deeplearning.ai/short-courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai/) by João Moura (2024).
+- [Building and Evaluating Advanced RAG Applications](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) by Jerry Liu and Anupam Datta (2023).
