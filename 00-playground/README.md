@@ -257,6 +257,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [setting up basic and advanced RAG pipelines](51-building-evaluating-advanced-rag/L1-Advanced_RAG_Pipeline.ipynb).
 - [evaluating RAG models using TruEra](51-building-evaluating-advanced-rag/L2-RAG_Triad_of_metrics.ipynb).
 - [iterating to refine a sentence-window index](51-building-evaluating-advanced-rag/L3-Sentence_window_retrieval.ipynb).
+- [experimenting with auto-merging layers](51-building-evaluating-advanced-rag/L4-Auto-merging_Retrieval.ipynb).
 
 These examples are based on four courses:
 
