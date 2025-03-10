@@ -255,6 +255,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Building and Evaluating Advanced RAG Applications
 
 - [setting up basic and advanced RAG pipelines](51-building-evaluating-advanced-rag/L1-Advanced_RAG_Pipeline.ipynb).
+- [evaluating RAG models using TruEra](51-building-evaluating-advanced-rag/L2-RAG_Triad_of_metrics.ipynb).
 
 These examples are based on four courses:
 
