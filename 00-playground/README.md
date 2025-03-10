@@ -259,6 +259,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [iterating to refine a sentence-window index](51-building-evaluating-advanced-rag/L3-Sentence_window_retrieval.ipynb).
 - [experimenting with auto-merging layers](51-building-evaluating-advanced-rag/L4-Auto-merging_Retrieval.ipynb).
 
+## JavaScript RAG Web Apps with LlamaIndex
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -281,3 +283,4 @@ We are also relying on several short courses:
 - [Multi AI Agent Systems with crewAI](https://www.deeplearning.ai/short-courses/multi-ai-agent-systems-with-crewai/) by João Moura (2024).
 - [Practical Multi AI Agents and Advanced Use Cases with crewAI](https://www.deeplearning.ai/short-courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai/) by João Moura (2024).
 - [Building and Evaluating Advanced RAG Applications](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) by Jerry Liu and Anupam Datta (2023).
+- [JavaScript RAG Web Apps with LlamaIndex](https://www.deeplearning.ai/short-courses/javascript-rag-web-apps-with-llamaindex/) by Laurie Voss (2024).
