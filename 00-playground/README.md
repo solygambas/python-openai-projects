@@ -268,6 +268,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Building Agentic RAG with LlamaIndex
 
+- [building a router query engine with vector and summary indexes](53-building-agentic-rag/L1_Router_Engine.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
