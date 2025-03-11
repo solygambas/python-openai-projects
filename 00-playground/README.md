@@ -269,6 +269,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Building Agentic RAG with LlamaIndex
 
 - [building a router query engine with vector and summary indexes](53-building-agentic-rag/L1_Router_Engine.ipynb).
+- [calling tools with metadata filtering](53-building-agentic-rag/L2_Tool_Calling.ipynb).
 
 These examples are based on four courses:
 
