@@ -271,6 +271,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [building a router query engine with vector and summary indexes](53-building-agentic-rag/L1_Router_Engine.ipynb).
 - [calling tools with metadata filtering](53-building-agentic-rag/L2_Tool_Calling.ipynb).
 - [building an agent reasoning loop](53-building-agentic-rag/L3_Building_an_Agent_Reasoning_Loop.ipynb).
+- [building a multi-document agent](53-building-agentic-rag/L4_Building_a_Multi-Document_Agent.ipynb).
 
 These examples are based on four courses:
 
