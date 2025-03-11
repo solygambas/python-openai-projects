@@ -273,6 +273,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [building an agent reasoning loop](53-building-agentic-rag/L3_Building_an_Agent_Reasoning_Loop.ipynb).
 - [building a multi-document agent](53-building-agentic-rag/L4_Building_a_Multi-Document_Agent.ipynb).
 
+## Event-Driven Agentic Document Workflows
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -297,3 +299,4 @@ We are also relying on several short courses:
 - [Building and Evaluating Advanced RAG Applications](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) by Jerry Liu and Anupam Datta (2023).
 - [JavaScript RAG Web Apps with LlamaIndex](https://www.deeplearning.ai/short-courses/javascript-rag-web-apps-with-llamaindex/) by Laurie Voss (2024).
 - [Building Agentic RAG with LlamaIndex](https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/) by Jerry Liu (2024).
+- [Event-Driven Agentic Document Workflows](https://www.deeplearning.ai/short-courses/event-driven-agentic-document-workflows/) by Laurie Voss (2025).

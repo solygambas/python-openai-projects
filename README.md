@@ -64,6 +64,7 @@ We are also relying on several short courses:
 - [Building and Evaluating Advanced RAG Applications](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) by Jerry Liu and Anupam Datta (2023).
 - [JavaScript RAG Web Apps with LlamaIndex](https://www.deeplearning.ai/short-courses/javascript-rag-web-apps-with-llamaindex/) by Laurie Voss (2024).
 - [Building Agentic RAG with LlamaIndex](https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/) by Jerry Liu (2024).
+- [Event-Driven Agentic Document Workflows](https://www.deeplearning.ai/short-courses/event-driven-agentic-document-workflows/) by Laurie Voss (2025).
 
 ## Show Your Support
 
