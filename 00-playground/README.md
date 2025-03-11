@@ -261,6 +261,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## JavaScript RAG Web Apps with LlamaIndex
 
+- [getting started with RAG](52-javascript-rag-web-apps/L1_Getting_started_with_RAG.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
