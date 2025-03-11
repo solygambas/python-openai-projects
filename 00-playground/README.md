@@ -264,6 +264,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [getting started with RAG](52-javascript-rag-web-apps/L1_Getting_started_with_RAG.ipynb).
 - [building a full-stack web app](52-javascript-rag-web-apps/L2_Build_a_full-stack_web_app.ipynb).
 - [creating a router query engine and defining tools](52-javascript-rag-web-apps/L3_Advanced_queries_with_Agents.ipynb).
+- [persisting data, querying it, and streaming replies](52-javascript-rag-web-apps/L4_Production-ready_techniques.ipynb).
 
 These examples are based on four courses:
 
