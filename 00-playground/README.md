@@ -262,6 +262,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## JavaScript RAG Web Apps with LlamaIndex
 
 - [getting started with RAG](52-javascript-rag-web-apps/L1_Getting_started_with_RAG.ipynb).
+- [building a full-stack web app](52-javascript-rag-web-apps/L2_Build_a_full-stack_web_app.ipynb).
 
 These examples are based on four courses:
 
