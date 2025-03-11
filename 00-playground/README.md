@@ -266,6 +266,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [creating a router query engine and defining tools](52-javascript-rag-web-apps/L3_Advanced_queries_with_Agents.ipynb).
 - [persisting data, querying it, and streaming replies](52-javascript-rag-web-apps/L4_Production-ready_techniques.ipynb).
 
+## Building Agentic RAG with LlamaIndex
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -289,3 +291,4 @@ We are also relying on several short courses:
 - [Practical Multi AI Agents and Advanced Use Cases with crewAI](https://www.deeplearning.ai/short-courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai/) by João Moura (2024).
 - [Building and Evaluating Advanced RAG Applications](https://www.deeplearning.ai/short-courses/building-evaluating-advanced-rag/) by Jerry Liu and Anupam Datta (2023).
 - [JavaScript RAG Web Apps with LlamaIndex](https://www.deeplearning.ai/short-courses/javascript-rag-web-apps-with-llamaindex/) by Laurie Voss (2024).
+- [Building Agentic RAG with LlamaIndex](https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/) by Jerry Liu (2024).
