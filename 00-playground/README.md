@@ -275,6 +275,8 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Event-Driven Agentic Document Workflows
 
+- [building a workflow](54-event-driven-agentic-document-workflows/L2.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
