@@ -279,6 +279,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [adding RAG](54-event-driven-agentic-document-workflows/L3.ipynb).
 - [parsing a form](54-event-driven-agentic-document-workflows/L4.ipynb).
 - [integrating human feedback into the workflow](54-event-driven-agentic-document-workflows/L5.ipynb).
+- [handling spoken human feedback](54-event-driven-agentic-document-workflows/L6.ipynb).
 
 These examples are based on four courses:
 
