@@ -284,6 +284,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Open Source Models with Hugging Face
 
 - [building a simple chatbot](55-open-source-models/L2_NLP.ipynb).
+- [translating and summarizing texts](55-open-source-models/L3_Translation_and_Summarization.ipynb).
 
 These examples are based on four courses:
 
