@@ -295,6 +295,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [generating captions from images](55-open-source-models/L11_image_captioning.ipynb).
 - [answering questions about images](55-open-source-models/L12_visual_q_and_a.ipynb).
 - [scoring candidate labels for images using zero-shot classification](55-open-source-models/L13_Zero_Shot_Image_Classification.ipynb).
+- [deploying to Hugging Face Spaces](55-open-source-models/L14_deployment.ipynb).
 
 These examples are based on four courses:
 
