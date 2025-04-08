@@ -290,6 +290,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [leveraging automatic speech recognition](55-open-source-models/L6_Automatic_Speech_Recognition.ipynb).
 - [converting text to speech](55-open-source-models/L7_Text_to_Speech.ipynb).
 - [combining object detection with text-to-speech](55-open-source-models/L8_object_detection.ipynb).
+- [performing object segmentation and depth detection on images](55-open-source-models/L9_segmentation.ipynb).
 
 These examples are based on four courses:
 
