@@ -293,6 +293,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [performing object segmentation and depth detection on images](55-open-source-models/L9_segmentation.ipynb).
 - [retrieving images from text queries](55-open-source-models/L10_image_retrieval.ipynb).
 - [generating captions from images](55-open-source-models/L11_image_captioning.ipynb).
+- [answering questions about images](55-open-source-models/L12_visual_q_and_a.ipynb).
 
 These examples are based on four courses:
 
