@@ -297,6 +297,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [scoring candidate labels for images using zero-shot classification](55-open-source-models/L13_Zero_Shot_Image_Classification.ipynb).
 - [deploying to Hugging Face Spaces](55-open-source-models/L14_deployment.ipynb).
 
+## Building an AI-Powered Game
+
+- [understanding hierarchical content generation](56-ai-powered-game\L1.ipynb).
+
 These examples are based on four courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -323,3 +327,4 @@ We are also relying on several short courses:
 - [Building Agentic RAG with LlamaIndex](https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/) by Jerry Liu (2024).
 - [Event-Driven Agentic Document Workflows](https://www.deeplearning.ai/short-courses/event-driven-agentic-document-workflows/) by Laurie Voss (2025).
 - [Open Source Models with Hugging Face](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Maria Khalusova, Marc Sun, Younes Belkada (2024).
+- [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
