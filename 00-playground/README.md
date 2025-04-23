@@ -300,6 +300,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Building an AI-Powered Game
 
 - [understanding hierarchical content generation](56-ai-powered-game\L1.ipynb).
+- [building interactive AI applications](56-ai-powered-game\L2.ipynb).
 
 These examples are based on four courses:
 
