@@ -304,12 +304,17 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [handling moderation and safety](56-ai-powered-game\L3.ipynb).
 - [implementing game mechanics](56-ai-powered-game\L4.ipynb).
 
-These examples are based on four courses:
+## LM Studio Deep Dive
+
+- [running LM Studio as a local LLM API server](57-local-llm-lm-studio/basic.py).
+
+These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
 - [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
 - [AI For Developers With GitHub Copilot, Cursor AI & ChatGPT](https://www.udemy.com/course/ai-for-developers-with-github-copilot-cursor-ai-chatgpt/) by Maximilian Schwarzmüller (2024).
+- [Local LLMs via Ollama & LM Studio - The Practical Guide](https://www.udemy.com/course/running-open-llms-locally-practical-guide/) by Maximilian Schwarzmüller (2025).
 
 We are also relying on several short courses:
 
