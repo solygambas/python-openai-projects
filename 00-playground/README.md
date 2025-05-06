@@ -308,7 +308,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - [running LM Studio as a local LLM API server](57-local-llm-lm-studio/basic.py).
 - [chatting with the model directly from the command line interface (CLI)](57-local-llm-lm-studio/chat.py).
-- [generating textual descriptions from images](57-local-llm-lm-studio/image-parser.py).
+- [generating textual descriptions from images](57-local-llm-lm-studio/image_parser.py).
 
 ## Ollama Deep Dive
 
