@@ -314,6 +314,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 - [building customized models based on existing models](58-local-llm-ollama/Modelfile).
 - [setting up models from scratch](58-local-llm-ollama/qwen/Modelfile).
+- [running Ollama as a local LLM API server](58-local-llm-ollama/ollama_api.py).
 
 These examples are based on five courses:
 
