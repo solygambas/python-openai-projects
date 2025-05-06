@@ -312,9 +312,13 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Ollama Deep Dive
 
-- [building customized models based on existing models](58-local-llm-ollama/Modelfile).
+- [building custom models based on existing ones](58-local-llm-ollama/Modelfile).
 - [setting up models from scratch](58-local-llm-ollama/qwen/Modelfile).
 - [running Ollama as a local LLM API server](58-local-llm-ollama/ollama_api.py).
+- [generating structured output using a JSON schema](58-local-llm-ollama/structured_output.py).
+- [using the OpenAI SDK with the Ollama API](58-local-llm-ollama/basic.py).
+- [chatting with the model directly from the command line interface (CLI)](58-local-llm-ollama/chat.py).
+- [generating textual descriptions from images](58-local-llm-ollama/image_parser.py).
 
 These examples are based on five courses:
 
