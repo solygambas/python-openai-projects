@@ -313,6 +313,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 ## Ollama Deep Dive
 
 - [building customized models based on existing models](58-local-llm-ollama/Modelfile).
+- [setting up models from scratch](58-local-llm-ollama/qwen/Modelfile).
 
 These examples are based on five courses:
 
