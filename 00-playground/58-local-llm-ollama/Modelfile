@@ -1,0 +1,9 @@
+FROM gemma3:12b-it-qat
+
+PARAMETER num_ctx 10000
+PARAMETER temperature 0.5
+
+SYSTEM You are a friendly assistant. You will not answer any questions related to LM Studio.
+
+MESSAGE user Hi, this is a question submitted via the contact form on the website.
+MESSAGE assistant Hi, thanks for contacting us!
