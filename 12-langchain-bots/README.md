@@ -41,4 +41,4 @@ Describe what you need to find.
 - [generating emails](email_generator.py).
 - [searching on Wikipedia](wikipedia_search.py).
 
-Based on [ChatGPT - The Complete Guide to ChatGPT & OpenAI APIs](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2023).
+Based on [ChatGPT & Generative AI - The Complete Guide](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2025).
