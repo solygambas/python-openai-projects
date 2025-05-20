@@ -322,9 +322,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Programmatic Use of LLMs via APIs
 
-- [getting started with sending requests](59-programmatic-use-llm-api/app.py).
+- [sending requests to an LLM API with a basic example](59-programmatic-use-llm-api/app.py).
 - [building a simple chat](59-programmatic-use-llm-api/input.py).
-- [refactoring the chat to use OpenAI SDK](59-programmatic-use-llm-api/input-openaisdk.py).
+- [refactoring the chat to use the OpenAI SDK](59-programmatic-use-llm-api/input-openaisdk.py).
+- [refactoring the chat to use a local LLM API server via LM Studio](59-programmatic-use-llm-api/input-lmstudio.py).
 
 These examples are based on five courses:
 
