@@ -320,6 +320,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [chatting with the model directly from the command line interface (CLI)](58-local-llm-ollama/chat.py).
 - [generating textual descriptions from images](58-local-llm-ollama/image_parser.py).
 
+## Programmatic Use of LLMs via APIs
+
+- [getting started with sending requests](59-programmatic-use-llm-api/app.py).
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
