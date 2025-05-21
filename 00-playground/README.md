@@ -329,7 +329,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 # RAG, CAG & Finetuning
 
-- [building a cache-augmented generation (CAG) query](60-rag-cag-finetuning/query-cag.js).
+- [building a cache-augmented generation (CAG) query](60-rag-cag-finetuning/cag/query-cag.js).
 
 These examples are based on five courses:
 
