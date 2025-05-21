@@ -1,0 +1,17 @@
+{
+  "name": "cag",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "populate": "node --env-file=.env populate-db.js",
+    "query:cag": "node --env-file=.env query-cag.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "openai": "^4.91.1"
+  }
+}

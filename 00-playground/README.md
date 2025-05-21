@@ -327,6 +327,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [refactoring the chat to use the OpenAI SDK](59-programmatic-use-llm-api/input-openaisdk.py).
 - [refactoring the chat to use a local LLM API server via LM Studio](59-programmatic-use-llm-api/input-lmstudio.py).
 
+# RAG, CAG & Finetuning
+
+- [building a cache-augmented generation (CAG) query](60-rag-cag-finetuning/query-cag.js).
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
