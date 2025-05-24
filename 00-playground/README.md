@@ -332,6 +332,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [building a cache-augmented generation (CAG) query](60-rag-cag-finetuning/cag/query-cag.js).
 - [building a retrieval-augmented generation (RAG) query](60-rag-cag-finetuning/rag/query-rag.js).
 
+# AI Agents & Automations
+
+- [creating AI agents programmatically](61-ai-agents-automation/main.py).
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
