@@ -327,14 +327,26 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [refactoring the chat to use the OpenAI SDK](59-programmatic-use-llm-api/input-openaisdk.py).
 - [refactoring the chat to use a local LLM API server via LM Studio](59-programmatic-use-llm-api/input-lmstudio.py).
 
-# RAG, CAG & Finetuning
+## RAG, CAG & Finetuning
 
 - [building a cache-augmented generation (CAG) query](60-rag-cag-finetuning/cag/query-cag.js).
 - [building a retrieval-augmented generation (RAG) query](60-rag-cag-finetuning/rag/query-rag.js).
 
-# AI Agents & Automations
+## AI Agents & Automations
 
 - [creating AI agents programmatically](61-ai-agents-automation/main.py).
+
+## Coding with AI (Copilot)
+
+- setting up Copilot in VS Code.
+- trying Vibe Coding with Bolt.
+- using edit and agent modes.
+- using Copilot context.
+- building a Next.js site with Copilot.
+- writing instruction files: [global](62-shopaholic/copilot-instructions.md) and [per-extension](62-shopaholic/instructions/tsx.instructions.md).
+- relying on git for version control.
+- accessing Supabase through an MCP server.
+- maintaining [a feature list](62-shopaholic/_instructions.md).
 
 These examples are based on five courses:
 
@@ -364,3 +376,4 @@ We are also relying on several short courses:
 - [Event-Driven Agentic Document Workflows](https://www.deeplearning.ai/short-courses/event-driven-agentic-document-workflows/) by Laurie Voss (2025).
 - [Open Source Models with Hugging Face](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Maria Khalusova, Marc Sun, Younes Belkada (2024).
 - [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
+- [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).

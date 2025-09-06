@@ -64,6 +64,7 @@ We are also relying on several short courses:
 - [Event-Driven Agentic Document Workflows](https://www.deeplearning.ai/short-courses/event-driven-agentic-document-workflows/) by Laurie Voss (2025).
 - [Open Source Models with Hugging Face](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Maria Khalusova, Marc Sun, Younes Belkada (2024).
 - [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
+- [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).
 
 ## Show Your Support
 
