@@ -1,0 +1,154 @@
+RAG SYSTEM QUERY FLOW DIAGRAM
+================================
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   FRONTEND      │    │    FASTAPI       │    │   RAG SYSTEM    │
+│   (script.js)   │    │    (app.py)      │    │ (rag_system.py) │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │ 1. POST /api/query    │                       │
+         │ {query, session_id}   │                       │
+         ├──────────────────────▶│                       │
+         │                       │ 2. rag_system.query() │
+         │                       ├──────────────────────▶│
+         │                       │                       │
+         │                       │                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ SESSION MANAGER │    │   AI GENERATOR   │    │   TOOL MANAGER  │
+│(session_mgr.py) │    │ (ai_generator.py)│    │(search_tools.py)│
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         ▲                       ▲                       │
+         │ 3. get_history()      │ 4. generate_response() │
+         │                       │    + tools             │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CLAUDE SONNET 4                             │
+│  System: "You are an AI assistant with course search tool..."   │
+│  Tools: [CourseSearchTool]                                      │
+│  Query: "Answer this question about course materials: ..."     │
+└─────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 5. Tool Decision
+                                 ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ COURSE SEARCH   │    │   VECTOR STORE   │    │    CHROMADB     │
+│     TOOL        │    │ (vector_store.py)│    │                 │
+│(search_tools.py)│    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │ 6. execute(query,     │                       │
+         │    course_name,       │                       │
+         │    lesson_number)     │                       │
+         ├──────────────────────▶│ 7. search()          │
+         │                       ├──────────────────────▶│
+         │                       │                       │
+         │                       │                       │
+         │                       │ ┌─────────────────────┤
+         │                       │ │ course_catalog      │
+         │                       │ │ - Course resolution │
+         │                       │ │                     │
+         │                       │ │ course_content      │
+         │                       │ │ - Semantic search   │
+         │                       │ └─────────────────────┤
+         │                       │                       │
+         │                       │ 8. SearchResults      │
+         │ 9. Formatted results  │◀──────────────────────┤
+         │◀──────────────────────┤                       │
+         │                       │                       │
+
+         │ 10. Tool results back to Claude
+         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CLAUDE SONNET 4                             │
+│  Synthesizes tool results into final answer                    │
+└─────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ 11. Final response
+                                 ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   RAG SYSTEM    │    │    FASTAPI       │    │   FRONTEND      │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │ 12. (response,        │                       │
+         │     sources)          │                       │
+         ├──────────────────────▶│ 13. QueryResponse     │
+         │                       │ {answer, sources,     │
+         │                       │  session_id}          │
+         │                       ├──────────────────────▶│
+         │                       │                       │
+         │                       │                       │ 14. Update UI
+         │                       │                       │ - Add message
+         │                       │                       │ - Show sources
+         │                       │                       │ - Store session
+
+FLOW SUMMARY:
+1. User query → FastAPI endpoint
+2. RAG system gets conversation history  
+3. AI Generator calls Claude with tools
+4. Claude decides to use CourseSearchTool
+5. Tool searches ChromaDB collections
+6. Results formatted and returned to Claude
+7. Claude synthesizes final answer
+8. Response flows back through layers
+9. Frontend displays answer with sources
+```
+
+KEY ARCHITECTURE POINTS:
+========================
+
+**Dual ChromaDB Collections**: 
+- `course_catalog` for name resolution
+- `course_content` for semantic search
+
+**Tool-Based Search**: 
+- Claude decides when to search vs. use general knowledge
+
+**Session Continuity**: 
+- Conversation history maintained across queries
+
+**Error Handling**: 
+- Each layer handles failures gracefully
+
+**Source Tracking**: 
+- Search results include course/lesson context for UI
+
+DETAILED COMPONENT BREAKDOWN:
+============================
+
+Frontend (script.js):
+- Handles user input and displays responses
+- Manages session state and loading animations
+- Renders sources and markdown content
+
+FastAPI (app.py):
+- Provides REST API endpoints
+- Handles request/response serialization
+- Manages CORS and static file serving
+
+RAG System (rag_system.py):
+- Main orchestrator coordinating all components
+- Manages session creation and conversation history
+- Routes queries through AI generator with tools
+
+AI Generator (ai_generator.py):
+- Interfaces with Claude Sonnet 4 API
+- Handles tool calling workflow
+- Manages conversation context and system prompts
+
+Search Tools (search_tools.py):
+- Implements CourseSearchTool for semantic search
+- Formats search results with course/lesson context
+- Tracks sources for UI display
+
+Vector Store (vector_store.py):
+- ChromaDB wrapper with dual collection strategy
+- Provides course name resolution and content search
+- Uses sentence-transformers for embeddings
+
+Session Manager (session_manager.py):
+- Maintains conversation history per session
+- Provides context for follow-up questions

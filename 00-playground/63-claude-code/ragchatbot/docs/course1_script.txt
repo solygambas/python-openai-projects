@@ -1,0 +1,1989 @@
+Course Title: Building Towards Computer Use with Anthropic
+Course Link: https://www.deeplearning.ai/short-courses/building-toward-computer-use-with-anthropic/
+Course Instructor: Colt Steele
+
+Lesson 0: Introduction
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/a6k0z/introduction
+Welcome to Building Toward Computer Use with Anthropic. Built in partnership with Anthropic and taught by Colt Steele, whose Anthropic's Head of Curriculum. Welcome, Colt. Thanks, Andrew. I'm delighted to have the opportunity to share this course with all of you. Anthropic made a recent breakthrough and released a model
+that could use a computer.
+That is, it can look at the screen, a computer usually running
+in a virtual machine, take a screenshot and generate mouse clicks
+or keystrokes in sequence to execute some tasks, such as search
+the web using a browser and download an image, and so on.
+This computer use capability is built by using many features of large language
+models in combination, including their ability to process
+an image, such as to understand what's happening in a screenshot,
+or to use tools that generate mouse clicks and keystrokes.
+And these are wrapped in an iterative agent workflow to then carry out
+complex tasks by taking many actions on that computer.
+In this course, you learn about the individual features
+which will be useful for your applications even outside of LLM-based computer use,
+as well as see how we can all come together for computer use. And Colt
+will show you how all this works. Thanks, Andrew.
+In this course, you will learn how to use many of the models
+and features that all combine to enable computer use.
+So here's how the course will progress.
+You'll first learn a little bit about Anthropic's background and vision
+and what's unique about our family of models.
+Then we'll use the API to make some basic requests.
+This then leads to multi-modal requests,
+where you'll use the model to analyze images.
+Then you'll dive into prompting,
+which Anthropic has really leaned into making models much more predictable
+with solid prompting,
+you'll learn about the prompting tips that actually matter,
+things like chain of thought and
+n-shot prompting, as well as get a chance to use our prompt improver tools.
+Recently, large language models have been supporting large input contexts.
+Anthropic's Claude, for example, supports over 200,000
+input tokens, which is more than 500 pages of text.
+Long inputs can be expensive to process,
+and that any long conversations with chatbot
+if you're processing that conversation history over and over
+to keep on generating that next response, that next response,
+then that too gets more expensive
+as that history gets longer as the conversation goes on.
+Exactly.
+And that brings us right to prompt caching.
+Prompt caching retains some of the results of processing prompts between invocation
+to the model, which can be a large cost and latency saver.
+You also get to use the model to generate calls to external tools
+and produce structured output, such as Json,
+and at the very end, we'll walk through a complete
+example of computer use that you can run on your own machine.
+Note that because of the nature of the tool,
+you will have to run that on a Docker image on your computer,
+rather than directly in the DeepLearning.AI notebook.
+I've tried out Computer
+use myself using Anthropic's models and found it really cool.
+And I think this capability will make possible
+a lot of new applications where you can build an AI assistant
+to use a computer to carry out tasks for you. Kind of think
+RPA or robotic process automation, which has been good at repetitive tasks
+but now easier to build and more general with LLM-based tools.
+Or as this technology
+is even better than even more flexible and more open-ended tasks.
+So gradually feel more and more like personal assistants.
+I could not agree more.
+Very excited to see where it goes.
+Many people have worked to create this course.
+I'd like to thank from Anthropic, Ben Mann, Maggie Vo, Kevin Garcia, the team
+working on computer use, and from DeepLearning.AI Geoff Ladwig and Esmaeil Gargari.
+Anthropic has built a lot of really great models, and I regularly use them myself.
+Colt will share details of these models in the next video.
+All right, let's get started.
+
+Lesson 1: Overview
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/gi7jq/overview
+By the end of this lesson,
+you'll be able to explain Anthropic's approach to AI research and development.
+Describe the key principles of AI safety, alignment and interpretability,
+and differentiate between Anthropic's family of models.
+Let's dive in.
+All right, let's get started.
+So this course is going to cover
+everything you need to know about working with the Anthropic API,
+working with our models,
+building up towards understanding how a computer-using agent works.
+So what do I mean by computer-using agent?
+Well, here's an example.
+On the left you can see I'm typing a prompt.
+What roles is Anthropic hiring for in Dublin?
+By the way this footage is sped up a little bit
+just so you don't have to listen to me talk for too long.
+You can see that the model is using the computer on the right.
+It is clicking, it's moving the mouse, it's selecting dropdowns.
+It's going to expand accordion menus.
+Eventually, it makes its way to the Anthropic careers page,
+it filters by Dublin, and then it's going to expand the two roles,
+a technical program manager and an audit and compliance role and security.
+So this is what I mean when I say a computer using agent,
+that agent you just saw builds upon all the fundamentals of the API.
+So we're going to go through these topics in order, culminating
+in a computer-use agent demonstration at the end.
+So that computer-using agent sends basic requests to the API, text prompts.
+It uses the messages format.
+It uses various model parameters.
+That's what we'll cover next.
+Then we'll move on to multi-modal requests.
+You may have noticed the model was using screenshots
+in order to decide where to click, where to drag, where to type,
+so you'll learn how to make requests that involve images, including screenshots.
+Then we move on to real-world prompting, which is focused on pretty big difference
+between talking to a chatbot like Claude.AI in a conversational manner versus
+prompting using the API for scalable, repeatable prompt templates.
+Then you'll learn about prompt caching, which is a strategy that the computer
+using agent employs.
+And it also is a great cost saving and latency saving measure.
+Then you'll learn about tool use, which is what enables the model to do
+things like click and scroll and type,
+or other tools like connect to an API or issue bash commands or run code.
+Various tools
+that we can provide the model with that it can tell us it wants to execute.
+Finally, at the very end,
+you'll see how to run the computer using-agent that you just saw.
+It combines all of the topics that we've covered, plus some other things.
+It's a bit of a step up, but it's a great capstone that covers
+all the core concepts of working with the anthropic API.
+Now, before we dive into actually working with the API,
+I want to talk a little bit about Anthropic.
+Anthropic is an unique AI lab that has a very heavy
+focus on research that puts safety at the very frontier.
+So essentially building frontier models, the best models in the world, at times
+simultaneously performing cutting-edge research using those models.
+This timeline really synthesizes
+both of those ideas in the span of a few short years.
+On the top you can see Anthropic was founded in 2021.
+You can see the timeline of various model releases leading up to Claude 3.5 Sonnet
+in 2024.
+And on the bottom, you can see
+some of the key research papers that have been released simultaneously.
+Now, this is not a course on research,
+but I do want to call your attention to the research page of Anthropic website.
+It's a great resource to learn more about our research,
+both in approachable formats and through full-fledged research papers.
+Some of the key areas that we focus on are interpretability,
+alignment, and societal impacts.
+Now I want to pay special attention to alignment.
+Alignment science focuses on ensuring that AI systems
+behave in accordance with our human values and human intentions.
+How do we create AI systems that reliably pursue the objectives?
+The tasks that we want them to pursue, even as they become more and more capable.
+Another heavy research area at Anthropic is interpretability,
+which is a bit of a mouthful,
+but is a really fascinating and critical aspect of AI research.
+Interpretability is all about understanding
+how large language models work internally.
+Essentially, reverse engineering them or giving the models MRIs or brain scans
+so we can understand
+exactly what is happening inside of them at any given point in time.
+It's very difficult to improve models
+and also to ensure that they are safe without understanding how they work.
+One of the things I encourage you to do, if you're interested, is to read
+some of our blog posts, watch some of the videos on interpretability,
+specifically this relatively approachable paper called Scaling Monosemanticity.
+I know the name doesn't sound that approachable,
+but it's full of really cool diagrams and visualizations
+as it walks through some key interpretability research.
+It's also just a pretty fun read with some interesting examples.
+Now, as I mentioned at the beginning, Anthropic is not just a research
+lab focused on safety, alignment, interpretability.
+Anthropic also releases state-of-the-art large language models on our models page.
+On our documentation, you'll find an up to date list of our current models,
+which, like everything in the AI space, changes pretty frequently.
+So it may not actually look exactly like this.
+But as you can see, Claude 3.5 Sonnet is currently our most intelligent model.
+And then Claude 3.5 Haiku,
+which is a slightly less capable model, though still very intelligent.
+That is faster.
+Those are the two main choices presented to you currently.
+If you're going to use one of our models.
+Now, if we zoom in on this
+model comparison table, you'll see we have Claude 3.5 Sonnet and Claude
+3.5 Haiku, as well as the original Claude 3 family of models.
+But the two newest and most capable models are on the left here, 3.5
+Sonnet and 3.5 Haiku.
+We can see a nice comparison, a breakdown of their capabilities, their strengths,
+their vision capabilities.
+So in general, Claude
+3.5 Sonnet is the most intelligent model we offer.
+It is the smartest, the most capable model.
+It's multilingual.
+It is multimodal,
+supporting image inputs.
+It supports our batches API.
+And one thing that trips some people up is that there are multiple versions of it,
+including the most recent upgraded version, which is Claude 3.5
+Sonnet 2024 1022.
+We'll talk more about the model strings in the next video.
+But this is the most recent version of Claude 3.5 Sonnet.
+It is
+fast, however, not as fast as Claude
+3.5 Haiku, which is the fastest model that we offer.
+It is very intelligent at very fast speeds,
+so it is faster than Claude 3.5 Sonnet
+slightly less capable on
+some of the popular benchmarks, and currently does not support vision.
+Now let's talk about context window.
+We're working with 200,000 tokens for the context window across
+both of those models, a maximum output tokens of 8192, 8192.
+Clearly, Claude 3.5 Haiku is cheaper, it's faster,
+but Claude 3.5 Sonnet is the most intelligent model, and that's
+what we'll be using throughout this course.
+It's also quite affordable, and it is the model that currently
+performs best on computer use tasks, largely because it supports image input.
+Now, we'll learn how to use these models
+in the next video.
+We'll start sending requests, but I just want you to see the documentation page
+so that you can always find out about the latest model
+and see a comparison of how these models stack up across various metrics.
+So that's a tiny bit about Anthropic.
+We're a frontier research lab creating frontier or cutting-edge models.
+It's also a little bit about the course and the rough structure.
+We're now going to dive
+into working with the API, sending our first simple text requests
+building up of course, to this computer using Agent Capstone demo.
+Okay, let's get started.
+
+Lesson 2: Working With The API
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/yldsj/working-with-the-api
+By the end of this lesson, you'll be able to make your own API request.
+to Claude.
+You'll format messages effectively for optimal AI responses and control
+various API parameters like the system prompt, max tokens, and stop sequences.
+All right. Let's dive into the code.
+So we'll begin by getting set up with the Anthropic Python SDK.
+The first step is to simply ensure that the anthropic SDK is installed,
+which is as simple as running pip install Anthropic,
+and once it's installed, we'll go ahead and import it.
+Specifically, we're going to import capital "A" Anthropic.
+And we'll use that to instantiate
+a client that we can then send API requests through.
+Okay.
+So on the second line we're creating, our client can call it whatever we want.
+I usually call it client.
+And this is where if we had an API key we wanted to explicitly pass through,
+we could pass it in right here anthropic API key equals.
+And then put your key in there.
+But if I leave it off this will automatically look for
+an environment variable called Anthropic API key.
+So now we have our client.
+The next step is to make our very first request.
+I've added two cells of code.
+The first one is just a model name variable.
+We're going to be repeating this model name over and over throughout the course.
+So I'm just going to put it in a variable Claude 3.5
+sonnet 20241022.
+Just the latest checkpoint, the latest version of Claude 3.5 Sonnet.
+And then this larger chunk,
+the most important piece here, is how we actually make a simple request.
+So we use our client variable dot messages dot create.
+And there are a few things in here we'll go over in due time.
+First of all we're just passing the model name.
+This is required. We do have to pass in max tokens.
+We'll discuss that in a little bit and we have to pass in messages.
+So messages needs to be a list containing a list of messages.
+In this case a single message a role of user meaning us, the user.
+We are providing a prompt to the model that has content set to some sort of
+content, some prompt.
+So I asked it to write a haiku about Anthropic.
+So let's run these cells and then notice I'm printing
+specifically response content zero dot text.
+We'll see what we get in just a moment.
+We get a haiku about Anthropic "Seeking to guide AI
+through wisdom and careful thought toward better futures."
+Great.
+So let's talk a bit more about this response object that we get back.
+Let's take a look at it.
+There are quite a few pieces in here.
+First of all, we have the content that we just discussed.
+Content is a list.
+If we look at the zero with element
+we can look at its text and we can see the actual haiku.
+We also have the model that was used.
+We have the role.
+Remember that our original message had a role of user.
+So this response back is a message with a role of assistant.
+We also have stop reason which tells us why the model stopped generating.
+In this case
+it says "end turn" which means essentially it reached a natural stopping point.
+Stop sequence is none.
+We'll talk more about stop sequence in a bit.
+And then under usage, we can see the number of tokens
+involved in our input, the actual prompt, as well as the output tokens
+that were generated.
+In this case 30 tokens of output.
+So go ahead and try this yourself.
+Put any sort of prompt
+you'd like in here in place of write a haiku about Anthropic.
+Next step we're going to discuss the specific format of the messages list.
+So the SDK is set up in such a way that we pass through a list of messages.
+It's required along with max tokens and a model name.
+And this list of messages
+so far, has only included a single message with a role set to user.
+The idea of the messages format is that it allows us
+to structure our API calls to Claude in the form of a conversation.
+We don't have to use it in that way.
+We haven't so far, but it's often useful if we are building any sort of
+conversational element or need to preserve any prior context.
+For now, all you need to know about messages
+is that they need to have a role set, either to user or to assistant.
+So let's try and provide some previous context.
+Let's say perhaps we've been talking to Claude, in Spanish,
+and I'd like Claude to continue speaking in Spanish.
+So I've updated the messages list to add some previous history
+where I have a user message saying "hello, only speak to me in Spanish",
+and then I have a response assistant message that says "Hola!"
+And then I have my final user message.
+The only thing that's changing is this role going from user to assistant.
+Back to user.
+I'm providing Claude
+with some conversation history, and then I'm finally saying, "how are you?"
+And if I run this,
+the model will take the entire conversation into account,
+Right?
+This is the entire prompt.
+Now and then we get a response in Spanish.
+So this is useful in a couple of different scenarios.
+The first and perhaps most obvious is in building conversational assistants
+in building chatbots.
+So here we have a very simple implementation of a chatbot
+that takes advantage of this messages format.
+We're going to alternate messages between a user and an assistant message
+growing the messages list as the conversation takes turns.
+So we start with an empty list of messages,
+and then we have a while loop.
+We're going to loop forever unless the user inputs the word quit,
+at which case we'll break out.
+We need to provide an escape hatch, but if they don't type quit,
+we'll ask the user for their input,
+and then we'll make a new message dictionary with the role of user.
+The content will be whatever the user typed in, like "hello Claude."
+We'll send that off to the model using the client
+dot messages dot create method we just saw.
+Then we'll take the assistance response we'll print it out.
+And then we'll also append that assistant message
+as a new message to our messages list.
+And then we'll repeat.
+And we'll keep growing this list over and over and over for each turn
+in the conversation. We'll add our user message.
+We'll get a response.
+We'll add our assistant message, and then we'll send the whole thing
+back to the model next time when we get a new user message.
+So let's try it.
+Go ahead and run this.
+So let's start with something simple. "Hello.
+I'm Colt".
+I'll send it off.
+We get a response "Hi Colt. I'm an AI assistant. Nice to meet you.
+How can I help you?"
+Let's just test that it actually has the full context.
+Let me ask it. What's my name?
+Okay, we'll send that off.
+"Your name is Colt. As you introduced yourself earlier."
+Let's try something a bit more interesting.
+I've asked it to help me learn more about how LLMs work.
+So generate a response for me here.
+This one's likely a little bit longer, and it gives me some information.
+And I'll follow up with expand on the third item.
+Again, this is just to demonstrate that it gets the full conversational history.
+On its own,
+this message doesn't mean anything to the model,
+but with the full conversation history that I'm sending to it.
+Now it expands on that third bullet point.
+So that's one use case for sending messages in the messages format.
+Another use case is what we call pre filling or putting words in the model's
+mouth.
+Essentially we can use an assistant message to tell the model
+"here are some words that you will begin your response with."
+We can put words in the model's mouth.
+So for example, I'm having it write a short poem about Anthropic.
+Let's change that to something else.
+How about a short poem about pigs? Sure.
+If I go ahead and just run this,
+it may tell me something like:
+"Okay, here's a short poem about pigs."
+There we go.
+But for some reason, I really want this poem to start with the word oink.
+I insist on it.
+Now I could tell the model, you know, write me a poem about pigs.
+You must start with the word oink.
+Also, don't give me this preamble.
+Just go right to the poem.
+But another option is to simply add in an assistant message
+that begins with the word oink.
+So something like this, where I have put
+new message in here with the role of assistant content is oink.
+So the model is now going to begin its response from this point.
+Oink. And then you can see the completion
+we get. "Oink and Snuffle pink and round rolling, happily unready ground."
+Now it is important to note
+it doesn't include the word oink in its response
+because the model didn't generate this word.
+I did, but the model generated all of this content by beginning with the word oink.
+So then I could just combine the word oink with the rest of the poem
+if I wanted to.
+So that's pre-filling the response.
+Next, we're going to talk about some of the parameters we can pass
+to the model via the API to control its behavior.
+The first we'll cover is max tokens.
+So we've been using max tokens but we haven't discussed what it does.
+In short Max tokens controls well the maximum
+number of tokens that Claude should generate in its response.
+Remember that models don't think in full words or in English words,
+but instead they use a series of word fragments that we call tokens.
+And model usage is also build according to token usage.
+For Claude, the token is roughly 3.5 English characters, though
+it can vary from one language to another.
+So this max tokens parameter allows us to set an upper bound.
+We can basically tell the model don't generate more than 500 tokens,
+or let's set this to something high, like 1000 tokens to start.
+I'm going to ask the model to write me an essay on large language models,
+a prompt that likely will generate
+a whole bunch of tokens because I asked for an essay.
+Okay, and here's our response. Great.
+Pretty long, looks to be a pretty decent essay.
+Now, if I tried this again, but I instead set max
+tokens to be something much shorter, like 100 tokens.
+I'll run this.
+What will happen here is the model will get cut off essentially mid-generation.
+We just cut it off because we've hit this 100 token generation.
+Importantly, if we
+look at the response object.
+We'll also see nested inside of here
+the number of output tokens was exactly 100.
+It hit that and it stopped.
+But we also see a stop reason this time that says Max tokens.
+So the model didn't naturally stop. Because stop reason is set to max tokens.
+That's how we know the model was cut off because of our max tokens parameter.
+So this does not influence how the model generates.
+Right. We're not telling the model,
+"Give me a short response with an entire essay that fits within 100 tokens."
+Instead, what we've done is we've told the model, write me
+an essay on large language models, and then we just cut it off at 100 tokens.
+So why would you use max tokens, or why would you alter it to something low
+or something high?
+Well, one reason is to try and save on API costs
+and set some sort of upper bound where through a combination of a good prompt,
+but also through setting max tokens.
+For example, if you're making a chatbot, you may not want
+your end users to have 5000 token turns with the chatbot.
+You may prefer that
+those conversational turns are short and they fit within a chat window.
+Another reason is to improve speed.
+The more tokens involved in an output, the longer it takes to generate.
+The next parameter we'll look at is called stop sequences.
+But this allows us to do is provide a list of strings
+that when the model encounters them, when the model actually generates them,
+it will stop.
+So we can tell the model
+once you've generated this word or this character or this phrase, stop.
+So it gives us a bit more control instead of just truncating a number of tokens.
+We can tell the model we want to truncate your output on this particular word.
+So here's an example where I'm not using a stop sequence.
+Generate a numbered ordered list of technical topics
+I should learn if I want to work on large language models.
+I pass that prompt through.
+I've just moved it to a variable because it's a bit longer
+and I get this nice numbered list, but it's quite long.
+12 different topics.
+Now, obviously through prompting I could tell the model only
+give me the top three or the top five, but I'll just showcase with this example.
+I'll copy this and duplicate it, but this time I'll provide stop sequences,
+which is a list, and it contains strings.
+In my case, let's say I want it to stop after it generates four.
+So four period, We'll try running it again and you can see what we get.
+So we get 1,2,3.
+And then the model went on to generate four.
+And it stopped.
+Notice that four is not included in the output itself.
+And if I look at the response object
+we'll also see
+that we have a stop reason this time set to stop sequence.
+This is the model API telling us it stopped
+because it hit a stop sequence which stopped sequence,
+it hit four followed by a period.
+So stop sequences is a list.
+We can provide as many as we want in here.
+This is one way to control when the model stops outputs
+or when the model stops generating.
+And we'll see some use cases for this when we get to some more advanced
+prompting techniques.
+Now the next parameter we'll talk about is called temperature.
+This parameter is used to control,
+you can think of it as the randomness or the creativity of the generated responses.
+Now it ranges from 0 to 1, where a higher value like one is going to result
+in more diverse and more unpredictable responses, with variations and phrasing
+and a lower temperature closer to zero will result in
+more deterministic outputs that stick to the more probable phrasing.
+So this chart here is an output from a little experiment I ran.
+I don't recommend you run it because it involved making hundreds of API
+requests, but I asked the model via the API to pick an animal.
+My prompt was something like pick a single animal, give me one word,
+and I did this 100 times with a temperature of zero.
+And you can see every single response out of 100 was the word giraffe.
+Now, I did this again, but instead set a temperature of one.
+And we still get a lot of giraffe responses.
+But we get some elephants and platypus, koala, cheetah and so on.
+We get more variation.
+So again, temperature of zero more likely to be deterministic,
+but not guaranteed temperature of one or more diverse outputs.
+Now here's a function you can run that will demonstrate this.
+I'm asking Claude
+three different times to generate a planet name for an alien planet.
+I'm telling it respond with a single word and I'm doing this three times
+for the temperature of zero and three times with a temperature of one.
+So let's see what happens.
+I'll execute this cell where I'm calling this function.
+And when I use a temperature of zero I get the same planet name three times
+in a row. Kestrax, Kestrax, Kestrax.
+And when I use a temperature of one, I get Keylara,
+Kestrax, and Kestryx spelled slightly differently.
+So we do get more diversity there.
+Now that we've seen the basics of making a request,
+I want to tie it back to computer use.
+Write everything we're going to learn in this course is in some way
+related towards building a computer, using agent, using Claude.
+So this is some code from our computer use quickstart that will take a look
+at towards the end of this course, but I want to highlight a few things.
+We are making a request where we're providing max tokens.
+We're providing a list of messages or providing a model name
+and then some other stuff we'll learn more about later.
+And then we're also using the conversational messages format.
+As you can see down here we have a list of messages.
+It's defined further up in this repository or in this file.
+But we have a list of messages that we are appending the assistance
+response back to.
+So very similar to the chatbot we saw earlier, except of course
+a lot more complicated.
+It's using a computer.
+There's screenshots involved and tools and a whole bunch of interactions,
+but it's the same basic concept.
+We send some message off to the model, and then we get the assistant response back.
+We append that to our messages.
+If I scroll up high enough, we can see it's all nested inside of a while true loop.
+And there's a whole bunch of other logic, of course,
+but it boils down to sending a request off to the API
+using our client, providing things like max tokens and messages,
+and then updating our messages list as new responses come back.
+And providing this updated, continuously growing list of messages
+every single time.
+And we do this over and over and over again
+using all the fundamentals we learned so far in this video.
+
+Lesson 3: Multimodal Requests
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/zrgb6/multimodal-requests
+By the end of this lesson, you'll be able to write multimodal prompts that combine
+images and text and work with streaming responses from the API.
+All right. Let's go.
+So let's get started making our first multimodal request.
+We're going to take an image or multiple images along with
+some text, send it off to the model and get a response.
+So just as in the previous video, we have some basic setup.
+We're going to import Anthropic.
+We'll set up our client
+and then we'll have just a helper variable to store the model name string.
+Before we start working with images, we need to talk
+a little bit more about the messages structure we've seen so far.
+So in the previous lesson
+we set up a messages list where each message had a role set to user
+and then content set to a string like tell me a joke.
+And if I run this, we should see a joke.
+And we do in fact get a joke.
+Not a good one, but a joke.
+Now this is actually a shortcut.
+Setting content to a string is a shortcut for this syntax
+here, where we set content to a list that contains a bunch of content blocks.
+In this case, it's just a single content block with a type
+set to text, and then text set to tell me a joke.
+So this will give us the exact same sort of input prompt, different syntax.
+Up here we have a nice shortcut.
+If we're simply doing text prompts, it's easier to do it this way.
+But as we'll see in just a moment, we'll want to provide
+a list of content blocks if we're going to provide images.
+So if I run this we again get a joke.
+And just to show you what I mean about a list of content blocks,
+here is a single message that has a roll of user content set to a list.
+And it contains three text blocks.
+Each one has text of a single word.
+Who, made, you. And if I run this, we'll see.
+We get a response. "I was created by Anthropic."
+So all of these messages are combined
+and essentially turned into a single input prompt.
+So now we go on to images.
+So our Claude models accept images as inputs.
+So we need some images to work with.
+I've provided you with an images folder that contains a handful of images
+that we'll use. This is the first one.
+Let's say that we hypothetically run a food delivery startup,
+and we're using Claude to verify customer claims.
+Customers will send us a screenshot saying, look, only have my order arrived.
+I want a refund.
+So we are going to use Claude to analyze images of customer food
+like this one here.
+We'll start simple and just ask Claude to tell us
+you know how many boxes and cartons of food are in this image.
+So the first step is to understand
+how we structure our messages that contain an image.
+This diagram illustrates the structure.
+So if you notice we have a messages list.
+We have a role set to user just like before.
+We have a content list.
+And then inside of content we have a new type of content block we have yet to see.
+We've only seen text box but this is an image block.
+So type is set to image. It's a dictionary.
+And then we have a source key set to another dictionary
+where we have type set to base64.
+We have media type which is set to the images media type like Jpeg or PNG or GIF.
+And then we have the raw image data.
+So this is the structure of a single message.
+So back in our notebook there's a few steps
+we need to go through before we can actually create that message.
+We need to read in the actual image file itself.
+We need to open it which is what we're doing here with the path to food dot PNG.
+Then we'll read in the
+contents of the image as a bytes object.
+Then we'll encode the binary data using base64.
+And then finally we'll take the base64 encoded data and turn it into a string.
+By the end of this we have our base64 string, which is quite long.
+But if we just look at the first
+100 characters, here's a preview of what it looks like.
+So now what we need to do is take this base64 string
+that contains our properly formatted image data, and now put it
+in a properly formatted message and then send it off to the model.
+So here's some code that takes that base64 string
+that contains our food dot png image data as base64 as a string,
+and puts it in a properly formatted content block and image content block.
+As you can see, type is set to image, source is set to dictionary, type
+is base64, it's a PNG and then data is set to
+our massive variable base64 string.
+And then we follow it up with a second content block.
+This time a text content block that has the text of
+how many to go containers of each type are in this image.
+Very very simple prompt.
+We're sending it this image of to go containers filled with food.
+We want to know how many of each type are in there.
+Okay, so now we just take this messages list and send it off to the API.
+So we use the same syntax we've seen before client dot messages dot create.
+We pass in messages. We'll run it.
+Then we see a response.
+In this image there are three rectangular plastic containers with clear lids
+and then three white paper or cardboard folded takeout boxes,
+often called Chinese takeout boxes or oyster pails.
+That is correct.
+If we go back to the original image.
+We do in fact see three boxes with plastic lids
+and three of the paper oyster pails or Chinese takeout containers.
+Now, going through all these steps to read the image and turn it into base64
+and then turn it into a string encoded in UTF-8,
+and then add it to a properly formatted message can be a little bit annoying
+to do over and over.
+So it's a great candidate for making a helper function.
+So here's a helper function that just combines the functionality
+we saw previously.
+It's called create image message.
+It takes an image path.
+And then it's going to run those steps that we saw previously.
+So it's going to open it read in the binary data.
+It's going to encode it with base64 encoding.
+It's going to turn it into a UTF-8 string.
+It's going to guess the Mime type.
+Remember we need to specify
+whether it's a PNG or a Jpeg or a GIF or some other format.
+And then finally it creates an image block,
+properly formatted and then returns that image block.
+So let's try it with a different image.
+The images directory has a plant dot png image.
+It's a pitcher plant.
+Technically I think it's an Nepenthes plant.
+I have had limited success growing this myself.
+Usually kill them before the pitchers emerge.
+But very cool plant.
+I'm going to ask the model just to identify the plant.
+Very simple use case.
+So we're going to use this function.
+We've defined.
+And here we are.
+I have a new messages list a single message in it with
+role of user.
+Content is set to a list containing the result of create
+image message for the plant png image.
+So we get that it properly formatted message back.
+Or technically it's a content block.
+And then we follow it up with a text content block asking a very simple prompt.
+"What species is this?"
+We'll send it off to the model.
+We'll run it. We'll print out the response.
+And here we go.
+"This appears to be a Nepethes pitcher plant,
+which is a type of carnivorous plant..."
+And on and on and on. Okay.
+So just a little helper function to to make things a bit easier.
+You could take it a step further and make a helper function
+just to generate the entire messages list itself, where you provide an image path
+and you provide a text prompt like "what species is this?"
+Next, let's take a look at a more realistic use case that a lot of
+our customers are using Claude to help with, which is analyzing documents.
+So many documents.
+Let's take an invoice like this one, which is called invoice dot
+PNG. Includes tons of important information.
+Maybe it's a PDF, maybe it's a PNG.
+We can feed it into Claude.
+Give it a good prompt and ask it to give us structured data as a response.
+So I might be able to turn thousands of invoices
+into Json and store them in a database in a matter of minutes.
+So here's what that could look like with a single example.
+This invoice dot PNG image. I provide an image message properly formatted.
+Then I provide a text prompt, a pretty simple one.
+"Generate a Json object representing the content of this invoice.
+It should include all dates, dollar amounts and addresses.
+Only respond with the Json itself.
+I'll send it off to the model
+and we get a Json response back.
+So it has the company name,
+which is my company, Acme Corporation, our fake address.
+It has information on the invoice invoice number, the date,
+the due date, information on who it's billed to and their address.
+The items in the invoice.
+So enterprise software license implementation
+services premium support plan.
+And then it has totals
+including the total, the tax rate, the tax amount and the actual total.
+And if I scroll back you can get a closer look at that image
+and see that all this information is, in fact accurate.
+So just a slightly more realistic use case
+for image prompting compared to, you know, identifying a plant species.
+Now, one thing we won't demonstrate here, but it's important, you know, it is
+possible is providing multiple images in a single message.
+Recall that all of our content blocks are treated essentially
+as one prompt behind the scenes when they're fed into the model.
+So I can provide a combination of multiple image blocks plus multiple text
+prompt blocks as part of a single-user message. Content is a list.
+So I simply add my content blocks inside whether they have type,
+set two image or type set two text.
+The second topic we'll cover in this lesson is streaming responses.
+What we've seen so far using client dot messages dot create works great.
+But if I give it a prompt like write me a poem.
+What you'll notice is that we're waiting for a response
+until the entire response is generated and ready.
+So it doesn't take all that long.
+That was maybe half a second, maybe a second or less,
+and we get the entire generation all at once.
+But the longer a model's output generation is, let's say we're writing an essay
+with the model, the longer it will take before we get any sort of content back.
+We don't get a response back until the entire output has been generated.
+With streaming, we can do something a bit different.
+We can get content back as the content is generated.
+And this is great for user facing scenarios where we can start
+to show users responses as they're being generated,
+instead of waiting until a full generation is complete.
+So streaming doesn't actually speed up the overall process to generate.
+It just speeds up what we call the time to first token, the time
+that you see the first sign of life, the first piece of a response.
+And the syntax is a little bit different, but very similar to this client dot
+messages dot create.
+So here we now have client dot messages dot stream.
+And notice, we pass in max tokens.
+We pass in a list of messages.
+My prompt is simple just write a poem.
+We pass in a model name.
+But what's a bit different,
+is that now we're going to iterate over this thing that we're calling stream.
+So I give it this name as stream, and then I iterate over
+every single bit of text in stream dot text stream, and then I print it out.
+So what we'll see when I run this,
+I'll just go ahead and execute it is we see the content coming back
+as it's generated,
+instead of having to wait for the entire thing to be generated at once.
+Let's try it again.
+You can see that we get chunks, little chunks, one by one,
+and we're printing them out as they come in.
+But again, the overall amount of time that it takes to do this
+generation is going to remain unchanged.
+Now, it obviously varies from one request to another, but we're not magically
+getting the full result any faster than we would without streaming.
+We're simply getting results.
+We're getting parts of the output as they're being generated.
+So we've seen how to make image requests, sending images as part of a prompt
+in the content. We've also seen how to stream responses back from the model.
+Now what I want to do is once again end by showing you
+a real example from our computer use Quickstart implementation.
+So this is a function that does a bunch of stuff.
+But if you look closely in here in this highlighted text,
+we are appending a correctly formatted image using the format that we talked
+about earlier in this lesson.
+So, type is image. Source is a dictionary.
+Type is base64. Now what are these images?
+These are the screenshots that we're providing the model with.
+As we've seen previously when we covered sort of an introduction to the computer
+use aspect of this course, the model works by getting screenshots,
+analyzing the screenshots, and then deciding to take actions.
+So we need to be able to provide images to the model.
+And we use the exact same syntax we've already seen in this lesson.
+We create these image content blocks a lot more complicated use case here
+than identifying a plant, but it's the exact same syntax.
+So we're slowly growing our arsenal of tools.
+Next, we're going to talk about some more real-world or complex prompting.
+
+Lesson 4: Real World Prompting
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/kmnd5/real-world-prompting
+By the end of this lesson, you'll be able to structure effective prompts
+that get consistent, high-quality responses from Claude.
+You'll utilize proven prompting techniques that actually matter in the real world,
+and to understand the difference between prompting a chatbot like Claude dot
+AI and writing enterprise-grade repeatable prompts.
+Let's get coding.
+So the main focus of this lesson is really on the distinction
+between the types of prompts that we might write as consumers
+or as users of a chatbot like Claude.AI, and the types of prompts
+that large customers are writing, or really any API customers are writing
+that need to be repeatable and reliable.
+This is the anthropic documentation.
+We have a section on prompt engineering with a whole bunch of different
+tips and strategies,
+a lot of which do matter, but some of which matter more than others.
+Which is what I want to talk about in this video.
+I want to focus on the tips that are worth your time.
+There's a lot of stuff out there on the internet around prompting.
+Some of it is a little bit dubious.
+So we're going to really focus on the prompting tips
+that have empirical evidence to back them up.
+But first, I want to show you an example of what I mean when I say a consumer
+prompt versus a real-world enterprise prompt.
+So I'm back in a notebook.
+I have the same initial setup we've had from previous videos,
+and here's an example of a potential chat bot or consumer
+prompt that I might type into the Claude AI website.
+Help me brainstorm ideas for a talk on AI and education.
+And if I'm happy with the result, great.
+If not, I have as many opportunities as needed to follow up and say "Woops!
+Actually, you're focusing too much on AI, not enough on education.
+Can you change this to a bullet-pointed list?
+Can you make this markdown?"
+Right. I can follow up over and over and over again.
+I have a lot of wiggle room and room for forgiveness.
+Now let's take a look at a potential enterprise-grade prompt.
+Now, I'll warn you ahead of time, this is quite long and way too much
+to read and go over in this video, but that's kind of the point.
+I want you to see that these prompts get long.
+They get complicated.
+They have structure to them.
+A lot of effort goes into creating these prompts
+beyond just sort of, you know, coming up with a thought
+and following it up with another thought in the way that I might talk to Claude.AI.
+So this is an example of a prompt that takes customer service calls,
+transcripts from a customer service call, and then generates Json summaries.
+And we might be doing this thousands of times per hour or maybe even per minute.
+If we're running, you know, a
+massive call center or we have a huge customer support team.
+So we're not going to go over this piece by piece,
+but I'm leaving you with this prompt so that you can go over it if you'd like.
+There are a few things in here we'll we'll refer back to.
+The first thing that I want to
+highlight, though, is that for enterprise grade prompts, for repeatable prompts,
+we really think about them as prompt templates where we have
+some large prompt structure that largely stays the same with a dynamic portion
+or multiple dynamic portions that are inserted as variables.
+So in this example, it starts by saying.
+Analyze the following customer service call and generate a Json object.
+Here's a transcript.
+And then on this line we have a placeholder
+where we actually would insert the real call transcript.
+So we would do this dynamically just using a string
+method most likely to replace this with a real transcript.
+And then another real transcript and thousands and thousands of them
+in a repeatable way.
+So we think of this more as a template instead of a one-off use case.
+Like you might consider your prompts for Claude.AI.
+So back to the slides for a moment.
+I've listed some of the more important prompting tips here,
+and I've bolded the ones that I think are the most important or more important
+than anything else.
+So one of them is use prompt templates.
+We've hinted at that idea.
+Other things on here include letting Claude think,
+also known as chain of thought.
+We'll talk about that in a bit.
+Structuring your prompts with XML.
+We saw a little bit of that in the prompt I just showed,
+but we'll also focus on that in the next few minutes and using examples.
+These are all techniques that have real data
+behind them that actually back up the claims that they matter.
+So now what I want to do is go through these and try
+and build a relatively real-world prompt.
+It will get a little bit long.
+Prompts do get long.
+It's a lot of text, a lot of strings.
+But we're going to go through this one bit at a time.
+We're going to go about this by building up to a larger
+real-world or enterprise-grade prompt.
+And the idea that we'll be using is a customer
+review, classification and sentiment analysis prompt.
+Let's say that we run some fictional e-commerce company.
+Acme company. And we have hundreds of products
+and thousands and thousands of customer reviews.
+We're going to use a Claude API to help us understand
+the sentiment of those reviews and some common complaints.
+So if this is a hypothetical review, I recently purchased XYZ smartphone.
+It's been a mixed experience.
+It lists some positive, some negatives.
+It says, you know, I expected fewer issues.
+I want Claude to be able to tell me in a repeatable fashion,
+is this a positive review?
+Negative is a neutral.
+And I wanted to highlight some of the key issues and point to feedback.
+Specifically for doing this at scale with thousands of thousands of reviews,
+I probably want the output to contain some easily extractable
+will and easy to work with the output format.
+Often that will be Json.
+Maybe something like this.
+Some repeatable object that always has a sentiment score
+positive, negative or neutral.
+It has some analysis under a key called sentiment analysis.
+And then it lists the actual complaints.
+So performance like poor value, unreliable facial recognition and so on.
+And then I can easily do this at scale for thousands of reviews.
+Storming a database.
+Compare them build charts, whatever I want to do with this repeatable output.
+So we're going to approach this piece by piece with our task now defined.
+We want to take customer reviews and turn them into Json
+with sentiment analysis information and customer complaint data extracted.
+We're going to go
+through this one part at a time and then build up the entire prompt.
+So the first tip we'll talk about is setting the role for the model.
+Now this is actually one that I don't feel as strongly about it.
+So we'll go through it pretty quickly.
+Something that can be useful
+is just giving the model a clear role and set of expectations upfront.
+So in this case it might look something like this.
+You are an AI assistant specialized in analyzing customer reviews.
+Your task is to determine the overall sentiment of a given review
+and extract any specific complaints mentioned.
+Please follow these instructions carefully.
+So obviously this is just one piece of the prompt,
+but we're setting the role or setting the stage, giving the model
+some context as to what it's supposed to be good at.
+So the next step here is to provide the actual instructions to the model.
+Right.
+If we scroll up, we told the model.
+Please follow these instructions carefully.
+Now we're going to give it a very clear and direct ordered list of instructions.
+So the first instruction is to review the following customer feedback.
+We're making this a prompt template where we'll actually insert a customer
+review here.
+Now you don't have to use these double curly braces.
+You can use whatever
+sort of variable that you want or placeholder that you want to replace.
+We like to use double curly braces, but definitely not a requirement.
+Additionally, notice that I'm using XML tags here.
+Not a requirement either, but Claude models tend to work very well with XML tags.
+You can use any sort of syntax or any sort of separators to tell the model.
+Here's where the customer review begins and here's where it ends.
+Some of these customer reviews might be short a couple of sentences,
+but for some very disgruntled or very enthusiastic customers,
+might be looking at thousands of characters.
+So we want to clearly tell the model.
+Here's where the review begins. Here's where it ends.
+The next thing that we'll focus on
+are the actual steps we want the model to go through.
+All right.
+We've provided the context and said we want you to review this customer
+feedback.
+We will then eventually insert the customer feedback in here.
+What do we want the model to do?
+It may be tempting to simply say generate Json that includes a sentiment score.
+Is it positive, neutral or negative?
+And a list of complaints that you've extracted and that may work.
+It likely will work in a lot of situations,
+but one of the prompting tips I want to highlight
+here is what we call letting Claude think or chain of thought.
+Essentially, telling the model
+that before it comes to a decision or some sort of conclusion,
+we want it to think out loud and output some analysis to help it make a decision.
+And then eventually make that judgment.
+So here's an example of what that could look like. In this variable instruction
+part two, another long string.
+I'm telling the model here's your second step.
+So once you've reviewed the customer feedback I want you to analyze the review
+using the following steps.
+There's a few things I want to highlight.
+First of all, this line here tells model to show its work in review
+break down text.
+Again, you don't have to use XML, but the model performs very well,
+the Claude family models perform well with XML, so a common strategy
+is to tell Claude to contain certain parts of its output
+in certain XML text, so we can tell it to do its thinking out loud.
+Instead of review, break down tags separate from the actual analysis
+the final result will tell it to put its results in some separate tag.
+We tell the model to start
+by extracting key phrases that might be related to sentiment.
+Then we tell the model to consider arguments for positive,
+negative, and neutral sentiment.
+Do the actual determination of the overall sentiment.
+Explain its reasoning and extract complaints
+that it finds within the actual customer review.
+And then we tell the model it's okay for the section to be quite long.
+As you thoroughly break down the review.
+Now, this is not something that every single prompt needs, right?
+This can result in unnecessary output tokens
+because the model is going to generate, a whole bunch of thinking before it
+actually generates the actual results for the actual final analysis in Json.
+So this is not something that you need to turn to immediately,
+but I'm showing it here
+because it is one of the more powerful techniques
+to get better results from the model.
+Which brings us to our next set of instructions.
+Details on the final output that we want.
+So in addition to the instructions about thinking,
+we're then going to tell the model in our third part of the instructions.
+Remember, we're going to combine
+all of these pieces together into a single prompt.
+We're going to tell the model in this third part
+to generate a Json output with this exact structure.
+I want a sentiment score a sentiment analysis.
+So the score is simply positive negative or neutral.
+The analysis is more details and then an array of complaints.
+And I want this to be done inside of Json XML tags.
+Again doesn't have to be XML but I want some way to extract this easily.
+Right. This is the meat of the response.
+And if I'm doing this thousands of times
+over and over and over, I need an easy, repeatable way to get that Json out.
+And then finally I end with some basic reminders.
+What happens in the edge case if there are no complaints?
+Use an empty array.
+Now that we have all these pieces to the prompt, let's put them together.
+What I'm going to do is make a final prompt variable.
+I'll make it an F string, and I'll dynamically insert
+the various parts of our prompt.
+So we have the setting, the role part of the prompt
+followed by our instructions part one, part two, and part three.
+Now my recommendation is not that you necessarily write these in individual
+chunks like I have.
+I've just broken it up to make it easier to talk about
+and sort of walk through one piece at a time.
+Now let's take a look at our final prompt.
+So I've printed it out and here it is.
+All the pieces together.
+So now what we'll do is write a function that takes a customer review.
+Inserts it into this prompt and then send it off to Claude.
+And then finally extract the Json output.
+So here's a simple function called get review sentiment
+that uses the final prompt that we just assembled
+from all the small pieces it expects us to pass in a customer review.
+And then because we're using a prompt template, remember we're going
+to replace our little placeholder of double braces
+customer review
+with the actual customer review that's being passed into the function.
+Then we send a request to Claude.
+So we build our final prompt.
+We call it prompt.
+And then we send that off in this list of messages.
+And then I'm doing two things.
+The first thing I'm doing is just so we know it's working.
+I'm printing out the entire model's output, which is this line right here.
+I print the entire output.
+This allows us to see the thought process.
+Remember, we told the model to perform some thinking, some analysis out loud,
+and then we're going to extract the content in between the Json tags.
+So I'm using regular expressions here to help me do that.
+I'm searching for whatever's inside of
+Json, opening tags in Json, closing tags.
+If you remember when we built this prompt, we told the model "generate a Json output
+that follows this structure inside of Json XML tags.
+Put your Json inside.
+So we do that and then
+we'll print out the final Json output which is the thing we're really after.
+And then if we don't find that for some reason or print
+there is an error or no sentiment analysis in the response.
+So let's try this with a very simple review.
+I'll just write a very simple one right now.
+All right.
+So here's a very simple review I just wrote.
+"I am in love with my Acme phone. It's incredible.
+It's a little expensive. So worth it I love the colors."
+Pretty positive.
+Let's try running this now with our function.
+Get review sentiment with our first review.
+All right I'll go ahead and run this cell and we'll see.
+Our response gets printed back. Right.
+So it extracts the key phrases. It does. It's thinking out loud.
+Here's some positive stuff. Here's some negative stuff.
+Here's the analysis.
+The overall sentiment, complaints.
+There's really just one. It's a little expensive.
+And then finally at the bottom we could see
+the actual Json that we extracted.
+So sentiment score is positive.
+Here's the analysis. Here's the complaints.
+Not very many complaints. It's just a little expensive.
+So here's another review a lot longer.
+It's a bit more mixed.
+It lists a lot more issues. We're not going to read it together.
+But this is maybe a bit closer to a review someone might write.
+Now let's try running this through the model.
+So I'll run this for our review two variable.
+And this time we get output again quite a lot of output.
+It extracts the positive phrases.
+The negative phrases.
+It does the analysis itself.
+It's a bit more conflicted.
+It's mixed, but it says the negative aspects outweigh the positive ones.
+So this also gives us sort of a trace, right?
+We can understand why Claude generated a certain output,
+which is another advantage of having it think out loud.
+And then it extracts the complaints.
+And then finally it gives me my Json output that I can extract and do something
+with, store in a database and repeat this tens of thousands of times.
+One tip that I like to not to show, because it tends to get very bulky
+and long to write, is examples also known as n-shot prompting.
+The idea here is that we can show the model in the prompt
+corresponding inputs and outputs as examples.
+So here's an example of what that might look like.
+It's quite long and not necessary in this example or in this particular prompt,
+but if you're trying to get the model to do
+something that it's having a hard time with, or it's being inaccurate
+with or not following the right format, this is one of the go-to strategies.
+So what we're doing here is telling the model
+"Here are some example inputs and outputs to help
+you understand the sort of analysis we're looking for."
+And then I'll simply say "here are some examples.
+Instead of XML tags.
+Here's the first one.
+Here's a customer reviews the input.
+Here's the ideal output you should give me."
+And as you can see, it gets
+quite long because the ideal output is long in this case.
+And this is for one example.
+In the real world, when you are providing examples in your prompts,
+you often want to cover a whole bunch of different cases.
+So in this situation
+at least a positive review, a negative and neutral, maybe an edge case
+where there's no review, it's empty, or the review is in a different language.
+We want to cover our bases.
+So writing these production-level prompts really can be a lot of work.
+Now we'll end by taking a look at the anthropic console's prompt generator tool.
+So this is not necessary to complete this course in any way.
+But this is a tool that helps you get the first 75% of the way
+to writing a real production-grade prompt.
+So I'm going to click on generate a prompt.
+So maybe the prompt that I need help generating is a marketing copy generator
+where I pass in things like a product description and bullet points,
+maybe an image, the audience that I'm hoping to reach and a desired length.
+Maybe I'm trying to write, you know, a tweet versus a full blog post versus
+an ad.
+I want help generating marketing copy.
+So I'm just going to hit generate.
+And what we're going to get is a prompt
+that's generated using some streaming, by the way, which we covered previously.
+You can see it streaming in.
+And this prompt, if we take a close look we'll include things
+like prompt variables.
+Or I insert the product description and the target audience
+and the desired length.
+And then I can decide I want to work with this prompt.
+As you can see here, I can play with the prompt.
+I can click to improve the prompt.
+I can also scroll up further and actually add in examples
+that will be dynamically added to the prompt.
+So this is a tool that just makes the initial pain points
+of writing these long prompts much, much easier.
+It still won't give you a perfect prompt on demand,
+but it's much better than starting from a blank page.
+
+Lesson 5: Prompt Caching
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/oh95z/prompt-caching
+By the end of this lesson, you'll be able to use prompt caching to reduce cost
+by up to 90% and reduce latency by up to 85% for long prompts.
+Let's give it a shot.
+Let's start by understanding what prompt caching actually does.
+What are the benefits and how does it work?
+Essentially, prompt caching is a feature that helps us optimize API usage by
+allowing resuming from particular prefixes that our prompts may have in common.
+In short, we can cache stuff that is going to remain consistent
+as a prefix from one API call to the next, drastically reducing processing time
+and costs for any sort of repetitive tasks or prompts
+that reuse consistent prefix elements.
+So let's take a look at some diagrams before diving into some code.
+So on the left we have a hypothetical prompt.
+I'm just representing it as shapes.
+So this is our prompt that we're going to send off.
+None of it has been cached to begin with.
+So we send this request off to the API. It's processed.
+And let's say that we decide to cache everything that we send off to the API.
+So at this point we now have all of our prompt prefix,
+the previous prompt from our first request stored in a cache.
+On a follow-up request,
+I now have a longer prompt.
+It contains the exact same prefix from the first request,
+but a whole bunch of other stuff afterwards.
+We no longer have to process for the API,
+no longer has to process the entire prompt.
+We've cached that prefix from the previous turn.
+So when I send this new request,
+we're going to get a cache hit, we'll read from the cache,
+meaning we don't have to reprocess all those tokens.
+And depending on how many tokens that is, that can save us a lot of time
+and also save us a lot of money if we're reusing it over and over and over again.
+And then we can write more to the cache and keep this process
+going, where we can incrementally,
+if we want to, add to the cache as a conversation grows.
+Or we can just cache some particularly long part of our prompt.
+Back in your notebook, there's the same basic setup we've had.
+We're importing Anthropic.
+We're setting up the client and we have our model named string variable.
+Now to see the most obvious difference with prompt caching.
+Basically with and without prompt caching,
+we are going to use a very, very long prompt.
+You're actually going to use the entire text of the book Frankenstein
+by Mary Shelley, which is available inside of a file called Frankenstein dot txt.
+So the first step here is to open that entire file and read the contents in
+just into a variable. We'll call it "book content"
+in this case. For content is going to be a very long string.
+As you can see here.
+Here's a small slice of it.
+So we can see some of the contents of the book.
+Okay.
+The next step is to send this off the entire book,
+along with some prompt like "what happens in chapter three?"
+Any simple prompt will do here, ideally something to do with the book
+Frankenstein.
+It's all in a function called "make_non_cash_API_call",
+and you'll see that there's some timing logic in here
+to start a timer before and after, but essentially try to calculate the time
+between the request being sent and the response being received.
+And then at the end, the function returns the overall response
+and then the delta, the time between the start time and the end time.
+To be clear, this version uses zero caching whatsoever.
+And the highlighted line
+is where the entire book of content that massive string is being provided.
+Notice it's wrapped inside of book XML tags.
+Not required, but it's a nice way just to separate out for the model.
+Here's this massive document.
+And at the end, here's the question "what happens in chapter three?"
+It is separate from the actual book.
+So we're just demarcating the bounds of this massive book.
+The next step is to call the function.
+So this line calls a function.
+This line prints out how long it took.
+And then this line prints out the actual content
+we get back from the model.
+So run the cell and wait.
+This is a very long prompt.
+So it may take a while.
+The response came back.
+In this particular instance it took 17.77 seconds.
+Again, no caching involved whatsoever.
+Here's the actual response, which to be honest, is the least important thing.
+That's happening in this function.
+It's more important to focus on the time element
+as well as the actual usage, which is right here.
+So you
+can see that there are quite a few input tokens that were processed
+under the 108,000 input tokens, followed by 324 output tokens.
+That's just the number of tokens used in the generation
+and zero cache creation input tokens and cache read tokens.
+Because we haven't involved caching yet at all.
+Now you can move on to the cached version that actually takes advantage
+of our explicit caching API.
+This is a function virtually identical to the previous one,
+except it's called "make cached API call" instead of uncashed.
+And there's one very important addition right here.
+So in this content block where we're providing the massive book content,
+there now is a cache control property
+or a key set to a dictionary that has type of ephemeral.
+Any time you want to set a caching point, essentially telling the API,
+"I would like to cache all of the input tokens up to this point.
+So that I can reuse them next time."
+Our API will do that.
+It needs to look for this tag.
+It has to be here in order to know that we want to write to the cache.
+Now when you run this, the first time, it's still going to take a long time.
+We won't be having any cache hits because we have yet to write to the cache.
+So you can execute it.
+Again,
+it will take a while because nothing has been cached yet,
+but as part of this request, the input tokens processed up to this
+cache control will be cached. That finished running.
+Here's a response you might get back.
+So all the content that the model actually generated.
+But for our purposes down here is the most important piece.
+We see that input tokens
+this time it's only counted as 11, output tokens
+is 324.
+And cache creation input tokens
+is 108,427.
+A large amount of tokens have now been stored in the cache.
+The next step is to try and read from them.
+Now going back to this function that you ran
+earlier, make a cached API, call this cache control tag
+really acts in a dual-purpose manner.
+The first time that our API encounters this,
+it will perform a cache write up to this point.
+So write all 108,000 tokens in the cache. And then on subsequent requests,
+when it encounters this cache control point, it is then going to look to see
+do we have anything cached up to this point
+essentially acting as a read point.
+So it's dual purpose in that it acts as a write point and a read point.
+So you can send the exact same function,
+just run the same function, call the exact same request to the API.
+This is now going to act as a read. So you can run this line again.
+New variable names,
+response to, duration to. That finished running.
+You can take a look at the usage property of the response
+to. Notice cache_creation_ input_token is zero.
+Because there was no writing to the cache performed cache read input tokens
+is 108,000 tokens.
+Compare that to the previous turn cache creation input tokens is 108,000.
+Cache read zero.
+Same exact request shape, same messages.
+This time there was a cache read, so there was no writing to the cache,
+but there was a massive read from the cache.
+And if we look at duration
+two: 6.2 seconds compared to
+an our totally un cached version 17 seconds.
+Exact same prompt.
+I think there's one small difference.
+This version asked what happens in chapter three.
+This version asks what happens in chapter five, but basically the exact
+same length to the prompt, just a different number at the end there.
+So 17.7 seconds compared to 6.2 seconds.
+And that's without considering the cost savings here.
+So let's talk about that.
+The way that prompt caching is priced is very straightforward.
+Essentially, you pay a little bit of a premium to write to the cache.
+So cache rate tokens are 25% more expensive than regular base input tokens.
+But the significant upside is when it comes time to do the cache reading,
+reading from the cache,
+those tokens are 90% cheaper than uncashed-based input tokens.
+And then the actual input and output anything that's not cached in any output
+that's generated are still priced at just the standard prices.
+So this means that it may not make sense to cache every single thing
+for every single message.
+But if you have some prompt prefix that is going to remain the same across
+a whole bunch of requests, it can be extremely efficient
+and cost effective to cache that long prefix and reuse it.
+Pay 25%
+more one time to make the cache right, and then pay 90% less for all of those
+input tokens for every subsequent request that gets a cache hit.
+Now, speaking of, cache hits,
+one thing that's important to note is that caches do not live forever.
+Each cache has a five-minute TTL or time to live.
+So we only support currently at least ephemeral caching,
+and each time you read from a cache, it resets that five-minute timer.
+So it also really depends on that use case and how you are using caching
+and what type of prompt you're sending.
+But any time you have a long, long prompt
+you want to save money on and you're reusing a lot of that prompt,
+you can use prompt caching.
+One common gotcha with prompt caching is multi-turn conversation caching.
+Imagine you have a very long conversation, maybe a conversation involving the book
+Frankenstein, where the model is sent that entire book text
+and there's a whole conversation about it.
+A long common prefix that should be cached to save on tokens, especially
+if the conversation has dozens or hundreds of turns and each turn is long.
+What you can do is cache the conversation as it grows.
+So by setting a cache control point,
+remember it really can act both as a write point.
+Write this to the cache.
+Everything up to this point and a read point.
+Attempt to read from the cache when working with multi-turn conversations,
+what you can do is use two cache control points that you continuously move
+down the conversation so that you are always caching the very last user message,
+and you have a cache control point on the second to last user message.
+Now why do you do that?
+How does that work?
+Again, it comes down to this dual-purpose nature.
+Imagine that this is a very long
+conversation that has hundreds of messages.
+This cache control point presumably will get a read from the previous turn.
+This used to be the last user message and then we got a response.
+So this was the last message a write was performed
+to the cache previously and now it acts as a read.
+There will be a cache hit and then this
+now at the very end, this cache control acts as the new write point
+telling the API
+write everything up to here and then you continue this pattern.
+So if the conversation grows, which is what this messages list shows
+it's the same pattern.
+Put a cache control on the second to last user message
+and a cache control on the last user message.
+Again, this tells the API write everything up to this point.
+This is new and read everything that you can from this point.
+Because this message tell me more about Mars
+previously was the last message.
+And you continue this pattern of moving these cache controls
+down the conversation, the last user message in the second to last user message
+to continuously read from the most recent cache
+and write up to the end of the conversation so that you can read from
+it next time around and you go over and over and over.
+This can confuse some people.
+It's on our documentation.
+It's also in this notebook, of course.
+Now, I'm not making any requests here.
+This is just the messages list that you can refer back to as an example.
+But again, it does trick people up.
+Finally, to tie things back to computer use,
+this is a little excerpt from our computer use quickstart
+demo that we've been looking at over and over throughout the last few lessons.
+I just want to highlight that we do in fact use cache control, right?
+Cache control is set to type ephemeral to cache a long history of messages
+with the model that includes a lot of screenshots,
+which can take up a decent number of tokens.
+So if this model was taking actions and it's a, I don't know, a 2 or 3
+or four minute interaction where it is trying something, doing a screenshot,
+and there's ten different screenshots
+and a whole bunch of different tool calls, which we've yet to discuss.
+Caching can significantly cut down on the time
+and also the cost for the actual computer use usage,
+so we'll get a chance to look closer at this code later.
+This is mostly just to show you: "Look, caching is real
+in the wild as well, not just in our educational notebook."
+
+Lesson 6: Tool Use
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/mshe8/tool-use
+By the end of this
+lesson, you'll be able to understand tool use workflows with Claude.
+You'll define your own tools
+and implement your own tool-based workflows from start to finish.
+Let's get to it.
+So let's start with an explanation
+of what tool use actually is. Tool use,
+also known as function calling is basically the ability
+to extend Claude's inherent capabilities.
+We can give Claude some set of external tools or functions,
+give it access to those functions,
+and then allow the model to call those at any point,
+although to be a little bit more specific, the model itself is simply requesting
+to call a tool or a function, and then we actually do the invocation.
+We actually do the function execution and then send the result back to the model.
+So we'll see some diagrams and we'll build an example of tool
+use, a little chatbot for customer support step by step.
+But before we do that let's talk about why this matters.
+The short story is that tool use vastly extends the use cases for Claude models.
+We can take our normal prompts, whether they're image-based prompts
+or text prompts, and combine them with calls to external functions.
+And again, Claude itself, or the model itself is not directly
+calling the tools, but it's deciding that it wants to call a tool.
+It's passing arguments through.
+And then we call actual tool and then pass the result back to Claude.
+And this enables us to do all sorts of things that the models
+can't do on their own, like retrieve dynamic data,
+query our own databases internally, interact with APIs,
+execute code, search the web, and of course, control a computer.
+As you'll see at the end of this video,
+tool use is what powers and enables computer use.
+The model can output tool calls to click or move a mouse
+or type, and various other computer actions whenever it wants.
+And then we can execute those actions and tell the model, all right,
+we did the click you wanted or we did the mouse move that you wanted.
+Here's what the screen now looks like.
+And give it a new screenshot.
+We'll build up to that.
+To start we need to understand how tool use works.
+Back in a notebook we have the same basic setup from previous lessons.
+This diagram shows the basic flow of tool use. On the left,
+right here, we have our model.
+We give it access to a set of tools.
+In this case inventory lookup, generate invoice, send email.
+Maybe these are things you want the model to be able to do.
+And in this particular diagram the model decides
+it wants to call the tool called inventory lookup.
+So step one, the model says I want to call this tool.
+And we'll see what this looks like in a bit.
+Then it's up to us or up to you to actually execute that tool, that function.
+So inventory lookup with some arguments presumably is going to connect
+to a database or some sort of API to do some lookup in our inventory somewhere.
+Then once you get some results back, you send them off to the model,
+and the model can complete whatever process it was trying to do.
+So again, the model issues a request to call a tool.
+Then you have to execute the tool.
+Then you tell the model about those results.
+And then the model can carry on and do whatever it wanted to do next.
+This more extensive diagram details the process.
+You give the model a prompt and a set of tools.
+You'll soon see how you do that, how you actually write the set of tools
+and provide them to the model.
+Then the model may decide it wants to use a tool, so it outputs that.
+It says, I'd like to use its tool with these arguments.
+Then you actually execute the tool.
+You get some result a return value or data
+from an API, or data from a search tool, or from a database.
+Then you send a tool result back to the model saying,
+here is the result of the tool you wanted to call.
+And then finally the model can do something with that result.
+So there's a couple of steps involved here.
+First, you need to have some set of tools you want to give the model.
+Second, you have to define them in the proper
+format and tell the model about those tools.
+And then third, you have to understand the back and forth flow
+and the proper format for returning a tool
+result to the model. To start,
+I'm going to show you a fake database class that we will be using
+in place of a real database, just to keep things simple.
+Imagine we run a company called creatively Acme Corporation or Acme Co,
+and this Acme Corporation has a few different products.
+We have customers. We have orders.
+So as you can see here, customers, it's all just placeholder data
+just to keep things simple.
+But someone like John Doe has an email
+and they also are going to have a username, John Doe.
+There's an
+orders list in this class representing the database.
+Each order has an ID, it has a customer ID, and it has a product quantity a price,
+a status, whether it's been shipped or if it's processing.
+Very, very simple.
+Just taking the place of a real database to keep things simple.
+This class has various functions or methods associated with it
+like get user, get ordered by ID,
+get customer orders, and cancel order.
+You can instantiate fake database here and imagine that you are a customer
+support representative.
+And somebody chats with you and says, my name is John Doe.
+My email is John@gmail.com.
+I want to cancel in order.
+If you look at the orders,
+they don't have John Doe associated or any username associated with them.
+They have a customer ID.
+Each user has a customer ID,
+and if you look
+at the methods we have available, we have get user,
+which will just find a user based off of an email, a phone or a username.
+We have get order by ID which requires an order ID.
+have get customer orders, which requires a customer ID,
+and then cancel order, which requires an order ID.
+So if John Doe wants to cancel an order,
+it's not as simple as just cancel order unless John
+Doe happens to know his exact order ID.
+So there's multiple steps involved.
+The first step as a human is to get user based off of this email.
+John@gmail.com.
+Then you can see that John has this user ID.
+The next step is to take that ID for John Doe
+find his orders using get customer orders.
+And then if you are acting as a customer support representative,
+you would likely follow up and say, I see you have three orders.
+Two of them have been shipped.
+We can only cancel a order that has not been shipped yet.
+Do you want to cancel the smartphone case order?
+In which case you could finally take this order ID
+right here and cancel this order using DB dot
+cancel dot order.
+And that will cancel that order.
+Okay, so multiple steps involved is the point here.
+It's all fake, right? Not a real database.
+But imagine you do run a company with a real database.
+And you want to use Claude to help automate portions of customer support.
+Maybe the low-hanging fruit.
+And you need to give Claude access to these functions.
+It needs to be able to look up a user by an email or a phone or a username.
+And instead of ten users or whatever we have here.
+Imagine there's tens of thousands and needs to be able to find
+orders and needs to be able to find orders based on a customer.
+It needs to be able to cancel orders.
+Just a small set of tools here.
+So how do you tell Claude about these tools?
+First step is to define the schemas for each of your functions.
+And the way that you do that is through Json schema.
+If you're not familiar with Json schema,
+it's a common open format that you can use to define well schemas.
+And in this case, Claude expects or the API
+expects tools to be passed in using this Json schema format.
+This is a hypothetical tool definition for the get user method you saw previously.
+So it has a name, get user, a description.
+And these tool descriptions are important to tell.
+Claude "Here's what this tool does"
+And then an input schema that includes the arguments necessary to call this tool.
+As a reminder, this is what get user looks like.
+So the underlying function has two parameters:
+key and value, both of which are required.
+Going back to the tool definition for get user,
+we write the schema to indicate that there are two arguments.
+One is called key.
+One is called value. Both are strings.
+Key is one of the following choices using this enum, which is a nice syntax
+to say that it has to be either email, phone, or username.
+The idea here is that
+you can look up a user by an email, or by a phone number, or by a username,
+and there's also a description attached explaining how it works.
+And then also a value which is a string
+which needs to be the actual email
+like John @gmail.com, or the actual phone number, or the actual username.
+And then finally down at the bottom here
+you can indicate which of these arguments are required to call this tool.
+In this case, both of them are required.
+So the next step is to define all of these tools.
+We have four different functions.
+We'll have four tool definitions or tool schemas
+using Json schema and put them in a list called something like tools.
+The name doesn't matter, but we'll group them together.
+This list, called tools, contains four Json schema tool definitions.
+Get user, get ordered by ID,
+get customer orders, and cancel order, all of which correspond
+to the previously defined methods we saw in our fake DB class.
+The next step is to give Claude the tools and send a prompt.
+So this is just a simple one off example.
+Not in a function, not in any sort of chatbot loop.
+You have a
+messages list with a single message from a user saying show me my orders.
+My username is priya123.
+Then most importantly, this highlighted line.
+In addition to the fields we've seen before
+or the parameters you've seen like model max tokens and messages.
+Now you're passing through tools.
+Tools is the list of tools previously defined.
+The model will know it has access to these tools and can decide if it needs to
+call any.
+Presumably, if this prompt is asking to show, you know, show me my orders.
+My username is priya123.
+The model should call a tool
+to look up orders based off of this username.
+Execute the cell and then print response dot content.
+Now we have something we've yet to see.
+There's a text response.
+I'll help you look up your orders.
+Let me first get your user details using your username.
+And then I can retrieve your orders. Followed by
+something called a tool use block.
+So we have a text block and the tool
+use block. And this tool use block,
+if I just let's take the last element in this list so we can hone in on that.
+The model
+wants to call this tool which is called Get User.
+Specifically it wants to call it with the argument key
+set to username and value set to priya123.
+There's also this tool use id which is important
+because the second step once the model says it wants to call
+the tool, is for you to actually execute the tool.
+Then tell the model what the result is.
+And when you do that, you give the model the tool result itself,
+the data from the function along with this ID,
+so that the model knows
+how this tool result corresponds to the initial tool use block.
+The next step is to translate the model's
+ToolUseBlock output, basically stating
+I'd like to call get user with these values
+and actually execute get user with those values, or execute
+any of the other tools, get order by ID or cancel order, or get customer orders.
+This is a very simplistic implementation, but that's what this function does.
+It takes a tool name and a tool input.
+And this is tool input right here.
+Then it's as simple as taking the tool name
+and the tool input that the model outputted for you.
+And then pass them to process tool call
+to actually execute that function, which is using the database,
+the DB that you saw previously.
+And that's the first half.
+The second half is to then send the result back to the model.
+To do that you need to send a follow-up message with a role of user.
+Where content has a type of tool result.
+Tool result must contain the actual content.
+In this case, this is the content back
+from calling a tool and the tool use id.
+This ID needs to match
+the corresponding tool result that you send back to the model.
+Simply defining this, of course, won't do anything.
+You need to send it to the model and have some sort of loop
+or some function so that
+you can continue chatting or conversing with the model.
+That's the next step is to put it all together so you can see the complete flow.
+This is a simple, complete implementation of a chatbot
+that uses the four tools you saw previously.
+There's a lot to cover.
+You don't need to go over it in extreme detail.
+It's there for you to look at on your own.
+But this is the core functionality, this function called simple chat.
+It uses a system prompt, which is a way to provide,
+repeated instructions to set the role, sort of set the expectations of the model.
+So in this case, the prompt says your customer support chatbot for Acme
+Co, your job is to help users look up their accountant orders and so on.
+And then in each conversational turn, begin by thinking about your response.
+Once you're done, write a user-facing response.
+This allows us to separate out the model's internal thoughts versus
+the actual reply that we want to show to a user as a chatbot.
+It's important to place all user-facing conversational responses
+inside of reply XML tags to make them easy to parse.
+A note about that.
+There's a function called extract reply that does exactly what it sounds like.
+It extracts the contents between reply XML tags. Further down,
+we start by asking for user input.
+There's a messages list that starts with a single user message.
+Maybe it's just "hello."
+There's a way to break out of the loop.
+If the user types the word quit and then it's all about tool use,
+the messages are sent off to the model in this loop.
+All four tools are provided as that list of tools previously defined.
+The prompt.
+The system prompt is provided.
+Model name Max tokens.
+All of that that you've seen before.
+Then the model responds with something.
+You append the message that the assistant responded with.
+Remember, there's
+this list of messages constantly growing when you're trying to build a chatbot.
+And most importantly for this lesson, if the model stopped because of tool use,
+if you recall, you saw stop reason a few lesson to go.
+One reason the model stops is because it just reached a natural stopping point.
+It's just it's done.
+Another reason is that it hits a stop sequence.
+Another reason is that it hits max tokens.
+And another reason is that it wants to call a tool so it stops generating.
+It's waiting to get a tool result.
+If that's what the model wants to do, then extract the tool
+use information including the name and the input.
+There's a print here that just lets you know that Claude wants to use
+a particular tool, then process the underlying tool
+using the function you saw previously,
+Process tool call.
+Finally, append a tool result to the conversation history.
+That includes the tool
+use id and the actual value returned
+from the underlying tool function and then the loop repeats.
+If Claude didn't want to use a tool, then simply print out
+the model's response and then you can try chatting to the model.
+Simply run the simple chat function
+and then enter your first conversational message.
+Maybe something like "hello",
+to start. There's a response.
+"Hello, welcome to Acme Co customer support.
+How can I help you?
+I can look up your account info, check order status or cancel orders."
+Let's say I'll post as Priya,
+which is one of the users in the fake database with the username of priya123.
+So I'll write that
+I want to check on my order status and then the model now says.
+"I'd be happy to help you check on that.
+Provide either the order ID", I don't have that.
+So instead I'll say I have my username which is priya123.
+Hit enter and the model will likely want to call a tool
+now. It wants to call Get user and it actually called two tools.
+The first time it called to get user to look up information about Priya.
+That then gave previous user id.
+The model then called get customer orders
+using the user id from Priya.
+Finally,
+it found the orders and gave a response saying "you have
+two recent orders a Bluetooth speaker and wireless headphones.
+Is there anything specific you want to know about those?"
+So that's a simple demonstration of the workflow.
+To wrap up, we'll return to our computer
+Use Quick Start implementation.
+We'll take a much closer look at this in the next video.
+But I just want to show you that it does in fact use tools.
+There's an import at the top to import various tools.
+A computer tool is the one that's most interesting to most people.
+It includes clicking functionality and mouse movement.
+All the tools are combined into this tool collection variable.
+When a request is sent to the model, the tools are passed through.
+The same thing you just saw tools equals some list of tools.
+And then once the model's responded back, if it wants to issue
+a tool or use a tool if the content block type is tool use.
+There's logic in here to execute a tool.
+And then make a tool result and send that back to the model.
+Slightly nicer code. A few helper functions.
+Things are split across files, but it's the same core tool
+use functionality that you saw in this lesson.
+
+Lesson 7: Computer Use
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/ljun5/computer-use
+In this last lesson, we'll tie together all the concepts you've learned so far.
+You will understand basic agent architectures,
+and then we'll demonstrate Claude's computer use capabilities
+that you can run yourself on your own computer.
+Let's go.
+So in this video we're going to tie everything together.
+Almost everything we've learned together into a single-use case
+that we've been building up to, which is a computer-using agent.
+Now, the first thing that you should know before we go any further
+is that in order to run this agent, it requires a few steps.
+It's relatively straightforward, but it has to be done on your local machine.
+It is not considered part of this course.
+This is purely a demonstration for those of you
+who are interested in pursuing this on your own.
+Anthropic has an Anthropic quickstart
+repository on GitHub that includes a computer use demo.
+Now this computer use demo is just one implementation to get up and running
+with a computer using agent relatively quickly, pretty much painlessly.
+All you need is an API key.
+You clone the repo and you run a few basic commands.
+There's other quick starts in here,
+but this is the one that is most relevant to computer use.
+I'll begin by cloning the repository, which includes multiple quick starts.
+I'll cd into the Anthropic quickstarts and I'll cd into the computer use demo.
+Next, I'll go back to the read me and run this line.
+It's a little bit of a long line.
+Copy this.
+It assumes that we have an Anthropic
+API key as an environment variable, which I've already set up.
+I'll paste this in.
+Hit enter and wait a little bit
+for the quickstart repo to do its magic.
+Now it's up and running.
+We'll visit localhost 8080 in the browser.
+And this is the quickstart.
+Again there are many different implementations.
+You can write your own implementation of a computer using agent,
+but this is the quickest way to get up and running.
+And of course you can modify it.
+What you'll see is on the left a chat interface
+where you can type a message to Claude, and on the right, we can look at this
+containerized computer that Claude will be able to interact with.
+At the moment I can't interact with it.
+You can see that it's simple Linux machine.
+I have different icons down here in the dock,
+but if I click toggle Screen Control and turn it onto
+on, I can now interact and open up Firefox.
+If there's certain things I want to do as a human.
+Before handing things over to Claude.
+But I'll go ahead and hit off just so it's clear
+that I'm not controlling this, and we can try something very simple.
+Before I do that, there are various parameters that you can enter here.
+You can set a maximum number of images.
+You can decide if you were using our Anthropic
+first party API or AWS bedrock Google Vertex.
+You can also, change the custom system prompt suffix.
+I'll just minimize this and we'll just do a very simple example.
+How about: "Find Anthropic's
+recent research paper on alignment making.
+And summarize it for me."
+Again very very simple.
+We send this off to the model,
+and it gets to work.
+So what you'll notice is a lot of tool use.
+On the left, we can see the tools the model wants to use.
+And we've covered a little bit of this
+introduced some of the concepts around a computer use tool, a screenshot tool.
+Tools to move the mouse, to left click, to right click, and so on.
+And on the right you can see the various moves
+or choices the model is making on the display.
+So it's searched for Anthropic alignment, faking research paper.
+Now it's clicked on this research paper.
+It's opened up the PDF.
+Now it's going to download this.
+So it's using curl as you can see on the left side here.
+This log that's showing us the various tools it's using.
+Okay.
+Looks like it downloaded.
+Now it's checking using a bash tool.
+All right.
+So this is some of the content that it downloaded.
+Now it's going to hopefully summarize the content of this for me.
+And we get a nice summary here.
+Okay. Again a very very simple example.
+But what I want to
+highlight is from the initial prompt all the way to the end goal
+here of a summary, there is maybe 10, 15 back-and-forth messages
+where this model is acting agentically in a loop.
+A very, very simple agent
+that is simply attempting to accomplish a goal.
+In this case,
+find Anthropic recent research paper on alignment tracking and summarize it.
+To do that, the model had access to a few different tools.
+This is the main agentic loop that calls the Anthropic
+API and provides it with our computer use tools.
+So it's a little bit more complicated than the demos you've seen so far,
+but there's a long prompt in here that explains the model,
+but it's using an Ubuntu virtual machine.
+It can open Firefox and it can install applications
+that it has access to various tools.
+It tells it the current date.
+And then if you keep scrolling down, what do we see?
+A pretty straightforward collection of tools.
+These tools are defined elsewhere,
+but they're the exact same type of tools that we've talked about.
+The same structure.
+They just happen to be
+maybe a little more interesting, especially the computer tool.
+There's some prompt caching involved here.
+And then further down we have messages
+that are being sent off to the model in a loop.
+So over and over and over until the model essentially decides I'm done.
+And if you look closely,
+there's logic in here that decides what to do when the model calls a tool.
+We execute the tool.
+We respond back with the correct tool format,
+all the things that we've covered previously.
+And in the repository there's a folder called tools.
+It includes a handful of tools we won't call for all of them,
+but let's look at computer.
+The computer tool is a tool that does things like
+types keys, types the letter S, or hits
+the enter key, moves the mouse, left clicks, right clicks,
+middle clicks, double clicks, and importantly takes screenshots.
+The underpinnings of this whole thing, it all depends on screenshots.
+The model requests the screenshot to get the current state of the screen,
+and then it decides where to move the mouse, where to type,
+where to click, and then it might get another screenshot and it keeps going.
+But it's all based on screenshots.
+And there's more logic in here.
+As I mentioned,
+some of it is a little bit complicated in the sense that screenshots
+need to be scaled down
+to the sort of ideal resolution that works for our Claude models.
+But at the end of the day, this is just a function
+that takes the model's request.
+It wants to left-click. It wants a screenshot.
+It wants to double-click or it wants to move the mouse.
+And then it actually implements that functionality.
+It moves the mouse.
+It clicks. And the code in this file just does those operations.
+Remember the model itself is not executing tools,
+just like with the simple chatbot example.
+The model output a little block that said, hey, I'd like to call this tool.
+It's the exact same thing here.
+We the engineers, the developers,
+and if you're using this quickstart repo, it's
+written for, you have to actually implement
+the clicking, the dragging, the screenshotting.
+The model is simply telling us it would like to take actions.
+So we'll zoom in a little bit on this log here.
+The model starts by outputting some text saying I'll help you do that.
+It says let me use Firefox and then it asks for a screenshot.
+So it outputs the tool block saying I'd like to use the screenshot tool.
+Then we provide a screenshot back of the current state.
+This is what it looks like at that point in time.
+Then the model decides based on this screenshot, it sees
+where the Firefox icon is.
+It decides to move the mouse to that location.
+So you can see the mouse is now there in the screenshot.
+And then it outputs a left-click tool use block.
+It wants to left-click. That's one of the tools it can use.
+It left clicks, Firefox opens and this process repeats.
+It gets a screenshot. It decides it needs to type into this nav bar.
+So it wants to move the mouse to the nav bar.
+And on and on and on until eventually it ended up
+finding the research paper, downloading it, summarizing it,
+and then giving us this nice summary at the end.
+Now, if you don't believe me that this is the exact same fundamental
+underpinnings of everything you've seen so far in this course,
+if we click on this Http Exchange Logs tab,
+I'll scroll down towards one of these at the bottom here.
+This is a full log of the entire conversation where I'll scroll up a bit,
+quite a bit.
+You can see every turn in this conversation,
+including our initial turn.
+So this has a role of user.
+"I'd like you to find Anthropic's research paper."
+We can see the assistance response.
+It has a response, some text.
+And then what do you know?
+We have a tool block, right? Type equals tool use.
+And then we respond as an engineer with a tool result.
+Of course, the tool use ID has to match as we learned when we covered tool use.
+Also, we covered multimodal prompting providing a screenshot.
+Here it is.
+So a content block with type of image we have type base64.
+The media type is a png. Here's the data.
+This should all look relatively familiar,
+obviously in a slightly different context.
+And that's a user message.
+And we go over and over and over, right?
+The model then outputs a mouse move tool use block.
+And then here's the tool result that corresponds. And this process
+repeats and repeats and repeats.
+So it's fancier.
+It's far more complicated than a simple chatbot.
+But underpinning it all is sending messages with the correct role.
+The correct types of content, images and text.
+Also tool use of course, providing the model with tools, responding
+back with the correct tool result blocks to tell the model:
+Here's the result of the tool you issued.
+There's also prompt caching involved and other techniques that we've covered,
+but really it's a nice summary of
+almost every single topic that we've touched on in this course.
+So again, this is a demonstration.
+This is not something that I'm expecting you to go do right now.
+If you're curious, if you're interested, you can do this on your own machine.
+Just go to the quickstart repository.
+It's fun to play around with.
+You can check out a bunch of information on our documentation
+and blog about how to get the most out of computer use
+and it's just a nice sort of capstone here that combines everything we've learned.
+So that's a simple demonstration of computer use.s
+
+Lesson 8: Conclusion
+Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/finqq/conclusion
+In this course, you've
+learned how to use all of the features of the Anthropic family of models.
+You've seen how you can combine all of these to build applications
+like computer use.
+So I'm looking forward to seeing how you will use these to build your own apps.

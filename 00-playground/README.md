@@ -348,6 +348,16 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - accessing Supabase through an MCP server.
 - maintaining [a feature list](62-shopaholic/_instructions.md).
 
+## Claude Code
+
+- understanding [a codebase](63-claude-code/ragchatbot/README.md) with Claude Code.
+- adding features.
+- testing, debugging, and refactoring code.
+- adding multiple features simultaneously.
+- exploring GitHub integration and hooks.
+- refactoring a Jupyter Notebook and creating a dashboard.
+- creating a web app based on a Figma mockup.
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -377,3 +387,4 @@ We are also relying on several short courses:
 - [Open Source Models with Hugging Face](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Maria Khalusova, Marc Sun, Younes Belkada (2024).
 - [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
 - [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).
+- [Claude Code: A Highly Agentic Coding Assistant](https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/) by Elie Schoppik (2025).
