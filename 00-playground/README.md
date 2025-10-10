@@ -355,7 +355,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - testing, debugging, and refactoring code.
 - adding multiple features simultaneously.
 - exploring GitHub integration and hooks.
-- refactoring a Jupyter Notebook and creating a dashboard.
+- refactoring a Jupyter Notebook and creating [a dashboard](63-claude-code/dashboard/README.md).
 - creating a web app based on a Figma mockup.
 
 These examples are based on five courses:
