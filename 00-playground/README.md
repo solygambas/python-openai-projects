@@ -358,6 +358,16 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - refactoring a Jupyter Notebook and creating [a dashboard](63-claude-code/dashboard/README.md).
 - creating [a web app](63-claude-code/fred-dashboard/README.md) based on [a Figma mockup](63-claude-code/fred-dashboard/key-indicators.fig).
 
+## MCP: Build Rich-Context AI Apps
+
+- [defining and using tools](64-mcp/L3.ipynb).
+- creating an MCP server.
+- creating an MCP client.
+- connecting the MCP chatbot to reference servers.
+- adding prompt and resource features.
+- configuring servers for Claude Desktop.
+- creating and deploying remote servers.
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -388,3 +398,4 @@ We are also relying on several short courses:
 - [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
 - [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).
 - [Claude Code: A Highly Agentic Coding Assistant](https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/) by Elie Schoppik (2025).
+- [MCP: Build Rich-Context AI Apps with Anthropic](https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/) by Elie Schoppik (2025).
