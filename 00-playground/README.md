@@ -366,7 +366,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - [connecting the MCP chatbot to reference servers](64-mcp/L6.ipynb).
 - [adding prompt and resource features](64-mcp/L7.ipynb).
 - configuring servers for Claude Desktop.
-- creating and deploying remote servers.
+- [creating and deploying remote servers](64-mcp/L9.ipynb).
 
 These examples are based on five courses:
 
