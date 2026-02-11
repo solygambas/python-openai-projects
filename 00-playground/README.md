@@ -375,6 +375,7 @@ These examples are based on five courses:
 - [ChatGPT & Generative AI - The Complete Guide](https://www.udemy.com/course/chatgpt-bard-bing-complete-guide-to-chatgpt-openai-apis/) by Maximilian Schwarzmüller (2025).
 - [AI For Developers With GitHub Copilot, Cursor AI & ChatGPT](https://www.udemy.com/course/ai-for-developers-with-github-copilot-cursor-ai-chatgpt/) by Maximilian Schwarzmüller (2024).
 - [Local LLMs via Ollama & LM Studio - The Practical Guide](https://www.udemy.com/course/running-open-llms-locally-practical-guide/) by Maximilian Schwarzmüller (2025).
+- [Claude Code - The Practical Guide](https://www.udemy.com/course/claude-code-the-practical-guide/) by Maximilian Schwarzmüller (2026).
 
 We are also relying on several short courses:
 
