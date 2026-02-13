@@ -42,3 +42,6 @@ next-env.d.ts
 
 # enable lib for this project
 !lib/
+
+# Database files
+*.db*
