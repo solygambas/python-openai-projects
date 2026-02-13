@@ -357,6 +357,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - exploring GitHub integration and hooks.
 - refactoring a Jupyter Notebook and creating [a dashboard](63-claude-code/dashboard/README.md).
 - creating [a web app](63-claude-code/fred-dashboard/README.md) based on [a Figma mockup](63-claude-code/fred-dashboard/key-indicators.fig).
+- creating a [note-taking app](63-claude-code/notes) based on [specs](63-claude-code/notes/SPEC.MD).
 
 ## MCP: Build Rich-Context AI Apps
 
