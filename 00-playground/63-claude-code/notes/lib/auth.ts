@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth';
+import { nextCookies } from 'better-auth/next-js';
 import { getDb } from './db';
 
 export const auth = betterAuth({
@@ -6,4 +7,5 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  plugins: [nextCookies()], 
 });
