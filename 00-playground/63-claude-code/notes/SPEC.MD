@@ -243,7 +243,7 @@ CREATE TABLE notes (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   title TEXT NOT NULL,
-  content_json TEXT NOT NULL,
+  content TEXT NOT NULL,
   is_public INTEGER NOT NULL DEFAULT 0,
   public_slug TEXT UNIQUE,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
@@ -285,7 +285,7 @@ export type Note = {
   id: string;
   userId: string;
   title: string;
-  contentJson: string; // stringified TipTap doc
+  content: string; // stringified TipTap doc
   isPublic: boolean;
   publicSlug: string | null;
   createdAt: string;
@@ -295,10 +295,10 @@ export type Note = {
 
 **Repository functions:**
 
-- `createNote(userId: string, data: { title?: string; contentJson?: string }): Promise<Note>`
+- `createNote(userId: string, data: { title?: string; content?: string }): Promise<Note>`
 - `getNoteById(userId: string, noteId: string): Promise<Note | null>`
 - `getNotesByUser(userId: string): Promise<Note[]>`
-- `updateNote(userId: string, noteId: string, data: Partial<{ title: string; contentJson: string }>): Promise<Note | null>`
+- `updateNote(userId: string, noteId: string, data: Partial<{ title: string; content?: string }>): Promise<Note | null>`
 - `deleteNote(userId: string, noteId: string): Promise<void>`
 - `setNotePublic(userId: string, noteId: string, isPublic: boolean): Promise<Note | null>`
 - `getNoteByPublicSlug(slug: string): Promise<Note | null>`
@@ -335,7 +335,7 @@ All `/api/notes` handlers (except public read) must:
 ]
 ```
 
-Optionally omit `contentJson` for list for performance.
+Optionally omit `content` for list for performance.
 
 #### POST /api/notes
 
@@ -345,13 +345,13 @@ Optionally omit `contentJson` for list for performance.
 ```json
 {
   "title": "Optional title",
-  "contentJson": { "type": "doc", ... }
+  "content": { "type": "doc", ... }
 }
 ```
 
 **Behavior:**
 - Default title = "Untitled note" if missing
-- Default `contentJson` = empty TipTap document if missing
+-- Default `content` = empty TipTap document if missing
 
 **Response 201:** created Note (or minimal subset)
 
@@ -360,7 +360,7 @@ Optionally omit `contentJson` for list for performance.
 **Description:** Get single note owned by current user.
 
 **Response:**
-- 200 with full note including `contentJson`
+-- 200 with full note including `content`
 - 404 if not found or not owned by user
 
 #### PUT /api/notes/:id
@@ -371,7 +371,7 @@ Optionally omit `contentJson` for list for performance.
 ```json
 {
   "title": "New title",
-  "contentJson": { ... }
+  "content": { ... }
 }
 ```
 
@@ -421,7 +421,7 @@ Optionally omit `contentJson` for list for performance.
 ```json
 {
   "title": "Public note",
-  "contentJson": { ... }
+  "content": { ... }
 }
 ```
 
@@ -500,7 +500,7 @@ const editor = useEditor({
     Code,
     CodeBlock
   ],
-  content: initialContentJson,  // TipTap JSON
+  content: initialContent,  // TipTap JSON
   onUpdate: ({ editor }) => {
     const json = editor.getJSON();
     onChange(json);

@@ -48,7 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Insert note into database
     const db = getDb();
     const stmt = db.prepare(`
-      INSERT INTO notes (id, user_id, title, content_json, created_at, updated_at)
+      INSERT INTO notes (id, user_id, title, content, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?)
     `);
 

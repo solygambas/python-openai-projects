@@ -67,7 +67,7 @@ function initSchema(database: DatabaseSync): void {
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL,
       title TEXT NOT NULL,
-      content_json TEXT NOT NULL,
+      content TEXT NOT NULL,
       is_public INTEGER NOT NULL DEFAULT 0,
       public_slug TEXT UNIQUE,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
