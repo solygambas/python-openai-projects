@@ -1,5 +1,5 @@
 import { requireAuth } from '@/lib/auth-helpers';
-import NewNoteForm from '@/app/components/NewNoteForm';
+import NoteForm from '@/app/components/NoteForm';
 
 export const metadata = {
   title: 'Create New Note | NextNotes',
@@ -12,7 +12,7 @@ export default async function NewNotePage() {
 
   return (
     <main className="bg-white dark:bg-gray-950">
-      <NewNoteForm />
+      <NoteForm />
     </main>
   );
 }

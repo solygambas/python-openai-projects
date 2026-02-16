@@ -1,4 +1,4 @@
-import { get, query } from '@/lib/db';
+import { get, query, run } from '@/lib/db';
 
 export type Note = {
   id: string;
@@ -96,3 +96,35 @@ export async function getNotesByUser(userId: string): Promise<NoteListItem[]> {
 
   return rows.map(mapNoteListRow);
 }
+
+export async function updateNote(
+  userId: string,
+  noteId: string,
+  title: string,
+  content: string
+): Promise<boolean> {
+  const now = new Date().toISOString();
+  const result = run(
+    `
+      UPDATE notes
+      SET title = ?, content = ?, updated_at = ?
+      WHERE id = ? AND user_id = ?
+    `,
+    [title, content, now, noteId, userId]
+  );
+
+  return result.changes > 0;
+}
+
+export async function deleteNote(userId: string, noteId: string): Promise<boolean> {
+  const result = run(
+    `
+      DELETE FROM notes
+      WHERE id = ? AND user_id = ?
+    `,
+    [noteId, userId]
+  );
+
+  return result.changes > 0;
+}
+

@@ -1,22 +1,45 @@
- 'use client';
+'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { useRouter } from 'next/navigation';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useRouter } from 'next/navigation';
+import type { Note } from '@/lib/notes';
 
-export default function NewNoteForm() {
+type NoteFormProps = {
+  note?: Note;
+  onSaveComplete?: () => void;
+};
+
+export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
   const router = useRouter();
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(note?.title ?? '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [, setEditorRerender] = useState(0);
+
+  const isEditMode = !!note;
+
+  // Parse note content (it's stored as JSON string)
+  let initialContent = { type: 'doc', content: [] };
+  if (isEditMode && note) {
+    try {
+      const parsed = JSON.parse(note.content);
+      if (parsed && parsed.type === 'doc') {
+        initialContent = parsed;
+      }
+    } catch {
+      // Keep default empty doc on parse error
+    }
+  }
 
   // Initialize TipTap editor
   const editor = useEditor({
     extensions: [StarterKit],
-    content: '',
+    content: initialContent,
     immediatelyRender: false,
+    editable: true,
     editorProps: {
       attributes: {
         class: 'prose prose-invert max-w-none focus:outline-none rounded-md border border-gray-300 bg-white p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white min-h-[200px]',
@@ -24,8 +47,25 @@ export default function NewNoteForm() {
     },
   });
 
+  // Force component re-render when editor updates (for toolbar state)
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleUpdate = () => {
+      setEditorRerender((prev) => prev + 1);
+    };
+
+    editor.on('update', handleUpdate);
+    editor.on('selectionUpdate', handleUpdate);
+
+    return () => {
+      editor.off('update', handleUpdate);
+      editor.off('selectionUpdate', handleUpdate);
+    };
+  }, [editor]);
+
   const handleSubmit = useCallback(
-    async (e: React.SubmitEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setError(null);
 
@@ -41,8 +81,11 @@ export default function NewNoteForm() {
         const cleanTitle = DOMPurify.sanitize(title.trim(), { ALLOWED_TAGS: [] });
         const content = editor.getJSON();
 
-        const response = await fetch('/api/notes', {
-          method: 'POST',
+        const url = isEditMode ? `/api/notes/${note!.id}` : '/api/notes';
+        const method = isEditMode ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -61,44 +104,63 @@ export default function NewNoteForm() {
           }
 
           const errorData = await response.json().catch(() => null);
-          setError(errorData?.error ?? 'Failed to create note.');
+          setError(errorData?.error ?? (isEditMode ? 'Failed to save note.' : 'Failed to create note.'));
           return;
         }
 
-        const data = await response.json();
-        router.push(`/notes/${data.id}`);
+        // Handle success
+        if (isEditMode) {
+          // For edit mode, call callback if provided
+          if (onSaveComplete) {
+            onSaveComplete();
+          }
+        } else {
+          // For create mode, redirect to the new note
+          const data = await response.json();
+          router.push(`/notes/${data.id}`);
+        }
       } catch (err) {
         console.error('Form submission error:', err);
-        setError('Could not create note. Please try again.');
+        setError(isEditMode ? 'Could not save note. Please try again.' : 'Could not create note. Please try again.');
       } finally {
         setIsSubmitting(false);
       }
     },
-    [title, editor, router]
+    [title, editor, isEditMode, note, onSaveComplete, router]
   );
 
+  const handleCancel = () => {
+    if (isEditMode) {
+      window.location.reload();
+    } else {
+      router.back();
+    }
+  };
+
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Create New Note
-        </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Write and format your note with rich text editing
-        </p>
-      </div>
+    <div className={isEditMode ? 'w-full space-y-6' : 'mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8'}>
+      {!isEditMode && (
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Create New Note
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            Write and format your note with rich text editing
+          </p>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+        >
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Error Message */}
-        {error && (
-          <div
-            role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
-          >
-            {error}
-          </div>
-        )}
-
         {/* Title Input */}
         <div>
           <label
@@ -116,7 +178,6 @@ export default function NewNoteForm() {
             disabled={isSubmitting}
             maxLength={255}
             className="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-400"
-            autoFocus
           />
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {title.length}/255
@@ -142,7 +203,10 @@ export default function NewNoteForm() {
                 <div className="flex flex-wrap gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800">
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleBold().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('bold')
@@ -156,7 +220,10 @@ export default function NewNoteForm() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleItalic().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('italic')
@@ -171,9 +238,10 @@ export default function NewNoteForm() {
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() =>
-                      editor.chain().focus().setParagraph().run()
-                    }
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().setParagraph().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('paragraph')
@@ -187,9 +255,10 @@ export default function NewNoteForm() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      editor.chain().focus().toggleHeading({ level: 1 }).run()
-                    }
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleHeading({ level: 1 }).run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('heading', { level: 1 })
@@ -203,9 +272,10 @@ export default function NewNoteForm() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      editor.chain().focus().toggleHeading({ level: 2 }).run()
-                    }
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleHeading({ level: 2 }).run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('heading', { level: 2 })
@@ -219,9 +289,10 @@ export default function NewNoteForm() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      editor.chain().focus().toggleHeading({ level: 3 }).run()
-                    }
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleHeading({ level: 3 }).run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('heading', { level: 3 })
@@ -236,7 +307,10 @@ export default function NewNoteForm() {
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleCode().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleCode().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('code')
@@ -250,7 +324,10 @@ export default function NewNoteForm() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleCodeBlock().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('codeBlock')
@@ -265,7 +342,10 @@ export default function NewNoteForm() {
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleBulletList().run();
+                    }}
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
                       editor.isActive('bulletList')
@@ -280,7 +360,10 @@ export default function NewNoteForm() {
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().setHorizontalRule().run();
+                    }}
                     disabled={isSubmitting}
                     className="rounded bg-white px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                     title="Horizontal Rule"
@@ -304,11 +387,11 @@ export default function NewNoteForm() {
             disabled={isSubmitting}
             className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-950"
           >
-            {isSubmitting ? 'Creating...' : 'Create Note'}
+            {isSubmitting ? (isEditMode ? 'Saving...' : 'Creating...') : (isEditMode ? 'Save Changes' : 'Create Note')}
           </button>
           <button
             type="button"
-            onClick={() => router.back()}
+            onClick={handleCancel}
             disabled={isSubmitting}
             className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-offset-gray-950"
           >
