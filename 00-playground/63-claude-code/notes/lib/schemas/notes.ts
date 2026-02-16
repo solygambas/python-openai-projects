@@ -1,12 +1,15 @@
 import { z } from 'zod';
 
+export const tipTapDocSchema = z
+  .object({
+    type: z.literal('doc'),
+    content: z.array(z.unknown()).optional(),
+  })
+  .passthrough();
+
 export const noteSchema = z.object({
-  title: z.string()
-    .min(1, 'Title is required')
-    .max(255, 'Title cannot exceed 255 characters'),
-  content: z.string()
-    .min(1, 'Content is required')
-    .max(50000, 'Content cannot exceed 50000 characters'),
+  title: z.string().max(255, 'Title cannot exceed 255 characters').optional(),
+  content: tipTapDocSchema.optional(),
 });
 
 export type NoteInput = z.infer<typeof noteSchema>;

@@ -86,6 +86,7 @@ export function getDb(): DatabaseSync {
   if (!db) {
     const dbPath = path.join(process.cwd(), process.env.DB_PATH || 'data/app.db');
     db = new DatabaseSync(dbPath);
+    // Enable WAL for performance and concurrency
     db.exec('PRAGMA journal_mode = WAL;');
     db.exec('PRAGMA foreign_keys = ON;');
     initSchema(db);

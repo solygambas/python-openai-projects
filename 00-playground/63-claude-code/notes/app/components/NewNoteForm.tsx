@@ -29,22 +29,17 @@ export default function NewNoteForm() {
       e.preventDefault();
       setError(null);
 
-      if (!title.trim()) {
-        setError('Title is required');
-        return;
-      }
-
-      if (!editor || editor.isEmpty) {
-        setError('Content is required');
+      if (!editor) {
+        setError('Editor is still loading. Please try again.');
         return;
       }
 
       setIsSubmitting(true);
 
       try {
-        // Sanitize user input before sending to the server
+        // Sanitize title input before sending to the server
         const cleanTitle = DOMPurify.sanitize(title.trim(), { ALLOWED_TAGS: [] });
-        const cleanContent = DOMPurify.sanitize(editor.getHTML());
+        const content = editor.getJSON();
 
         const response = await fetch('/api/notes', {
           method: 'POST',
@@ -53,7 +48,7 @@ export default function NewNoteForm() {
           },
           body: JSON.stringify({
             title: cleanTitle,
-            content: cleanContent,
+            content,
           }),
         });
 
