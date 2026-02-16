@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import NoteRenderer, { type TipTapDoc } from '@/app/components/NoteRenderer';
-import NoteForm from '@/app/components/NoteForm';
-import type { Note } from '@/lib/notes';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import NoteRenderer, { type TipTapDoc } from "@/app/components/NoteRenderer";
+import NoteForm from "@/app/components/NoteForm";
+import PublicSharingSection from "@/app/components/PublicSharingSection";
+import type { Note } from "@/lib/notes";
 
 type NotePageProps = {
   params: Promise<{ id: string }>;
@@ -13,7 +14,7 @@ type NotePageProps = {
 function parseDoc(content: string): TipTapDoc | null {
   try {
     const parsed = JSON.parse(content) as TipTapDoc;
-    if (parsed && parsed.type === 'doc') {
+    if (parsed && parsed.type === "doc") {
       return parsed;
     }
     return null;
@@ -51,17 +52,17 @@ export default function NotePage({ params }: NotePageProps) {
 
         if (!response.ok) {
           if (response.status === 404) {
-            router.push('/dashboard');
+            router.push("/dashboard");
             return;
           }
-          throw new Error('Failed to fetch note');
+          throw new Error("Failed to fetch note");
         }
 
-        const data = await response.json() as Note;
+        const data = (await response.json()) as Note;
         setNote(data);
       } catch (err) {
-        console.error('Error fetching note:', err);
-        setError('Failed to load note');
+        console.error("Error fetching note:", err);
+        setError("Failed to load note");
       } finally {
         setIsLoading(false);
       }
@@ -74,7 +75,6 @@ export default function NotePage({ params }: NotePageProps) {
     setIsEditing(true);
   }, []);
 
-
   const handleSaveComplete = useCallback(() => {
     setIsEditing(false);
     // Refetch the note to get updated data
@@ -82,7 +82,7 @@ export default function NotePage({ params }: NotePageProps) {
       fetch(`/api/notes/${paramsId}`)
         .then((res) => res.json())
         .then((data: Note) => setNote(data))
-        .catch((err) => console.error('Error refetching note:', err));
+        .catch((err) => console.error("Error refetching note:", err));
     }
   }, [paramsId]);
 
@@ -100,18 +100,18 @@ export default function NotePage({ params }: NotePageProps) {
 
     try {
       const response = await fetch(`/api/notes/${note.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete note');
+        throw new Error("Failed to delete note");
       }
 
       // Redirect to dashboard on success
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (err) {
-      console.error('Error deleting note:', err);
-      setError('Failed to delete note');
+      console.error("Error deleting note:", err);
+      setError("Failed to delete note");
       setIsDeleting(false);
     }
   }, [note, router]);
@@ -138,7 +138,7 @@ export default function NotePage({ params }: NotePageProps) {
       <main className="min-h-screen bg-white dark:bg-gray-950">
         <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200">
-            {error || 'Note not found'}
+            {error || "Note not found"}
           </div>
         </div>
       </main>
@@ -148,11 +148,11 @@ export default function NotePage({ params }: NotePageProps) {
   const doc = parseDoc(note.content);
   const updatedAt = new Date(note.updatedAt);
   const updatedLabel = Number.isNaN(updatedAt.getTime())
-    ? 'Unknown date'
-    : new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+    ? "Unknown date"
+    : new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       }).format(updatedAt);
 
   return (
@@ -161,7 +161,7 @@ export default function NotePage({ params }: NotePageProps) {
         {/* Back Button */}
         <div className="mb-6">
           <button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
             disabled={isDeleting}
             className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-400 dark:hover:text-blue-300"
           >
@@ -177,10 +177,7 @@ export default function NotePage({ params }: NotePageProps) {
                 Edit Note
               </h1>
             </div>
-            <NoteForm
-              note={note}
-              onSaveComplete={handleSaveComplete}
-            />
+            <NoteForm note={note} onSaveComplete={handleSaveComplete} />
           </>
         ) : (
           // View Mode
@@ -192,21 +189,21 @@ export default function NotePage({ params }: NotePageProps) {
               <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
                 {note.title}
               </h1>
-              
+
               {/* Edit and Delete Buttons */}
               <div className="mt-4 flex gap-3">
                 <button
                   onClick={handleEditClick}
-                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-gray-950"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDeleteClick}
                   disabled={isDeleting}
-                  className="inline-flex items-center rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-800 dark:bg-gray-900 dark:text-red-400 dark:hover:bg-red-950/20 dark:focus:ring-offset-gray-950"
+                  className="inline-flex items-center rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-800 dark:bg-gray-900 dark:text-red-400 dark:hover:bg-red-950/20 dark:focus:ring-offset-gray-950"
                 >
-                  {isDeleting ? 'Deleting...' : 'Delete'}
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </header>
@@ -220,6 +217,14 @@ export default function NotePage({ params }: NotePageProps) {
                 </p>
               )}
             </section>
+
+            {/* Public Sharing Section */}
+            <div className="mt-8">
+              <PublicSharingSection
+                note={note}
+                onSharingStatusChange={setNote}
+              />
+            </div>
           </>
         )}
 
@@ -227,17 +232,18 @@ export default function NotePage({ params }: NotePageProps) {
         {isDialogOpen && (
           <dialog
             ref={dialogRef}
-            className="m-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900 backdrop:bg-black/50"
+            className="m-auto rounded-lg border border-gray-200 bg-white shadow-lg backdrop:bg-black/50 dark:border-gray-800 dark:bg-gray-900"
           >
             <div className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Delete Note
               </h2>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Are you sure you want to delete this note? This action cannot be undone.
+                Are you sure you want to delete this note? This action cannot be
+                undone.
               </p>
 
-              <div className="mt-6 flex gap-3 justify-end">
+              <div className="mt-6 flex justify-end gap-3">
                 <button
                   onClick={handleCancelDelete}
                   disabled={isDeleting}
@@ -250,7 +256,7 @@ export default function NotePage({ params }: NotePageProps) {
                   disabled={isDeleting}
                   className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isDeleting ? 'Deleting...' : 'Delete'}
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
