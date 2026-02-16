@@ -1,6 +1,7 @@
-'use client';
+ 'use client';
 
 import { useCallback, useState } from 'react';
+import DOMPurify from 'isomorphic-dompurify';
 import { useRouter } from 'next/navigation';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -41,28 +42,39 @@ export default function NewNoteForm() {
       setIsSubmitting(true);
 
       try {
+        // Sanitize user input before sending to the server
+        const cleanTitle = DOMPurify.sanitize(title.trim(), { ALLOWED_TAGS: [] });
+        const cleanContent = DOMPurify.sanitize(editor.getHTML());
+
         const response = await fetch('/api/notes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            title: title.trim(),
-            content: editor.getHTML(),
+            title: cleanTitle,
+            content: cleanContent,
           }),
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to create note');
+          // For server errors show a generic message; show server-provided message for client errors
+          if (response.status >= 500) {
+            setError('Server error. Please try again later.');
+            console.error('Server returned status', response.status);
+            return;
+          }
+
+          const errorData = await response.json().catch(() => null);
+          setError(errorData?.error ?? 'Failed to create note.');
+          return;
         }
 
         const data = await response.json();
         router.push(`/notes/${data.id}`);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'An error occurred';
-        setError(message);
         console.error('Form submission error:', err);
+        setError('Could not create note. Please try again.');
       } finally {
         setIsSubmitting(false);
       }

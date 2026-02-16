@@ -10,25 +10,29 @@ interface LogoutButtonProps {
 
 export default function LogoutButton({ email }: LogoutButtonProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const handleLogout: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleLogout: React.SubmitEventHandler<HTMLFormElement> = React.useCallback(
+    async (e) => {
+      e.preventDefault();
+      setIsLoading(true);
 
-    try {
-      await signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push('/authenticate');
+      try {
+        await signOut({
+          fetchOptions: {
+            onSuccess: () => {
+              router.push('/authenticate');
+            },
           },
-        },
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-      setIsLoading(false);
-    }
-  };
+        });
+      } catch (error) {
+        console.error('Logout failed:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router]
+  );
 
   return (
     <form onSubmit={handleLogout} className="flex items-center gap-4">

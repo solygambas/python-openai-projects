@@ -3,6 +3,7 @@ import { getSessionFromRequest } from '@/lib/auth-helpers';
 import { getDb } from '@/lib/db';
 import { noteSchema } from '@/lib/schemas/notes';
 import { randomUUID } from 'node:crypto';
+import DOMPurify from 'isomorphic-dompurify';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -16,18 +17,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Parse request body
-    const body = await req.json();
+    const raw = await req.json();
 
-    // Validate input
-    const validationResult = noteSchema.safeParse(body);
+    // Sanitize incoming user-generated input to avoid XSS and unsafe HTML
+    const sanitized = {
+      title: DOMPurify.sanitize(String(raw.title ?? ''), { ALLOWED_TAGS: [] }),
+      content: DOMPurify.sanitize(String(raw.content ?? '')),
+    };
+
+    // Validate sanitized input
+    const validationResult = noteSchema.safeParse(sanitized);
     if (!validationResult.success) {
       return NextResponse.json(
-        { 
-          error: 'Invalid input', 
-          details: validationResult.error.issues.map(issue => ({
+        {
+          error: 'Invalid input',
+          details: validationResult.error.issues.map((issue) => ({
             path: issue.path.join('.'),
             message: issue.message,
-          }))
+          })),
         },
         { status: 400 }
       );
@@ -60,10 +67,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       { status: 201 }
     );
   } catch (error) {
+    // Log full error server-side for debugging, but never return internal error details to clients
     console.error('Error creating note:', error);
-    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: message },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
