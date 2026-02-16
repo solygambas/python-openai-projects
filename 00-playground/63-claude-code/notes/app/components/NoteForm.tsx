@@ -1,12 +1,13 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import DOMPurify from 'isomorphic-dompurify';
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useRouter } from 'next/navigation';
 import type { Note } from '@/lib/notes';
 import { Toolbar } from './Toolbar';
+import { sanitizeAndValidateNote } from '@/lib/utils/note-validation'
+import { createOrUpdateNote } from '@/lib/api/notes-client'
 
 type NoteFormProps = {
   note?: Note;
@@ -89,53 +90,43 @@ export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
       setIsSubmitting(true);
 
       try {
-        // Sanitize title input before sending to the server
-        const cleanTitle = DOMPurify.sanitize(title.trim(), { ALLOWED_TAGS: [] });
-        const content = editor.getJSON();
+        const content = editor.getJSON()
 
-        const url = isEditMode ? `/api/notes/${note!.id}` : '/api/notes';
-        const method = isEditMode ? 'PUT' : 'POST';
-
-        const response = await fetch(url, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: cleanTitle,
-            content,
-          }),
-        });
-
-        if (!response.ok) {
-          // For server errors show a generic message; show server-provided message for client errors
-          if (response.status >= 500) {
-            setError('Server error. Please try again later.');
-            console.error('Server returned status', response.status);
-            return;
-          }
-
-          const errorData = await response.json().catch(() => null);
-          setError(errorData?.error ?? (isEditMode ? 'Failed to save note.' : 'Failed to create note.'));
-          return;
+        const validation = sanitizeAndValidateNote(title, content)
+        if (!validation.success) {
+          // validation.error can be a ZodError or other error
+          setError('Invalid input')
+          setIsSubmitting(false)
+          return
         }
 
-        // Handle success
-        if (isEditMode) {
-          // For edit mode, call callback if provided
-          if (onSaveComplete) {
-            onSaveComplete();
+        const { title: cleanTitle, content: contentString } = validation.value
+
+        const resp = await createOrUpdateNote({ noteId: isEditMode ? note!.id : undefined, title: cleanTitle, content })
+
+        if (!resp.ok) {
+          if (resp.status >= 500) {
+            setError('Server error. Please try again later.')
+            console.error('Server returned status', resp.status)
+            return
           }
+
+          const errorData = await resp.json().catch(() => null)
+          setError(errorData?.error ?? (isEditMode ? 'Failed to save note.' : 'Failed to create note.'))
+          return
+        }
+
+        if (isEditMode) {
+          if (onSaveComplete) onSaveComplete()
         } else {
-          // For create mode, redirect to the new note
-          const data = await response.json();
-          router.push(`/notes/${data.id}`);
+          const data = await resp.json()
+          router.push(`/notes/${data.id}`)
         }
       } catch (err) {
-        console.error('Form submission error:', err);
-        setError(isEditMode ? 'Could not save note. Please try again.' : 'Could not create note. Please try again.');
+        console.error('Form submission error:', err)
+        setError(isEditMode ? 'Could not save note. Please try again.' : 'Could not create note. Please try again.')
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
       }
     },
     [title, editor, isEditMode, note, onSaveComplete, router]
