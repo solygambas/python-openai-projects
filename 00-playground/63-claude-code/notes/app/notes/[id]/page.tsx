@@ -30,6 +30,7 @@ export default function NotePage({ params }: NotePageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Unwrap params (it's a Promise in Next.js 15)
@@ -73,9 +74,6 @@ export default function NotePage({ params }: NotePageProps) {
     setIsEditing(true);
   }, []);
 
-  const handleCancelEdit = useCallback(() => {
-    setIsEditing(false);
-  }, []);
 
   const handleSaveComplete = useCallback(() => {
     setIsEditing(false);
@@ -89,12 +87,14 @@ export default function NotePage({ params }: NotePageProps) {
   }, [paramsId]);
 
   const handleDeleteClick = useCallback(() => {
+    setIsDialogOpen(true);
     dialogRef.current?.showModal();
   }, []);
 
   const handleConfirmDelete = useCallback(async () => {
     if (!note) return;
 
+    setIsDialogOpen(false);
     dialogRef.current?.close();
     setIsDeleting(true);
 
@@ -117,6 +117,7 @@ export default function NotePage({ params }: NotePageProps) {
   }, [note, router]);
 
   const handleCancelDelete = useCallback(() => {
+    setIsDialogOpen(false);
     dialogRef.current?.close();
   }, []);
 
@@ -223,37 +224,38 @@ export default function NotePage({ params }: NotePageProps) {
         )}
 
         {/* Delete Confirmation Dialog */}
-        <div className="grid place-items-center">
-        <dialog
-          ref={dialogRef}
-          className="rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900"
-        >
-          <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Delete Note
-            </h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Are you sure you want to delete this note? This action cannot be undone.
-            </p>
+        {isDialogOpen && (
+          <dialog
+            ref={dialogRef}
+            className="m-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900 backdrop:bg-black/50"
+          >
+            <div className="p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Delete Note
+              </h2>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Are you sure you want to delete this note? This action cannot be undone.
+              </p>
 
-            <div className="mt-6 flex gap-3 justify-end">
-              <button
-                onClick={handleCancelDelete}
-                disabled={isDeleting}
-                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmDelete}
-                disabled={isDeleting}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
+              <div className="mt-6 flex gap-3 justify-end">
+                <button
+                  onClick={handleCancelDelete}
+                  disabled={isDeleting}
+                  className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                  className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
             </div>
-          </div>
-        </dialog></div>
+          </dialog>
+        )}
       </div>
     </main>
   );
