@@ -14,11 +14,11 @@ export default function NewNoteForm() {
   // Initialize TipTap editor
   const editor = useEditor({
     extensions: [StarterKit],
-    content: '<p>Start typing your note here...</p>',
+    content: '',
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none rounded-md border border-gray-300 bg-white p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white',
+        class: 'prose prose-invert max-w-none focus:outline-none rounded-md border border-gray-300 bg-white p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white min-h-[200px]',
       },
     },
   });
@@ -161,21 +161,23 @@ export default function NewNoteForm() {
                   >
                     <em>I</em>
                   </button>
+                  <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleStrike().run()}
+                    onClick={() =>
+                      editor.chain().focus().setParagraph().run()
+                    }
                     disabled={isSubmitting}
                     className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('strike')
+                      editor.isActive('paragraph')
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
                         : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
                     } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Strikethrough"
-                    aria-label="Toggle strikethrough"
+                    title="Paragraph"
+                    aria-label="Normal text"
                   >
-                    <s>S</s>
+                    ¶
                   </button>
-                  <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
                     onClick={() =>
@@ -208,6 +210,51 @@ export default function NewNoteForm() {
                   >
                     H2
                   </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 3 }).run()
+                    }
+                    disabled={isSubmitting}
+                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                      editor.isActive('heading', { level: 3 })
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                    title="Heading 3"
+                    aria-label="Toggle heading 3"
+                  >
+                    H3
+                  </button>
+                  <div className="border-r border-gray-300 dark:border-gray-600" />
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleCode().run()}
+                    disabled={isSubmitting}
+                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                      editor.isActive('code')
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                    title="Inline Code"
+                    aria-label="Toggle inline code"
+                  >
+                    <code className="text-xs">&lt;/&gt;</code>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                    disabled={isSubmitting}
+                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                      editor.isActive('codeBlock')
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                    title="Code Block"
+                    aria-label="Toggle code block"
+                  >
+                    ⌨
+                  </button>
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
@@ -223,34 +270,16 @@ export default function NewNoteForm() {
                   >
                     •
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('orderedList')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Ordered List"
-                    aria-label="Toggle ordered list"
-                  >
-                    1.
-                  </button>
                   <div className="border-r border-gray-300 dark:border-gray-600" />
                   <button
                     type="button"
-                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                    onClick={() => editor.chain().focus().setHorizontalRule().run()}
                     disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('codeBlock')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Code Block"
-                    aria-label="Toggle code block"
+                    className="rounded bg-white px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    title="Horizontal Rule"
+                    aria-label="Insert horizontal rule"
                   >
-                    &lt;&gt;
+                    —
                   </button>
                 </div>
 

@@ -97,7 +97,7 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
     <div className="w-full max-w-sm">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Email
           </label>
           <input
@@ -106,14 +106,14 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
             value={formState.email}
             onChange={(e) => handleEmailChange(e.currentTarget.value)}
             disabled={formState.isLoading}
-            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-400"
             placeholder="you@example.com"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Password
           </label>
           <input
@@ -122,7 +122,7 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
             value={formState.password}
             onChange={(e) => handlePasswordChange(e.currentTarget.value)}
             disabled={formState.isLoading}
-            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400 dark:focus:ring-blue-400"
             placeholder={isLogin ? 'Enter your password' : 'At least 8 characters'}
             required
           />
@@ -130,7 +130,7 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
 
         {formState.error && (
           <div
-            className="p-3 bg-destructive/10 border border-destructive/30 rounded-md text-sm text-destructive"
+            className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
             role="alert"
           >
             {formState.error}
@@ -140,7 +140,7 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
         <button
           type="submit"
           disabled={formState.isLoading}
-          className="w-full px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-950"
         >
           {formState.isLoading
             ? isLogin
@@ -153,12 +153,12 @@ function AuthForm({ mode }: { mode: Mode }): ReactNode {
       </form>
 
       <div className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">
+        <span className="text-gray-600 dark:text-gray-400">
           {isLogin ? "Don't have an account? " : 'Already have an account? '}
         </span>
         <button
           onClick={toggleMode}
-          className="text-primary hover:underline font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded px-1"
+          className="font-medium text-blue-600 hover:text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-1 dark:text-blue-400 dark:hover:text-blue-300 dark:focus:ring-offset-gray-950"
         >
           {isLogin ? 'Sign up' : 'Sign in'}
         </button>
