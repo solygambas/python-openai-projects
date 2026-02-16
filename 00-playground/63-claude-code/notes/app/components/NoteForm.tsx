@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useRouter } from 'next/navigation';
 import type { Note } from '@/lib/notes';
+import { Toolbar } from './Toolbar';
 
 type NoteFormProps = {
   note?: Note;
@@ -17,7 +18,6 @@ export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
   const [title, setTitle] = useState(note?.title ?? '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [, setEditorRerender] = useState(0);
 
   const isEditMode = !!note;
 
@@ -47,22 +47,34 @@ export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
     },
   });
 
-  // Force component re-render when editor updates (for toolbar state)
-  useEffect(() => {
-    if (!editor) return;
+  // Use TipTap's useEditorState hook for efficient toolbar state updates
+  const editorStateRaw = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      isBold: editor?.isActive('bold') ?? false,
+      isItalic: editor?.isActive('italic') ?? false,
+      isParagraph: editor?.isActive('paragraph') ?? false,
+      isHeading1: editor?.isActive('heading', { level: 1 }) ?? false,
+      isHeading2: editor?.isActive('heading', { level: 2 }) ?? false,
+      isHeading3: editor?.isActive('heading', { level: 3 }) ?? false,
+      isCode: editor?.isActive('code') ?? false,
+      isCodeBlock: editor?.isActive('codeBlock') ?? false,
+      isBulletList: editor?.isActive('bulletList') ?? false,
+    }),
+  });
 
-    const handleUpdate = () => {
-      setEditorRerender((prev) => prev + 1);
-    };
-
-    editor.on('update', handleUpdate);
-    editor.on('selectionUpdate', handleUpdate);
-
-    return () => {
-      editor.off('update', handleUpdate);
-      editor.off('selectionUpdate', handleUpdate);
-    };
-  }, [editor]);
+  // Provide default values when editorState is null
+  const editorState = editorStateRaw ?? {
+    isBold: false,
+    isItalic: false,
+    isParagraph: false,
+    isHeading1: false,
+    isHeading2: false,
+    isHeading3: false,
+    isCode: false,
+    isCodeBlock: false,
+    isBulletList: false,
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -137,6 +149,12 @@ export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
     }
   };
 
+  // Memoize toolbar button handlers to ensure consistent focus behavior
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLButtonElement>, command: () => boolean) => {
+    e.preventDefault();
+    command();
+  }, []);
+
   return (
     <div className={isEditMode ? 'w-full space-y-6' : 'mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8'}>
       {!isEditMode && (
@@ -200,178 +218,12 @@ export default function NoteForm({ note, onSaveComplete }: NoteFormProps) {
             ) : (
               <div className="space-y-2">
                 {/* Toolbar */}
-                <div className="flex flex-wrap gap-1 rounded-md border border-gray-300 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800">
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleBold().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('bold')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Bold (Ctrl+B)"
-                    aria-label="Toggle bold"
-                  >
-                    <strong>B</strong>
-                  </button>
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleItalic().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('italic')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Italic (Ctrl+I)"
-                    aria-label="Toggle italic"
-                  >
-                    <em>I</em>
-                  </button>
-                  <div className="border-r border-gray-300 dark:border-gray-600" />
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().setParagraph().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('paragraph')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Paragraph"
-                    aria-label="Normal text"
-                  >
-                    ¶
-                  </button>
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleHeading({ level: 1 }).run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('heading', { level: 1 })
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Heading 1"
-                    aria-label="Toggle heading 1"
-                  >
-                    H1
-                  </button>
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleHeading({ level: 2 }).run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('heading', { level: 2 })
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Heading 2"
-                    aria-label="Toggle heading 2"
-                  >
-                    H2
-                  </button>
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleHeading({ level: 3 }).run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('heading', { level: 3 })
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Heading 3"
-                    aria-label="Toggle heading 3"
-                  >
-                    H3
-                  </button>
-                  <div className="border-r border-gray-300 dark:border-gray-600" />
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleCode().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('code')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Inline Code"
-                    aria-label="Toggle inline code"
-                  >
-                    <code className="text-xs">&lt;/&gt;</code>
-                  </button>
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleCodeBlock().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('codeBlock')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Code Block"
-                    aria-label="Toggle code block"
-                  >
-                    ⌨
-                  </button>
-                  <div className="border-r border-gray-300 dark:border-gray-600" />
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().toggleBulletList().run();
-                    }}
-                    disabled={isSubmitting}
-                    className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-                      editor.isActive('bulletList')
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                    title="Bullet List"
-                    aria-label="Toggle bullet list"
-                  >
-                    •
-                  </button>
-                  <div className="border-r border-gray-300 dark:border-gray-600" />
-                  <button
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      editor.chain().focus().setHorizontalRule().run();
-                    }}
-                    disabled={isSubmitting}
-                    className="rounded bg-white px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                    title="Horizontal Rule"
-                    aria-label="Insert horizontal rule"
-                  >
-                    —
-                  </button>
-                </div>
+                <Toolbar
+                  editor={editor}
+                  editorState={editorState}
+                  isSubmitting={isSubmitting}
+                  onMouseDown={handleMouseDown}
+                />
 
                 {/* Editor */}
                 <EditorContent editor={editor} />
