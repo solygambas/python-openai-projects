@@ -1,0 +1,603 @@
+[
+  {
+    "category": "database",
+    "description": "Create SQLite database with better-auth schema",
+    "steps": [
+      "Create data/ directory and app.db SQLite file",
+      "Create user table with id, name, email, emailVerified, image, timestamps",
+      "Create session table with userId foreign key and token",
+      "Create account table for credential provider",
+      "Create verification table",
+      "Verify all tables exist with correct structure"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Create notes table with indexes",
+    "steps": [
+      "Create notes table with id, user_id, title, content_json, is_public, public_slug, timestamps",
+      "Add FOREIGN KEY on user_id references user(id)",
+      "Add UNIQUE constraint on public_slug",
+      "Create indexes on user_id, public_slug, is_public",
+      "Verify table structure and indexes"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Build database access utilities (lib/db.ts)",
+    "steps": [
+      "Create lib/db.ts with Bun SQLite connection",
+      "Implement singleton getDb() pattern",
+      "Create query<T>() utility with generic type safety",
+      "Create get<T>() for single row queries",
+      "Create run() for INSERT/UPDATE/DELETE",
+      "Test utilities with sample queries"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Define Note type and create helper functions (lib/notes.ts)",
+    "steps": [
+      "Define Note type with camelCase fields",
+      "Create helper to map DB row to Note type",
+      "Create generatePublicSlug() using nanoid (16+ chars)",
+      "Create default empty TipTap JSON constant",
+      "Export all types and helpers"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Implement createNote repository function",
+    "steps": [
+      "Create async createNote(userId, data) function",
+      "Generate unique ID for new note",
+      "Set default title 'Untitled note' if not provided",
+      "Set default empty TipTap JSON if contentJson not provided",
+      "INSERT with user_id scoping",
+      "Return created Note"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Implement getNoteById and getNotesByUser functions",
+    "steps": [
+      "Create getNoteById(userId, noteId) with authorization check",
+      "Return null if note doesn't exist or user doesn't own it",
+      "Create getNotesByUser(userId) returning all user's notes",
+      "Order by updated_at DESC",
+      "Test authorization is enforced"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Implement updateNote function",
+    "steps": [
+      "Create updateNote(userId, noteId, data) function",
+      "Accept partial updates for title and contentJson",
+      "Update updated_at timestamp automatically",
+      "Enforce user_id authorization",
+      "Return updated Note or null"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Implement deleteNote function",
+    "steps": [
+      "Create deleteNote(userId, noteId) function",
+      "DELETE only if user owns the note",
+      "Return boolean indicating success",
+      "Test authorization check works"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Implement note sharing functions",
+    "steps": [
+      "Create setNotePublic(userId, noteId, isPublic) function",
+      "Generate public_slug when enabling sharing",
+      "Clear public_slug when disabling",
+      "Create getNoteByPublicSlug(slug) for public access",
+      "Only return note if is_public = 1"
+    ],
+    "passes": false
+  },
+  {
+    "category": "auth",
+    "description": "Configure better-auth server (lib/auth.ts)",
+    "steps": [
+      "Create lib/auth.ts with betterAuth configuration",
+      "Configure SQLite database adapter using Bun SQLite",
+      "Set up credential provider for email/password",
+      "Configure session management",
+      "Export auth instance"
+    ],
+    "passes": false
+  },
+  {
+    "category": "auth",
+    "description": "Create better-auth API route",
+    "steps": [
+      "Create app/api/auth/[...all]/route.ts",
+      "Export GET and POST handlers from better-auth",
+      "Use auth.handler for both methods",
+      "Test auth endpoints respond at /api/auth/*"
+    ],
+    "passes": false
+  },
+  {
+    "category": "auth",
+    "description": "Implement server-side auth helpers",
+    "steps": [
+      "Create getSession() helper for server components",
+      "Create requireAuth() helper that throws/redirects if not authenticated",
+      "Export helpers from lib/auth.ts",
+      "Test helpers return correct session data"
+    ],
+    "passes": false
+  },
+  {
+    "category": "auth",
+    "description": "Create auth client for frontend",
+    "steps": [
+      "Create lib/auth-client.ts with createAuthClient()",
+      "Export signIn, signUp, signOut methods",
+      "Export useSession hook for client components",
+      "Test client can be imported without errors"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build sign up form component",
+    "steps": [
+      "Create components/SignUpForm.tsx client component",
+      "Add name, email, password inputs with controlled state",
+      "Add client-side validation (email format, password length)",
+      "Integrate with auth client signUp method",
+      "Display error messages on failure",
+      "Handle success (will redirect in parent)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build login form component",
+    "steps": [
+      "Create components/LoginForm.tsx client component",
+      "Add email, password inputs with controlled state",
+      "Add client-side validation",
+      "Integrate with auth client signIn method",
+      "Display error messages on failure",
+      "Handle success (will redirect in parent)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Create authentication page",
+    "steps": [
+      "Create app/authenticate/page.tsx",
+      "Include both SignUpForm and LoginForm components",
+      "Add toggle between sign up and login modes",
+      "Redirect to /dashboard after successful auth",
+      "Style page layout"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add app header with auth state",
+    "steps": [
+      "Create components/Header.tsx server component",
+      "Check auth state with getSession()",
+      "Show app name/logo linking to home",
+      "Show Login/Sign up links when not authenticated",
+      "Show Dashboard link and Logout button when authenticated",
+      "Add to app/layout.tsx"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Implement logout functionality",
+    "steps": [
+      "Create components/LogoutButton.tsx client component",
+      "Call signOut from auth client on click",
+      "Redirect to / after logout",
+      "Add to Header component",
+      "Test logout clears session"
+    ],
+    "passes": false
+  },
+  {
+    "category": "actions",
+    "description": "Create server action for creating notes",
+    "steps": [
+      "Create lib/actions/notes.ts with 'use server'",
+      "Implement createNoteAction() that calls repository",
+      "Get session and validate user is authenticated",
+      "Return created note or error",
+      "Use Zod for input validation if data provided"
+    ],
+    "passes": false
+  },
+  {
+    "category": "actions",
+    "description": "Create server action for updating notes",
+    "steps": [
+      "Implement updateNoteAction(noteId, data) in lib/actions/notes.ts",
+      "Validate user owns the note",
+      "Use Zod schema for title/contentJson validation",
+      "Return updated note or error",
+      "Revalidate path after update"
+    ],
+    "passes": false
+  },
+  {
+    "category": "actions",
+    "description": "Create server action for deleting notes",
+    "steps": [
+      "Implement deleteNoteAction(noteId) in lib/actions/notes.ts",
+      "Validate user owns the note",
+      "Delete and revalidate dashboard path",
+      "Return success/error result"
+    ],
+    "passes": false
+  },
+  {
+    "category": "actions",
+    "description": "Create server action for toggling note sharing",
+    "steps": [
+      "Implement toggleShareAction(noteId, isPublic) in lib/actions/notes.ts",
+      "Validate user owns the note",
+      "Call setNotePublic from repository",
+      "Return updated note with publicSlug",
+      "Revalidate note page"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build dashboard page with RSC data fetching",
+    "steps": [
+      "Create app/dashboard/page.tsx as server component",
+      "Use requireAuth() to protect and get session",
+      "Fetch notes with getNotesByUser() directly",
+      "Pass notes to client component for display",
+      "Handle empty state"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Create notes list component",
+    "steps": [
+      "Create components/NoteList.tsx",
+      "Display note title, updated date, public status for each note",
+      "Link each note to /notes/[id]",
+      "Style as card layout",
+      "Show helpful message when list is empty"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add create note button to dashboard",
+    "steps": [
+      "Create components/CreateNoteButton.tsx client component",
+      "Call createNoteAction on click",
+      "Navigate to /notes/[id] after creation",
+      "Show loading state while creating",
+      "Add to dashboard page"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Create loading and error states for dashboard",
+    "steps": [
+      "Create app/dashboard/loading.tsx with skeleton UI",
+      "Create app/dashboard/error.tsx with error boundary",
+      "Add 'Try again' functionality",
+      "Style appropriately"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build note editor page with RSC",
+    "steps": [
+      "Create app/notes/[id]/page.tsx as server component",
+      "Use requireAuth() and get session",
+      "Fetch note with getNoteById()",
+      "Return 404 if not found or not owned",
+      "Pass note data to editor component"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Create TipTap editor component",
+    "steps": [
+      "Create components/NoteEditor.tsx client component",
+      "Import useEditor and EditorContent from @tiptap/react",
+      "Import StarterKit, Code, CodeBlock extensions",
+      "Configure heading levels 1-3",
+      "Initialize with note's contentJson",
+      "Add onChange callback to track content changes"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add title input to editor",
+    "steps": [
+      "Add controlled title input in NoteEditor",
+      "Initialize with note.title",
+      "Track title changes in state",
+      "Style input appropriately"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build editor toolbar with formatting buttons",
+    "steps": [
+      "Create components/EditorToolbar.tsx component",
+      "Add Bold and Italic toggle buttons",
+      "Add H1, H2, H3 heading buttons",
+      "Add Paragraph button to reset formatting",
+      "Show active state for current formatting"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add code and list buttons to toolbar",
+    "steps": [
+      "Add Inline code button",
+      "Add Code block button",
+      "Add Bullet list button",
+      "Add Horizontal rule button",
+      "Test all formatting options work"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Implement save functionality",
+    "steps": [
+      "Add Save button to editor that calls updateNoteAction",
+      "Implement debounced auto-save on changes (1-2 second delay)",
+      "Show save status indicator (saving/saved/error)",
+      "Don't trigger auto-save on initial load"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add delete functionality to editor",
+    "steps": [
+      "Add Delete button to editor",
+      "Show confirmation dialog before delete",
+      "Call deleteNoteAction on confirm",
+      "Redirect to /dashboard after delete",
+      "Show loading state during deletion"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add navigation and error handling to editor",
+    "steps": [
+      "Add 'Back to Dashboard' link",
+      "Handle 404 errors gracefully",
+      "Show toast notifications for save/delete results",
+      "Create loading.tsx for editor page"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build share toggle component",
+    "steps": [
+      "Create components/ShareToggle.tsx client component",
+      "Add toggle switch for public/private",
+      "Call toggleShareAction on change",
+      "Display public URL when enabled",
+      "Add Copy URL button"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Add copy URL functionality",
+    "steps": [
+      "Implement clipboard copy with navigator.clipboard",
+      "Show 'Copied!' feedback for 2 seconds",
+      "Handle copy errors gracefully",
+      "Integrate into ShareToggle"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Build public note page with RSC",
+    "steps": [
+      "Create app/p/[slug]/page.tsx as server component",
+      "Fetch note with getNoteByPublicSlug()",
+      "Return 404 if not found or not public",
+      "No auth check needed (public route)",
+      "Pass note to viewer component"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Create public note viewer component",
+    "steps": [
+      "Create components/PublicNoteViewer.tsx",
+      "Display note title as heading",
+      "Render TipTap content with editable: false",
+      "Style for reading (typography, spacing)",
+      "No editing controls visible"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Style the landing page",
+    "steps": [
+      "Update app/page.tsx with better marketing copy",
+      "Add feature highlights",
+      "Improve CTA button styling",
+      "Ensure responsive layout"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Apply consistent styling and dark mode",
+    "steps": [
+      "Review all pages for consistent spacing/padding",
+      "Style editor with clean, minimal design",
+      "Add typography styles for note content",
+      "Test dark mode works across all pages",
+      "Fix any contrast issues"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Implement responsive design",
+    "steps": [
+      "Test all pages on mobile viewport (375px)",
+      "Test on tablet viewport (768px)",
+      "Adjust layouts with Tailwind responsive classes",
+      "Ensure touch targets are appropriate",
+      "Test navigation works on mobile"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Set up Vitest configuration",
+    "steps": [
+      "Create vitest.config.ts with jsdom environment",
+      "Configure path aliases matching tsconfig",
+      "Set test file patterns",
+      "Verify 'bun test' runs correctly"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write unit tests for database utilities",
+    "steps": [
+      "Create __tests__/lib/db.test.ts",
+      "Test getDb() singleton pattern",
+      "Test query<T>() with sample data",
+      "Test get<T>() returns single row",
+      "Test run() executes mutations"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write unit tests for notes repository",
+    "steps": [
+      "Create __tests__/lib/notes.test.ts",
+      "Test createNote() with defaults",
+      "Test getNoteById() authorization",
+      "Test updateNote() updates timestamp",
+      "Test deleteNote() authorization",
+      "Test setNotePublic() generates/clears slug"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write unit tests for server actions",
+    "steps": [
+      "Create __tests__/actions/notes.test.ts",
+      "Mock auth session",
+      "Test createNoteAction creates note",
+      "Test updateNoteAction validates ownership",
+      "Test deleteNoteAction validates ownership",
+      "Test toggleShareAction updates correctly"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Set up Playwright for E2E testing",
+    "steps": [
+      "Install @playwright/test and browsers",
+      "Create playwright.config.ts with webServer config",
+      "Create e2e/ directory",
+      "Create e2e/helpers/auth.ts with signUp/login helpers",
+      "Create e2e/setup.ts for test database setup",
+      "Verify 'bun test:e2e' runs"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write E2E tests for authentication",
+    "steps": [
+      "Create e2e/auth.spec.ts",
+      "Test user can sign up",
+      "Test user can log in",
+      "Test invalid credentials show error",
+      "Test redirect to dashboard after auth",
+      "Test logout works"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write E2E tests for notes CRUD",
+    "steps": [
+      "Create e2e/notes.spec.ts",
+      "Test creating new note from dashboard",
+      "Test editing note title and content",
+      "Test formatting (bold, italic, headings)",
+      "Test auto-save works",
+      "Test delete with confirmation"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write E2E tests for note sharing",
+    "steps": [
+      "Create e2e/sharing.spec.ts",
+      "Test toggling public sharing",
+      "Test public URL is displayed",
+      "Test anonymous access to public note",
+      "Test 404 for private/invalid slugs",
+      "Test copy URL works"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Write E2E tests for responsive and dark mode",
+    "steps": [
+      "Create e2e/responsive.spec.ts",
+      "Test mobile viewport layout",
+      "Test tablet viewport layout",
+      "Test dark mode styling",
+      "Verify all interactions work on mobile"
+    ],
+    "passes": false
+  }
+]
