@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500&display=swap');
+
+/* app/assets/css/main.css */
+
+:root {
+  --background-color: #1A1A2E;
+  --background-light: #3A3A60;
+  --component-bg-color: #2C2C54;
+  --component-bg-color-rgb: 44, 44, 84;
+  --primary-accent-color: #ff74ef;
+  --secondary-accent-color: #86e5ff;
+  --text-color: #EAEAEA;
+  --text-color-secondary: #dcdcdcff;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: var(--background-color);
+  background-image: radial-gradient(ellipse at top center, var(--background-light) 0%, var(--background-color) 70%);
+  color: var(--text-color);
+}
+
+h1, .hero-title {
+  font-family: 'Lora', serif;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.btn {
+  background: var(--primary-accent-color);
+  color: #fff !important;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.header {
+  background-color: rgba(var(--component-bg-color-rgb), 0.6); 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--secondary-accent-color);
+  text-decoration: none;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.nav-item {
+  margin-left: 1.5rem;
+}
+
+.nav-item a{
+  text-decoration: none;
+  color: var(--text-color-secondary);
+  transition: color 0.3s ease;
+  font-size: 0.9em;
+}
+
+.nav-item a:hover {
+  color: var(--primary-accent-color);
+}
+
+.router-link-active {
+  color: var(--secondary-accent-color);
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* Remove padding from main on homepage */
+.main-content:has(.hero-section) {
+    padding: 0;
+}
+
+.footer {
+  background-color: var(--component-bg-color);
+  color: var(--text-color-secondary);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem 2rem; /* Added top padding to account for sticky nav */
+  min-height: 500px;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 6px 0 0 6px;
+  font-size: 1rem;
+  background-color: rgba(0,0,0,0.2);
+  color: var(--text-color);
+  outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-color-secondary);
+    opacity: 0.8;
+}
+
+.search-button {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--primary-accent-color);
+  border-radius: 0 6px 6px 0;
+  background-color: var(--primary-accent-color);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  opacity: 0.9;
+}
+
+/* Features Section */
+.features-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: var(--component-bg-color);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex-basis: 300px;
+}
+
+.feature-title {
+  font-size: 1.3rem;
+  color: var(--secondary-accent-color);
+  margin-bottom: 1rem;
+}
+
+.feature-icon {
+  color: var(--primary-accent-color);
+  margin-bottom: 1.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Recent Combos Section */
+.recent-combos-section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.section-title {
+  font-family: 'Lora', serif;
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 3rem;
+}
+
+.combo-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.combo-card {
+  background-color: var(--component-bg-color);
+  padding: 0 1.5rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-basis: 300px;
+  text-align: left;
+  transition: transform 0.2s ease-in-out;
+}
+
+.combo-card:hover {
+    transform: translateY(-5px);
+}
+
+.combo-title {
+  font-size: 1.4rem;
+  color: var(--primary-accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.combo-description {
+  font-size: 0.95rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 1rem;
+}
+
+.combo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: rgba(134, 229, 255, 0.2); /* secondary-accent-color with transparency */
+  color: var(--secondary-accent-color);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Create Page */
+.create-page {
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.page-title {
+  font-family: 'Lora', serif;
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.create-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.create-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+}
+
+.create-form input[type="text"],
+.create-form textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color:rgba(0,0,0,0.2);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.create-form input[type="text"]:focus,
+.create-form textarea:focus {
+  border-color: var(--primary-accent-color);
+}
+
+.submit-btn {
+  width: auto; /* Changed from 100% */
+  padding: 0.9rem 2rem; /* Adjusted padding for better look with auto width */
+  font-size: 1.1rem;
+  display: block; /* Added to allow margin auto to center */
+  margin: 2rem auto 0 auto; /* Centered with top margin */
+}
