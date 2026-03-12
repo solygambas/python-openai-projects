@@ -372,7 +372,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 
 ## Gemini CLI  
 
-- 
+- [generating a GEMINI.md file](65-gemini-cli/GEMINI.md).
 
 These examples are based on five courses:
 
