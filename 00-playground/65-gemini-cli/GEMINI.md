@@ -41,3 +41,10 @@ This project is a Nuxt 3/4 starter application named "FoodSmash," designed to sh
 - **Styling:** Adhere to the existing vanilla CSS patterns in `app/assets/css/main.css`.
 - **File Naming:** Use lowercase with hyphens for directories and PascalCase or lowercase for Vue files as per project current state (e.g., `create.vue`, `index.vue`).
 - **Imports:** Prefer explicit imports for Vue and Vitest utilities.
+
+## Coding Preferences
+
+- Do not use semicolons for any JS/TS file.
+- Do not use Tailwind classes in component templates.
+- Keep project dependencies minimal.
+- Use relative imports and NOT a path alias.
