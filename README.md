@@ -66,6 +66,9 @@ We are also relying on several short courses:
 - [Open Source Models with Hugging Face](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Maria Khalusova, Marc Sun, Younes Belkada (2024).
 - [Building an AI-Powered Game](https://www.deeplearning.ai/short-courses/open-source-models-hugging-face/) by Niki Birkner and Nick Walton (2024).
 - [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).
+- [Claude Code: A Highly Agentic Coding Assistant](https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/) by Elie Schoppik (2025).
+- [MCP: Build Rich-Context AI Apps with Anthropic](https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/) by Elie Schoppik (2025).
+- [Gemini CLI Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9h-AKdBSCRpqjD3y6T7Xgrb) by Shaun Pelling - Net Ninja (2025).
 
 ## Show Your Support
 

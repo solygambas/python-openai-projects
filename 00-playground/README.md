@@ -370,6 +370,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - configuring servers for Claude Desktop.
 - [creating and deploying remote servers](64-mcp/L9.ipynb).
 
+## Gemini CLI  
+
+- 
+
 These examples are based on five courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
@@ -402,3 +406,4 @@ We are also relying on several short courses:
 - [Coding with AI (Copilot) Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9joeiiVaLExvfSgmdtBbSPM) by Shaun Pelling - Net Ninja (2025).
 - [Claude Code: A Highly Agentic Coding Assistant](https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/) by Elie Schoppik (2025).
 - [MCP: Build Rich-Context AI Apps with Anthropic](https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/) by Elie Schoppik (2025).
+- [Gemini CLI Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9h-AKdBSCRpqjD3y6T7Xgrb) by Shaun Pelling - Net Ninja (2025).
