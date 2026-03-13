@@ -22,60 +22,41 @@ import { BookOpen, Users, Star } from 'lucide-vue-next';
       </div>
     </div>
     <section class="features-section">
-      <div class="feature-card">
-        <BookOpen :size="48" class="feature-icon" />
-        <h3 class="feature-title">Discover new flavours</h3>
-        <p>
-          Explore a world of unexpected taste sensations and find your next
-          favorite meal.
-        </p>
-      </div>
-      <div class="feature-card">
-        <Users :size="48" class="feature-icon" />
-        <h3 class="feature-title">Join the community</h3>
-        <p>
-          Connect with fellow food enthusiasts, share your own creations, and get
-          feedback.
-        </p>
-      </div>
-      <div class="feature-card">
-        <Star :size="48" class="feature-icon" />
-        <h3 class="feature-title">Rate and review</h3>
-        <p>
-          Help others by rating and reviewing combinations, and climb the
-          leaderboard.
-        </p>
-      </div>
+      <FeatureCard
+        :icon="BookOpen"
+        title="Discover new flavours"
+        description="Explore a world of unexpected taste sensations and find your next favorite meal."
+      />
+      <FeatureCard
+        :icon="Users"
+        title="Join the community"
+        description="Connect with fellow food enthusiasts, share your own creations, and get feedback."
+      />
+      <FeatureCard
+        :icon="Star"
+        title="Rate and review"
+        description="Help others by rating and reviewing combinations, and climb the leaderboard."
+      />
     </section>
 
     <section class="recent-combos-section">
       <h2 class="section-title">Recent Combo's</h2>
       <div class="combo-grid">
-        <div class="combo-card">
-          <h4 class="combo-title">Marmite & Cheese</h4>
-          <p class="combo-description">A classic savory delight, loved by many.</p>
-          <div class="combo-tags">
-            <span class="tag">Savory</span>
-            <span class="tag">Classic</span>
-          </div>
-        </div>
-        <div class="combo-card">
-          <h4 class="combo-title">Maltesers & Salt & Vinegar Crisps</h4>
-          <p class="combo-description">An unexpected sweet and salty crunch.</p>
-          <div class="combo-tags">
-            <span class="tag">Sweet</span>
-            <span class="tag">Salty</span>
-            <span class="tag">Crunchy</span>
-          </div>
-        </div>
-        <div class="combo-card">
-          <h4 class="combo-title">Strawberries & Black Pepper</h4>
-          <p class="combo-description">A surprising burst of sweet and spicy.</p>
-          <div class="combo-tags">
-            <span class="tag">Fruity</span>
-            <span class="tag">Spicy</span>
-          </div>
-        </div>
+        <ComboCard
+          title="Marmite & Cheese"
+          description="A classic savory delight, loved by many."
+          :tags="['Savory', 'Classic']"
+        />
+        <ComboCard
+          title="Maltesers & Salt & Vinegar Crisps"
+          description="An unexpected sweet and salty crunch."
+          :tags="['Sweet', 'Salty', 'Crunchy']"
+        />
+        <ComboCard
+          title="Strawberries & Black Pepper"
+          description="A surprising burst of sweet and spicy."
+          :tags="['Fruity', 'Spicy']"
+        />
       </div>
     </section>
   </div>
