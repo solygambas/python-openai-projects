@@ -33,6 +33,10 @@ const handleSubmit = () => {
     alert('Please fill out all required fields.')
     return
   }
+
+  if (currentTag.value.trim() && tags.value.length < 5 && !tags.value.includes(currentTag.value.trim())) {
+    tags.value.push(currentTag.value.trim())
+  }
   
   const comboData = {
     foodOne: foodOne.value,

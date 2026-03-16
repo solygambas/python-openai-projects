@@ -46,16 +46,19 @@ import { BookOpen, Users, Star } from 'lucide-vue-next';
           title="Marmite & Cheese"
           description="A classic savory delight, loved by many."
           :tags="['Savory', 'Classic']"
+          image="/images/marmite-cheese.png"
         />
         <ComboCard
           title="Maltesers & Salt & Vinegar Crisps"
           description="An unexpected sweet and salty crunch."
           :tags="['Sweet', 'Salty', 'Crunchy']"
+          image="/images/maltesers-chips.png"
         />
         <ComboCard
           title="Strawberries & Black Pepper"
           description="A surprising burst of sweet and spicy."
           :tags="['Fruity', 'Spicy']"
+          image="/images/strawberries-pepper.png"
         />
       </div>
     </section>
