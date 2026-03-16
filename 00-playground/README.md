@@ -376,6 +376,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - making code changes and managing context.
 - [defining custom commands](65-gemini-cli/.gemini/commands/component.toml).
 - running shell commands.
+- using MCP servers and extensions.
 
 These examples are based on five courses:
 
