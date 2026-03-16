@@ -1,0 +1,20 @@
+description = "Create a commit message based on staged changes"
+
+prompt = '''
+Generate a commit message, based on the following git diff:
+
+```
+!{git diff --staged}
+```
+
+Use conventional commit message format with a maximum of 72 characters. 
+Keep lowercase, use imperative mood. 
+
+Format: type(scope): description. 
+Common types: feat, fix, docs, refactor, test, chore, ci, build, perf, style, revert. 
+Use '!' for breaking changes. 
+
+Examples: 'feat(auth): add oauth login', 'fix: resolve user login timeout', 
+'docs: update api reference', 'feat!: remove deprecated endpoints', 'docs: edit readme'.
+
+'''
