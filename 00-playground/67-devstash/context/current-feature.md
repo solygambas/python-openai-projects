@@ -1,23 +1,24 @@
 # Current Feature
 
-<!-- Feature Name -->
+None
 
 ## Status
 
-<!-- Not Started|In Progress|Completed -->
-
-Not Started
-
-## Goals
-
-<!-- Goals & requirements -->
-
-## Notes
-
-<!-- Any extra notes -->
+Idle
 
 ## History
 
-<!-- Keep this updated. Earliest to latest -->
-
+- **Dashboard UI Phase 1** (Completed)
+    - [x] ShadCN UI initialization and components
+    - [x] ShadCN component installation
+    - [x] Dashboard route at /dashboard
+    - [x] Main dashboard layout and any global styles
+    - [x] Dark mode by default
+    - [x] Top bar with search and new item button (display only)
+    - [x] Placeholder for sidebar and main area. Just add an h2 with "Sidebar" and "Main" for now.
+    - *Note:* This was phase 1 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-1-spec.md`.
 - Project setup and boilerplate cleanup
+- Created mock data at `src/lib/mock-data.ts`
+- Started Dashboard UI Phase 1 implementation
+- [x] Completed Phase 1: Basic layout, dark mode, and ShadCN setup.
+- [x] Fixed dark mode by forcing `dark` class on `html` tag and disabling system override.
