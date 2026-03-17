@@ -44,6 +44,7 @@ These projects are based on the following courses:
 - [AI For Developers With GitHub Copilot, Cursor AI & ChatGPT](https://www.udemy.com/course/ai-for-developers-with-github-copilot-cursor-ai-chatgpt/) by Maximilian Schwarzmüller (2024).
 - [Local LLMs via Ollama & LM Studio - The Practical Guide](https://www.udemy.com/course/running-open-llms-locally-practical-guide/) by Maximilian Schwarzmüller (2025).
 - [Claude Code - The Practical Guide](https://www.udemy.com/course/claude-code-the-practical-guide/) by Maximilian Schwarzmüller (2026).
+- [Coding With AI - Planning To Production](https://www.udemy.com/course/coding-with-ai/) by Brad Traversy (2026).
 
 We are also relying on several short courses:
 
