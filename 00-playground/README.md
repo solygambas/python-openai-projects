@@ -378,7 +378,7 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - running shell commands.
 - using MCP servers and extensions.
 
-These examples are based on five courses:
+These examples are based on the following courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).

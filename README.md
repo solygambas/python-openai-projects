@@ -36,7 +36,7 @@ You need to create a `.env` file with your `OPENAI_API_KEY`.
 
 ## Acknowledgments
 
-These projects are based on five courses:
+These projects are based on the following courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
 - [The Ultimate Guide To ChatGPT & Midjourney](https://www.udemy.com/course/the-ultimate-guide-to-chatgpt-midjourney-prompt-engineering-openai-gpt/) by Colt Steele (2023).
