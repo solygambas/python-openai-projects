@@ -53,6 +53,15 @@ We will create a new branch for every feature/fix. Name branch **feature/[featur
 
 - **Do NOT run `git init`** during feature implementation
 
+### Workflow Commands
+
+```bash
+git add .
+git commit -m 'feat: [description]'
+git checkout main && git merge feature/[branch-name]
+git branch -d feature/[branch-name]
+```
+
 ## Code Review
 
 Review AI-generated code periodically, especially for:
