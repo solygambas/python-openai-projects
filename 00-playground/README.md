@@ -378,6 +378,10 @@ For Stable Diffusion, you need to add your `STABILITY_AI_KEY`. You can find it i
 - running shell commands.
 - using MCP servers and extensions.
 
+## Coding With AI (Claude Code)
+
+- [creating a basic python script](66-chuck-norris-jokes.py).
+
 These examples are based on the following courses:
 
 - [Mastering OpenAI Python APIs: Unleash the Power of GPT4](https://www.udemy.com/course/mastering-openai/) by Colt Steele (2023).
