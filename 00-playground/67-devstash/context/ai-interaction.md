@@ -49,6 +49,10 @@ We will create a new branch for every feature/fix. Name branch **feature/[featur
 - Don't add "nice to have" features
 - Preserve existing patterns in the codebase
 
+## Git/Repository
+
+- **Do NOT run `git init`** during feature implementation
+
 ## Code Review
 
 Review AI-generated code periodically, especially for:
