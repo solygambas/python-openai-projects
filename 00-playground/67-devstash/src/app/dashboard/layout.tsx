@@ -1,41 +1,82 @@
+"use client";
+
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Plus, Sparkles } from "lucide-react";
+import { Search, Plus, Sparkles, PanelLeft, Menu } from "lucide-react";
+import { DashboardSidebar } from "@/components/dashboard-sidebar";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       {/* Top Bar */}
-      <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4">
+        {/* Mobile Menu Trigger */}
+        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+          <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden" />}>
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64 pt-12">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
+              <SheetDescription>
+                Access your items, collections and account settings.
+              </SheetDescription>
+            </SheetHeader>
+            <DashboardSidebar className="border-none bg-background w-full" />
+          </SheetContent>
+        </Sheet>
+
+        {/* Desktop Sidebar Toggle */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="hidden md:flex h-9 w-9 text-muted-foreground"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          <PanelLeft className="h-5 w-5" />
+          <span className="sr-only">Toggle sidebar</span>
+        </Button>
+
         {/* Logo */}
-        <div className="flex items-center gap-2 font-bold text-xl">
-          <div className="bg-primary text-primary-foreground p-1 rounded-md">
-            <Sparkles className="h-6 w-6" />
+        <div className="flex items-center gap-2 font-bold text-lg mr-4">
+          <div className="bg-primary/10 text-primary p-1 rounded-md">
+            <Sparkles className="h-5 w-5" />
           </div>
-          <span className="hidden sm:inline-block">DevStash</span>
+          <span className="hidden lg:inline-block">DevStash</span>
         </div>
 
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <form className="ml-auto flex-1 sm:flex-initial">
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
               <Input
                 type="search"
                 placeholder="Search items..."
-                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[400px] bg-muted/50 border-none"
+                className="pl-9 h-10 sm:w-[300px] md:w-[200px] lg:w-[500px] bg-muted/30 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
               />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded border bg-background text-[10px] font-medium text-muted-foreground/50">
+                <span className="text-xs">⌘</span>
+                <span>K</span>
+              </div>
             </div>
           </form>
           <div className="flex items-center gap-2 ml-auto sm:ml-0">
-            <Button variant="outline" className="hidden sm:flex" size="sm">
+            <Button variant="ghost" className="hidden sm:flex text-muted-foreground" size="sm">
               <Plus className="mr-2 h-4 w-4" />
               New Collection
             </Button>
-            <Button size="sm">
+            <Button size="sm" className="bg-primary hover:bg-primary/90">
               <Plus className="mr-2 h-4 w-4" />
               New Item
             </Button>
@@ -43,18 +84,20 @@ export default function DashboardLayout({
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar Placeholder */}
-        <aside className="hidden w-64 border-r bg-muted/20 md:block">
-          <div className="flex h-full flex-col gap-2 p-6">
-            <h2 className="text-lg font-semibold tracking-tight">Sidebar</h2>
-          </div>
-        </aside>
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Desktop Sidebar */}
+        <div className={cn(
+          "hidden md:block h-full transition-all duration-300 border-r",
+          isCollapsed ? "w-16" : "w-64"
+        )}>
+          <DashboardSidebar 
+            isCollapsed={isCollapsed} 
+          />
+        </div>
 
-        {/* Main Content Area Placeholder */}
-        <main className="flex flex-1 flex-col overflow-y-auto bg-background p-6">
-          <div className="flex h-full flex-col gap-2">
-            <h2 className="text-lg font-semibold tracking-tight md:hidden">Main</h2>
+        {/* Main Content Area */}
+        <main className="flex flex-1 flex-col overflow-y-auto bg-background/50">
+          <div className="flex h-full flex-col">
             {children}
           </div>
         </main>

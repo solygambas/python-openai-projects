@@ -1,13 +1,29 @@
 # Current Feature
 
-None
+**Dashboard UI Phase 2**
+
+- [x] Collapsible sidebar
+- [x] Items/types with links to /items/TYPE (eg.items/snippets)
+- [x] Favorite collections
+- [x] Most recent collections
+- [x] User avatar area at the bottom
+- [x] Drawer icon to open/close sidebar
+- [x] Always a drawer on mobile view
 
 ## Status
 
-Idle
+Completed
 
 ## History
 
+- [x] Implemented Dashboard UI Phase 2:
+    - [x] Created `DashboardSidebar` component with collapsible logic.
+    - [x] Integrated `DashboardSidebar` into `DashboardLayout`.
+    - [x] Added mobile drawer using ShadCN `Sheet` component.
+    - [x] Populated sidebar with mock data (item types, favorites, recent collections).
+    - [x] Added user avatar area with dropdown menu and settings icon.
+    - [x] Fixed sidebar styling to match screenshot (colors, counts, filled stars, collapsible "Types" and "Collections").
+    - [x] Improved top bar with sidebar toggle button and command shortcut hint.
 - **Dashboard UI Phase 1** (Completed)
     - [x] ShadCN UI initialization and components
     - [x] ShadCN component installation
