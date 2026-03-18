@@ -8,6 +8,13 @@ Idle
 
 ## History
 
+- **Dashboard UI Phase 3** (Completed)
+    - [x] The main area to the right
+    - [x] Recent collections
+    - [x] Pinned Items
+    - [x] 10 Recent items
+    - [x] 4 stats cards at the top for number of items, collections, favorite items and favorite collections
+    - *Note:* This was phase 3 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-3-spec.md`.
 - **Dashboard UI Phase 2** (Completed)
     - [x] Collapsible sidebar
     - [x] Items/types with links to /items/TYPE (eg. /items/snippets)
