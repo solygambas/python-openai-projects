@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url is now configured in prisma.config.ts for Prisma 7
+}
+
+// ============================================
+// USER
+// ============================================
+model User {
+  id                   String       @id @default(cuid())
+  email                String       @unique
+  emailVerified        DateTime?
+  name                 String?
+  image                String?
+  password             String?
+  isPro                Boolean      @default(false)
+  stripeCustomerId     String?      @unique
+  stripeSubscriptionId String?      @unique
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  // Relations
+  items       Item[]
+  collections Collection[]
+  itemTypes   ItemType[]
+  accounts    Account[]
+  sessions    Session[]
+
+  @@map("users")
+}
+
+// ============================================
+// NEXTAUTH MODELS
+// ============================================
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// ITEM
+// ============================================
+enum ContentType {
+  TEXT
+  FILE
+  URL
+}
+
+model Item {
+  id          String      @id @default(cuid())
+  title       String
+  contentType ContentType
+  content     String?     @db.Text // For TEXT types
+  fileUrl     String?     // R2 URL for FILE types
+  fileName    String?     // Original filename
+  fileSize    Int?        // Size in bytes
+  url         String?     // For URL/link types
+  description String?     @db.Text
+  isFavorite  Boolean     @default(false)
+  isPinned    Boolean     @default(false)
+  language    String?     // Programming language for syntax highlighting
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemTypeId String
+  itemType   ItemType @relation(fields: [itemTypeId], references: [id])
+  tags       Tag[]    @relation("ItemTags")
+
+  // Many-to-many with collections
+  collections ItemCollection[]
+
+  @@index([userId])
+  @@index([itemTypeId])
+  @@index([createdAt])
+  @@map("items")
+}
+
+// ============================================
+// ITEM TYPE
+// ============================================
+model ItemType {
+  id       String  @id @default(cuid())
+  name     String
+  icon     String
+  color    String
+  isSystem Boolean @default(false)
+
+  // Relations
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items  Item[]
+
+  // Collections that use this as default type
+  defaultForCollections Collection[]
+
+  @@unique([name, userId])
+  @@map("item_types")
+}
+
+// ============================================
+// COLLECTION
+// ============================================
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultTypeId String?
+  defaultType   ItemType? @relation(fields: [defaultTypeId], references: [id])
+
+  // Many-to-many with items
+  items ItemCollection[]
+
+  @@index([userId])
+  @@map("collections")
+}
+
+// ============================================
+// ITEM-COLLECTION JOIN TABLE
+// ============================================
+model ItemCollection {
+  itemId       String
+  collectionId String
+  addedAt      DateTime @default(now())
+
+  item       Item       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, collectionId])
+  @@map("item_collections")
+}
+
+// ============================================
+// TAG
+// ============================================
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  items Item[] @relation("ItemTags")
+
+  @@map("tags")
+}

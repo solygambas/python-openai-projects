@@ -1,13 +1,44 @@
 # Current Feature
 
-None
+Implement Neon PostgreSQL and Prisma
 
 ## Status
 
-Idle
+Completed
+
+## Tasks
+
+- [x] Install Prisma 7 and `@prisma/client`
+- [x] Initialize Prisma with `npx prisma init`
+- [x] Configure `schema.prisma` with Neon PostgreSQL provider
+- [x] Implement data models from `@context/project-overview.md`:
+    - [x] `User` model
+    - [x] NextAuth models (`Account`, `Session`, `VerificationToken`)
+    - [x] `Item` model and `ContentType` enum
+    - [x] `ItemType` model
+    - [x] `Collection` model
+    - [x] `ItemCollection` join table
+    - [x] `Tag` model
+- [x] Add appropriate indexes and cascade deletes as per `@context/features/database-spec.md`
+- [x] Create the initial migration: `npx prisma migrate dev --name init`
+- [x] Create a seed script `prisma/seed.ts` for system item types
+- [x] Verify the setup by running the seed script
+- [x] Create a singleton Prisma client in `src/lib/prisma.ts`
+- [x] Added helper scripts to `package.json` (`db:migrate`, `db:seed`, etc.)
+- [x] Configured `prisma.config.ts` for Prisma 7 (centralized config)
+- [x] Created `scripts/test-db.ts` to verify database connection using `node --experimental-strip-types` and `--env-file` support
+- [x] Removed `dotenv` and shifted to native Node.js `--env-file` for all scripts and Prisma config
 
 ## History
 
+- **Neon PostgreSQL and Prisma Setup** (Completed)
+    - [x] Prisma 7 installation and configuration
+    - [x] Database schema implementation
+    - [x] Neon serverless adapter setup
+    - [x] Initial migration and seeding
+    - [x] Singleton Prisma client implementation
+    - [x] Verified database connectivity with a custom test script using native Node env loading
+    - [x] Cleaned up project by removing `dotenv` and `tsx` in favor of native Node 24+ features (`--experimental-strip-types`, `--env-file`)
 - **Dashboard UI Phase 3** (Completed)
     - [x] The main area to the right
     - [x] Recent collections
