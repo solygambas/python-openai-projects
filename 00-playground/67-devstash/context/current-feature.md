@@ -1,19 +1,15 @@
 # Current Feature
 
-Dashboard Collections
+[Feature Title]
 
 ## Status
 
-Completed
+Not Started
 
 ## Tasks
 
-- [x] Create `src/lib/db/collections.ts` with data fetching functions
-- [x] Fetch collections directly in the dashboard server component
-- [x] Implement border color logic based on most-used content type in collection
-- [x] Display icons for all content types present in each collection
-- [x] Update collection stats cards with real data
-- [x] Ensure layout matches the existing design/screenshot
+- [ ] Task 1
+- [ ] Task 2
 
 ## History
 
