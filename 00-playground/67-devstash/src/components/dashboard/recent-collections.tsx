@@ -25,19 +25,20 @@ const iconMap: Record<string, any> = {
 interface Collection {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   isFavorite: boolean;
   itemCount: number;
   itemTypeIds: string[];
   updatedAt: Date;
+  borderColor?: string;
 }
 
 interface RecentCollectionsProps {
   collections: Collection[];
-  mockItemTypes: any[];
+  itemTypes: any[];
 }
 
-export function RecentCollections({ collections, mockItemTypes }: RecentCollectionsProps) {
+export function RecentCollections({ collections, itemTypes }: RecentCollectionsProps) {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
@@ -48,10 +49,7 @@ export function RecentCollections({ collections, mockItemTypes }: RecentCollecti
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {collections.map((collection) => {
-          // Get the color from the first item type
-          const firstTypeId = collection.itemTypeIds[0];
-          const firstType = mockItemTypes.find(t => t.id === firstTypeId);
-          const borderColor = firstType?.color || '#6b7280';
+          const borderColor = collection.borderColor || '#6b7280';
 
           return (
             <Card 
@@ -84,7 +82,7 @@ export function RecentCollections({ collections, mockItemTypes }: RecentCollecti
                 </p>
                 <div className="flex gap-2 mt-4">
                   {collection.itemTypeIds.map(typeId => {
-                    const type = mockItemTypes.find(t => t.id === typeId);
+                    const type = itemTypes.find(t => t.id === typeId);
                     const Icon = iconMap[type?.icon || 'File'] || File;
                     return <Icon key={typeId} className="h-4 w-4" style={{ color: type?.color }} />;
                   })}

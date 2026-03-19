@@ -5,16 +5,15 @@ interface RecentItemsProps {
   items: any[];
   iconMap: Record<string, any>;
   formatDate: (date: Date) => string;
-  mockItemTypes: any[];
 }
 
-export function RecentItems({ items, iconMap, formatDate, mockItemTypes }: RecentItemsProps) {
+export function RecentItems({ items, iconMap, formatDate }: RecentItemsProps) {
   return (
     <section className="space-y-4">
       <h2 className="text-xl font-semibold tracking-tight">Recent Items</h2>
       <div className="grid gap-4">
         {items.map((item) => {
-          const itemType = mockItemTypes.find(t => t.id === item.itemTypeId);
+          const itemType = item.itemType;
           const Icon = iconMap[itemType?.icon || 'File'] || File;
           
           return (
@@ -30,9 +29,9 @@ export function RecentItems({ items, iconMap, formatDate, mockItemTypes }: Recen
               </div>
               <div className="flex items-center gap-4">
                  <div className="hidden sm:flex gap-1">
-                  {item.tags.slice(0, 2).map((tag: string) => (
-                    <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 h-4 font-normal">
-                      {tag}
+                  {item.tags.slice(0, 2).map((tag: any) => (
+                    <Badge key={tag.id} variant="outline" className="text-[10px] px-1 py-0 h-4 font-normal">
+                      {tag.name}
                     </Badge>
                   ))}
                 </div>

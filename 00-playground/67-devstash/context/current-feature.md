@@ -1,6 +1,6 @@
 # Current Feature
 
-Seed Sample Data
+Dashboard Collections
 
 ## Status
 
@@ -8,14 +8,27 @@ Completed
 
 ## Tasks
 
-- [x] Install `bcryptjs` for password hashing
-- [x] Implement demo user seeding in `prisma/seed.ts`
-- [x] Implement system item types seeding in `prisma/seed.ts` (updated)
-- [x] Implement sample collections and items seeding in `prisma/seed.ts`
-- [x] Verify seeding by running `npm run db:seed`
+- [x] Create `src/lib/db/collections.ts` with data fetching functions
+- [x] Fetch collections directly in the dashboard server component
+- [x] Implement border color logic based on most-used content type in collection
+- [x] Display icons for all content types present in each collection
+- [x] Update collection stats cards with real data
+- [x] Ensure layout matches the existing design/screenshot
 
 ## History
 
+- **Dashboard Collections** (Completed)
+    - [x] Created `src/lib/db/collections.ts`, `src/lib/db/items.ts`, `src/lib/db/item-types.ts`, and `src/lib/db/users.ts` with real data fetching functions
+    - [x] Updated `src/app/dashboard/page.tsx` to be an async server component fetching real data
+    - [x] Implemented border color logic in `getRecentCollections` based on the most frequent content type
+    - [x] Updated `RecentCollections`, `PinnedItems`, and `RecentItems` components to use real data from Prisma
+    - [x] Verified build succeeds and database connectivity is working
+- **Verification Script & Demo Data Integrity** (Completed)
+    - [x] Updated `scripts/test-db.ts` to fetch and display demo data
+    - [x] Enabled ESM support in `package.json` to fix module compatibility warnings
+    - [x] Optimized `tsconfig.json` for script execution and TypeScript handling
+    - [x] Verified full database and demo data integrity via `npm run db:test`
+    - [x] Verified build succeeds and merged to main
 - **Seed Sample Data** (Completed)
     - [x] Installed `bcryptjs` and `@types/bcryptjs`
     - [x] Updated `prisma/seed.ts` to hash password and seed comprehensive sample data

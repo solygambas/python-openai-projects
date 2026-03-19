@@ -6,10 +6,9 @@ interface PinnedItemProps {
   items: any[];
   iconMap: Record<string, any>;
   formatDate: (date: Date) => string;
-  mockItemTypes: any[];
 }
 
-export function PinnedItems({ items, iconMap, formatDate, mockItemTypes }: PinnedItemProps) {
+export function PinnedItems({ items, iconMap, formatDate }: PinnedItemProps) {
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2">
@@ -18,7 +17,7 @@ export function PinnedItems({ items, iconMap, formatDate, mockItemTypes }: Pinne
       </div>
       <div className="grid gap-4">
         {items.map((item) => {
-          const itemType = mockItemTypes.find(t => t.id === item.itemTypeId);
+          const itemType = item.itemType;
           const Icon = iconMap[itemType?.icon || 'File'] || File;
           const borderColor = itemType?.color || '#6b7280';
           
@@ -42,9 +41,9 @@ export function PinnedItems({ items, iconMap, formatDate, mockItemTypes }: Pinne
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-1">{item.description}</p>
                     <div className="flex gap-2 pt-1">
-                      {item.tags.map((tag: string) => (
-                        <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0 h-4 font-normal">
-                          {tag}
+                      {item.tags.map((tag: any) => (
+                        <Badge key={tag.id} variant="secondary" className="text-[10px] px-1.5 py-0 h-4 font-normal">
+                          {tag.name}
                         </Badge>
                       ))}
                     </div>
