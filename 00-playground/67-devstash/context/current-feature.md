@@ -1,6 +1,6 @@
 # Current Feature
 
-Implement Neon PostgreSQL and Prisma
+Seed Sample Data
 
 ## Status
 
@@ -8,29 +8,19 @@ Completed
 
 ## Tasks
 
-- [x] Install Prisma 7 and `@prisma/client`
-- [x] Initialize Prisma with `npx prisma init`
-- [x] Configure `schema.prisma` with Neon PostgreSQL provider
-- [x] Implement data models from `@context/project-overview.md`:
-    - [x] `User` model
-    - [x] NextAuth models (`Account`, `Session`, `VerificationToken`)
-    - [x] `Item` model and `ContentType` enum
-    - [x] `ItemType` model
-    - [x] `Collection` model
-    - [x] `ItemCollection` join table
-    - [x] `Tag` model
-- [x] Add appropriate indexes and cascade deletes as per `@context/features/database-spec.md`
-- [x] Create the initial migration: `npx prisma migrate dev --name init`
-- [x] Create a seed script `prisma/seed.ts` for system item types
-- [x] Verify the setup by running the seed script
-- [x] Create a singleton Prisma client in `src/lib/prisma.ts`
-- [x] Added helper scripts to `package.json` (`db:migrate`, `db:seed`, etc.)
-- [x] Configured `prisma.config.ts` for Prisma 7 (centralized config)
-- [x] Created `scripts/test-db.ts` to verify database connection using `node --experimental-strip-types` and `--env-file` support
-- [x] Removed `dotenv` and shifted to native Node.js `--env-file` for all scripts and Prisma config
+- [x] Install `bcryptjs` for password hashing
+- [x] Implement demo user seeding in `prisma/seed.ts`
+- [x] Implement system item types seeding in `prisma/seed.ts` (updated)
+- [x] Implement sample collections and items seeding in `prisma/seed.ts`
+- [x] Verify seeding by running `npm run db:seed`
 
 ## History
 
+- **Seed Sample Data** (Completed)
+    - [x] Installed `bcryptjs` and `@types/bcryptjs`
+    - [x] Updated `prisma/seed.ts` to hash password and seed comprehensive sample data
+    - [x] Implemented idempotency in seed script by clearing existing user data
+    - [x] Successfully ran `npm run db:seed`
 - **Neon PostgreSQL and Prisma Setup** (Completed)
     - [x] Prisma 7 installation and configuration
     - [x] Database schema implementation
