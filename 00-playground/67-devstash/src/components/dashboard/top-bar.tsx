@@ -8,7 +8,7 @@ import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { useSidebar } from "./sidebar-provider";
 
 export function DashboardTopBar() {
-  const { isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen } = useSidebar();
+  const { isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen, sidebarData } = useSidebar();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4">
@@ -25,7 +25,16 @@ export function DashboardTopBar() {
               Access your items, collections and account settings.
             </SheetDescription>
           </SheetHeader>
-          <DashboardSidebar className="border-none bg-background w-full" />
+          {sidebarData && (
+            <DashboardSidebar 
+              className="border-none bg-background w-full" 
+              user={sidebarData.user}
+              itemTypes={sidebarData.itemTypes}
+              itemTypeCounts={sidebarData.itemTypeCounts}
+              favoriteCollections={sidebarData.favoriteCollections}
+              recentCollections={sidebarData.recentCollections}
+            />
+          )}
         </SheetContent>
       </Sheet>
 

@@ -22,12 +22,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  mockItemTypes, 
-  mockCollections, 
-  mockUser,
-  mockItemTypeCounts
-} from "@/lib/mock-data";
 
 const iconMap: Record<string, LucideIcon> = {
   Code,
@@ -41,7 +35,9 @@ const iconMap: Record<string, LucideIcon> = {
 
 interface NavItemProps {
   href: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  customIcon?: React.ReactNode;
+  fillIcon?: boolean;
   children: React.ReactNode;
   count?: number;
   iconColor?: string;
@@ -54,6 +50,8 @@ interface NavItemProps {
 const NavItem = ({ 
   href, 
   icon: Icon, 
+  customIcon,
+  fillIcon,
   children, 
   count,
   iconColor,
@@ -66,17 +64,24 @@ const NavItem = ({
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm transition-colors",
+        "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm transition-colors group",
         isActive 
           ? "bg-primary/10 text-primary font-medium" 
           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
         isCollapsed && "justify-center px-2"
       )}
     >
-      <Icon 
-        className={cn("h-4 w-4 shrink-0")} 
-        style={{ color: iconColor }}
-      />
+      {customIcon ? (
+        <div className="flex h-4 w-4 shrink-0 items-center justify-center">
+          {customIcon}
+        </div>
+      ) : Icon ? (
+        <Icon 
+          className={cn("h-4 w-4 shrink-0")} 
+          style={{ color: iconColor }}
+          fill={fillIcon ? "currentColor" : "none"}
+        />
+      ) : null}
       {!isCollapsed && (
         <>
           <span className="flex-1 truncate">{children}</span>
@@ -119,20 +124,42 @@ const SectionHeader = ({
 
 interface DashboardSidebarProps {
   isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
   className?: string;
+  user: {
+    name: string | null;
+    email: string;
+    image: string | null;
+  };
+  itemTypes: any[];
+  itemTypeCounts: Record<string, number>;
+  favoriteCollections: any[];
+  recentCollections: any[];
 }
 
 export function DashboardSidebar({ 
   isCollapsed, 
-  className 
+  className,
+  user,
+  itemTypes,
+  itemTypeCounts,
+  favoriteCollections,
+  recentCollections
 }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [isTypesOpen, setIsTypesOpen] = React.useState(true);
   const [isCollectionsOpen, setIsCollectionsOpen] = React.useState(true);
-  
-  const favoriteCollections = mockCollections.filter(c => c.isFavorite);
-  const otherCollections = mockCollections.filter(c => !c.isFavorite);
+
+  // Custom sort order for item types
+  const typeOrder = ['snippet', 'prompt', 'command', 'note', 'file', 'image', 'link'];
+  const sortedItemTypes = [...itemTypes].sort((a, b) => {
+    const indexA = typeOrder.indexOf(a.name);
+    const indexB = typeOrder.indexOf(b.name);
+    
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
 
   return (
     <aside 
@@ -154,13 +181,13 @@ export function DashboardSidebar({
             />
             {isTypesOpen && (
               <div className="mt-1 space-y-0.5">
-                {mockItemTypes.map((type) => (
+                {sortedItemTypes.map((type) => (
                   <NavItem 
                     key={type.id} 
                     href={`/items/${type.name}s`} 
                     icon={iconMap[type.icon] || File}
                     iconColor={type.color}
-                    count={mockItemTypeCounts[type.name as keyof typeof mockItemTypeCounts]}
+                    count={itemTypeCounts[type.name] || 0}
                     isCollapsed={isCollapsed}
                     isActive={pathname === `/items/${type.name}s`}
                   >
@@ -182,42 +209,50 @@ export function DashboardSidebar({
             {isCollectionsOpen && (
               <div className="mt-1 space-y-4">
                 {/* Favorites Sub-section */}
-                <div>
-                  {!isCollapsed && (
-                    <h4 className="px-3 mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
-                      Favorites
-                    </h4>
-                  )}
-                  <div className="space-y-0.5">
-                    {favoriteCollections.map((coll) => (
-                      <NavItem 
-                        key={coll.id} 
-                        href={`/collections/${coll.id}`} 
-                        icon={Folder}
-                        rightIcon={Star}
-                        rightIconColor="text-yellow-500"
-                        isCollapsed={isCollapsed}
-                        isActive={pathname === `/collections/${coll.id}`}
-                      >
-                        {coll.name}
-                      </NavItem>
-                    ))}
+                {favoriteCollections.length > 0 && (
+                  <div>
+                    {!isCollapsed && (
+                      <h4 className="px-3 mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+                        Favorites
+                      </h4>
+                    )}
+                    <div className="space-y-0.5">
+                      {favoriteCollections.map((coll) => (
+                        <NavItem 
+                          key={coll.id} 
+                          href={`/collections/${coll.id}`} 
+                          icon={Star}
+                          iconColor="#eab308"
+                          fillIcon={true}
+                          count={coll.itemCount}
+                          isCollapsed={isCollapsed}
+                          isActive={pathname === `/collections/${coll.id}`}
+                        >
+                          {coll.name}
+                        </NavItem>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* All Collections Sub-section */}
+                {/* Recent Collections Sub-section */}
                 <div>
                   {!isCollapsed && (
                     <h4 className="px-3 mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
-                      All Collections
+                      Recent
                     </h4>
                   )}
                   <div className="space-y-0.5">
-                    {otherCollections.map((coll) => (
+                    {recentCollections.map((coll) => (
                       <NavItem 
                         key={coll.id} 
                         href={`/collections/${coll.id}`} 
-                        icon={Folder}
+                        customIcon={
+                          <div 
+                            className="h-2 w-2 rounded-full" 
+                            style={{ backgroundColor: coll.borderColor || '#6b7280' }} 
+                          />
+                        }
                         count={coll.itemCount}
                         isCollapsed={isCollapsed}
                         isActive={pathname === `/collections/${coll.id}`}
@@ -225,6 +260,20 @@ export function DashboardSidebar({
                         {coll.name}
                       </NavItem>
                     ))}
+                    
+                    {!isCollapsed && (
+                      <div className="mt-2 pt-2 border-t border-muted/30">
+                        <NavItem 
+                          href="/collections" 
+                          isCollapsed={isCollapsed}
+                          isActive={pathname === "/collections"}
+                        >
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground">
+                            View all collections
+                          </span>
+                        </NavItem>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -240,13 +289,17 @@ export function DashboardSidebar({
           isCollapsed && "justify-center"
         )}>
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground overflow-hidden">
-            <User className="h-5 w-5" />
+            {user.image ? (
+              <img src={user.image} alt={user.name || ""} className="h-full w-full object-cover" />
+            ) : (
+              <User className="h-5 w-5" />
+            )}
           </div>
           {!isCollapsed && (
             <>
               <div className="flex flex-1 flex-col overflow-hidden text-sm">
-                <span className="truncate font-medium text-foreground">{mockUser.name}</span>
-                <span className="truncate text-xs text-muted-foreground">{mockUser.email}</span>
+                <span className="truncate font-medium text-foreground">{user.name}</span>
+                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
               </div>
               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                 <Settings className="h-4 w-4" />

@@ -1,9 +1,10 @@
 import prisma from '@/lib/prisma';
 
-export async function getRecentCollections(userId: string, limit = 6) {
+export async function getRecentCollections(userId: string, limit = 6, isFavorite?: boolean) {
   const collections = await prisma.collection.findMany({
     where: {
       userId,
+      ...(isFavorite !== undefined ? { isFavorite } : {}),
     },
     take: limit,
     orderBy: {

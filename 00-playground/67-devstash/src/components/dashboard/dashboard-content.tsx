@@ -4,8 +4,14 @@ import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebar-provider";
 
-export function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { isCollapsed } = useSidebar();
+export function DashboardContent({ 
+  children,
+}: { 
+  children: React.ReactNode;
+}) {
+  const { isCollapsed, sidebarData } = useSidebar();
+
+  if (!sidebarData) return null;
 
   return (
     <div className="flex flex-1 overflow-hidden relative">
@@ -16,6 +22,11 @@ export function DashboardContent({ children }: { children: React.ReactNode }) {
       )}>
         <DashboardSidebar 
           isCollapsed={isCollapsed} 
+          user={sidebarData.user}
+          itemTypes={sidebarData.itemTypes}
+          itemTypeCounts={sidebarData.itemTypeCounts}
+          favoriteCollections={sidebarData.favoriteCollections}
+          recentCollections={sidebarData.recentCollections}
         />
       </div>
 
@@ -28,3 +39,4 @@ export function DashboardContent({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

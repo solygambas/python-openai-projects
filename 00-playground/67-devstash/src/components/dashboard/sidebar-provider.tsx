@@ -2,16 +2,31 @@
 
 import React, { createContext, useContext, useState } from "react";
 
+interface SidebarData {
+  user: any;
+  itemTypes: any[];
+  itemTypeCounts: Record<string, number>;
+  favoriteCollections: any[];
+  recentCollections: any[];
+}
+
 interface SidebarContextType {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
   isMobileOpen: boolean;
   setIsMobileOpen: (value: boolean) => void;
+  sidebarData?: SidebarData;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export function SidebarProvider({ children }: { children: React.ReactNode }) {
+export function SidebarProvider({ 
+  children,
+  sidebarData
+}: { 
+  children: React.ReactNode;
+  sidebarData?: SidebarData;
+}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -21,7 +36,8 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
         isCollapsed, 
         setIsCollapsed, 
         isMobileOpen, 
-        setIsMobileOpen 
+        setIsMobileOpen,
+        sidebarData
       }}
     >
       {children}

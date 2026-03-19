@@ -13,6 +13,14 @@ Not Started
 
 ## History
 
+- **Stats & Sidebar Implementation** (Completed)
+    - [x] Added `getItemTypeCounts(userId)` in `src/lib/db/items.ts`
+    - [x] Updated `getRecentCollections` in `src/lib/db/collections.ts` to support favorite filtering
+    - [x] Updated `SidebarProvider` to include `sidebarData` in context
+    - [x] Updated `DashboardLayout` to fetch real sidebar data (user, types, counts, collections)
+    - [x] Updated `DashboardSidebar` to use real data and implemented colored circle indicators for recent collections
+    - [x] Added "View all collections" link in sidebar
+    - [x] Verified build succeeds and real data is displayed in sidebar and stats
 - **Dashboard Items** (Completed)
     - [x] Created `src/lib/db/items.ts` with data fetching functions for pinned and recent items
     - [x] Updated `DashboardPage` to fetch real item data from Prisma
