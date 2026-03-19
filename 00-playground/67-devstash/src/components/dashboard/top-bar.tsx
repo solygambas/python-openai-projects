@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Plus, Sparkles, PanelLeft, Menu } from "lucide-react";
+import { FolderPlus, Search, Plus, Sparkles, PanelLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -74,7 +74,7 @@ export function DashboardTopBar() {
         </div>
         <div className="flex items-center gap-2 ml-auto sm:ml-0">
           <Button variant="ghost" className="hidden sm:flex text-muted-foreground" size="sm">
-            <Plus className="mr-2 h-4 w-4" />
+            <FolderPlus className="mr-2 h-4 w-4" />
             New Collection
           </Button>
           <Button size="sm" className="bg-primary hover:bg-primary/90">
