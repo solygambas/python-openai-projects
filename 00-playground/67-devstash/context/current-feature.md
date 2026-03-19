@@ -13,6 +13,12 @@ Not Started
 
 ## History
 
+- **Dashboard Items** (Completed)
+    - [x] Created `src/lib/db/items.ts` with data fetching functions for pinned and recent items
+    - [x] Updated `DashboardPage` to fetch real item data from Prisma
+    - [x] Implemented type-based border indicators and icons in `PinnedItems` and `RecentItems`
+    - [x] Added empty state handling for `PinnedItems` to hide the section when no items are pinned
+    - [x] Verified stats display correctly using database counts
 - **Dashboard Collections** (Completed)
     - [x] Created `src/lib/db/collections.ts`, `src/lib/db/items.ts`, `src/lib/db/item-types.ts`, and `src/lib/db/users.ts` with real data fetching functions
     - [x] Updated `src/app/dashboard/page.tsx` to be an async server component fetching real data

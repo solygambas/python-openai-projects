@@ -9,6 +9,8 @@ interface PinnedItemProps {
 }
 
 export function PinnedItems({ items, iconMap, formatDate }: PinnedItemProps) {
+  if (items.length === 0) return null;
+
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2">

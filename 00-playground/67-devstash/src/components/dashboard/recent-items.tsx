@@ -15,16 +15,22 @@ export function RecentItems({ items, iconMap, formatDate }: RecentItemsProps) {
         {items.map((item) => {
           const itemType = item.itemType;
           const Icon = iconMap[itemType?.icon || 'File'] || File;
+          const borderColor = itemType?.color || '#6b7280';
           
           return (
-            <div key={item.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer border border-transparent hover:border-white/5">
+            <div key={item.id} className="flex items-center justify-between p-2 pl-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden">
+              {/* Colored border indicator */}
+              <div 
+                className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full" 
+                style={{ backgroundColor: borderColor }}
+              />
               <div className="flex items-center gap-4">
                 <div className="h-8 w-8 rounded bg-secondary flex items-center justify-center">
-                  <Icon className="h-4 w-4" style={{ color: itemType?.color || 'currentColor' }} />
+                  <Icon className="h-4 w-4" style={{ color: borderColor }} />
                 </div>
                 <div>
                   <p className="text-sm font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
