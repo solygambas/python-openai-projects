@@ -1,0 +1,1 @@
+C:/Users/JoachimP/Documents/solygambas/repos/python-openai-projects/00-playground/67-devstash/AGENTS.md
