@@ -41,5 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 !lib
+!.claude
 
 /src/generated/prisma
