@@ -2,12 +2,20 @@
 
 import React, { createContext, useContext, useState } from "react";
 
+import type { User, ItemType, Collection } from "@prisma/client";
+
+interface CollectionWithStats extends Collection {
+  itemCount: number;
+  borderColor?: string;
+  itemTypeIds: string[];
+}
+
 interface SidebarData {
-  user: any;
-  itemTypes: any[];
+  user: User;
+  itemTypes: ItemType[];
   itemTypeCounts: Record<string, number>;
-  favoriteCollections: any[];
-  recentCollections: any[];
+  favoriteCollections: CollectionWithStats[];
+  recentCollections: CollectionWithStats[];
 }
 
 interface SidebarContextType {

@@ -15,8 +15,9 @@ import { getDemoUser } from "@/lib/db/users";
 import { getCollectionStats, getRecentCollections } from "@/lib/db/collections";
 import { getPinnedItems, getRecentItems } from "@/lib/db/items";
 import { getItemTypes } from "@/lib/db/item-types";
+import { type IconMap } from "@/types/dashboard";
 
-const iconMap: Record<string, any> = {
+const iconMap: IconMap = {
   Code,
   Sparkles,
   Terminal,
@@ -77,18 +78,18 @@ export default async function DashboardPage() {
       <StatsCards stats={stats} />
       
       <RecentCollections 
-        collections={recentCollections as any} 
+        collections={recentCollections} 
         itemTypes={itemTypes} 
       />
 
       <PinnedItems 
-        items={pinnedItems as any} 
+        items={pinnedItems} 
         iconMap={iconMap} 
         formatDate={formatDate} 
       />
 
       <RecentItems 
-        items={recentItems as any} 
+        items={recentItems} 
         iconMap={iconMap} 
         formatDate={formatDate} 
       />

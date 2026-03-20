@@ -9,16 +9,16 @@ import {
   Terminal, 
   StickyNote, 
   File, 
-  Image, 
+  Image as ImageIcon, 
   Link as LinkIcon, 
   Star, 
-  Folder,
   ChevronDown,
   ChevronRight,
   Settings,
   User,
   LucideIcon
 } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,8 +31,8 @@ const iconMap: Record<string, LucideIcon> = {
   Terminal,
   StickyNote,
   File,
-  Image,
-  Link: LinkIcon,
+  Image: ImageIcon,
+  Link: LinkIcon, 
 };
 
 interface NavItemProps {
@@ -317,9 +317,15 @@ export function DashboardSidebar({
           "flex items-center gap-3",
           isCollapsed && "justify-center"
         )}>
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground overflow-hidden">
+          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground overflow-hidden">
             {user.image ? (
-              <img src={user.image} alt={user.name || ""} className="h-full w-full object-cover" />
+              <Image 
+                src={user.image} 
+                alt={user.name || ""} 
+                width={36}
+                height={36}
+                className="h-full w-full object-cover" 
+              />
             ) : (
               <User className="h-5 w-5" />
             )}

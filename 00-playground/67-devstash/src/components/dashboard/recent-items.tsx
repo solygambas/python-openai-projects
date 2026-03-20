@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
+import { type DashboardItem, type IconMap } from "@/types/dashboard";
 
 interface RecentItemsProps {
-  items: any[];
-  iconMap: Record<string, any>;
+  items: DashboardItem[];
+  iconMap: IconMap;
   formatDate: (date: Date) => string;
 }
 
@@ -35,7 +36,7 @@ export function RecentItems({ items, iconMap, formatDate }: RecentItemsProps) {
               </div>
               <div className="flex items-center gap-4">
                  <div className="hidden sm:flex gap-1">
-                  {item.tags.slice(0, 2).map((tag: any) => (
+                  {item.tags.slice(0, 2).map((tag) => (
                     <Badge key={tag.id} variant="outline" className="text-[10px] px-1 py-0 h-4 font-normal">
                       {tag.name}
                     </Badge>

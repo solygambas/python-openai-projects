@@ -9,10 +9,12 @@ import {
   StickyNote, 
   File, 
   Image as ImageIcon, 
-  Link as LinkIcon 
+  Link as LinkIcon
 } from "lucide-react";
 
-const iconMap: Record<string, any> = {
+import { type Collection, type ItemType, type IconMap } from "@/types/dashboard";
+
+const iconMap: IconMap = {
   Code,
   Sparkles,
   Terminal,
@@ -22,20 +24,9 @@ const iconMap: Record<string, any> = {
   Link: LinkIcon,
 };
 
-interface Collection {
-  id: string;
-  name: string;
-  description: string | null;
-  isFavorite: boolean;
-  itemCount: number;
-  itemTypeIds: string[];
-  updatedAt: Date;
-  borderColor?: string;
-}
-
 interface RecentCollectionsProps {
   collections: Collection[];
-  itemTypes: any[];
+  itemTypes: ItemType[];
 }
 
 export function RecentCollections({ collections, itemTypes }: RecentCollectionsProps) {

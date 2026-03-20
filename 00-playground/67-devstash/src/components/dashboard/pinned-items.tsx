@@ -1,10 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Pin, Star, File } from "lucide-react";
+import { type DashboardItem, type IconMap } from "@/types/dashboard";
 
 interface PinnedItemProps {
-  items: any[];
-  iconMap: Record<string, any>;
+  items: DashboardItem[];
+  iconMap: IconMap;
   formatDate: (date: Date) => string;
 }
 
@@ -43,7 +44,7 @@ export function PinnedItems({ items, iconMap, formatDate }: PinnedItemProps) {
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-1">{item.description}</p>
                     <div className="flex gap-2 pt-1">
-                      {item.tags.map((tag: any) => (
+                      {item.tags.map((tag) => (
                         <Badge key={tag.id} variant="secondary" className="text-[10px] px-1.5 py-0 h-4 font-normal">
                           {tag.name}
                         </Badge>
