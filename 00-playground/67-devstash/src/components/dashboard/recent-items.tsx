@@ -1,14 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
+import { formatDate } from "@/lib/utils";
 
 interface RecentItemsProps {
   items: DashboardItem[];
   iconMap: IconMap;
-  formatDate: (date: Date) => string;
 }
 
-export function RecentItems({ items, iconMap, formatDate }: RecentItemsProps) {
+export function RecentItems({ items, iconMap }: RecentItemsProps) {
   return (
     <section className="space-y-4">
       <h2 className="text-xl font-semibold tracking-tight">Recent Items</h2>

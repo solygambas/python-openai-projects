@@ -88,4 +88,11 @@ Not Started
     - [x] Defined `ItemType` and `Collection` interfaces to fix TypeScript lint errors
     - [x] Updated `NavItem` for flexible child support
     - [x] Verified implementation via browser screenshot and lint check
-
+- **Quick Wins & Optimizations** (Completed)
+    - [x] Added DB indexes to Item and Collection models for `isPinned`, `isFavorite`, and `updatedAt`
+    - [x] Refactored Dashboard to use `Suspense` and Skeleton loaders for improved performance
+    - [x] Created shared `formatDate` utility in `src/lib/utils.ts`
+    - [x] Added query limit validation to all DB fetching functions to prevent over-fetching
+    - [x] Improved type safety in `src/lib/mock-data.ts`
+    - [x] Successfully migrated database with new indexes
+    - [x] Standardized date formatting across Dashboard components

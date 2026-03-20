@@ -117,6 +117,9 @@ model Item {
   @@index([userId])
   @@index([itemTypeId])
   @@index([createdAt])
+  @@index([updatedAt])
+  @@index([isPinned])
+  @@index([isFavorite])
   @@map("items")
 }
 
@@ -163,6 +166,8 @@ model Collection {
   items ItemCollection[]
 
   @@index([userId])
+  @@index([updatedAt])
+  @@index([isFavorite])
   @@map("collections")
 }
 

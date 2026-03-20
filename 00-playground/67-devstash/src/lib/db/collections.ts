@@ -1,12 +1,15 @@
 import prisma from '@/lib/prisma';
 
 export async function getRecentCollections(userId: string, limit = 6, isFavorite?: boolean) {
+  // Validate limit
+  const validatedLimit = Math.max(1, Math.min(limit, 50));
+
   const collections = await prisma.collection.findMany({
     where: {
       userId,
       ...(isFavorite !== undefined ? { isFavorite } : {}),
     },
-    take: limit,
+    take: validatedLimit,
     orderBy: {
       updatedAt: 'desc',
     },

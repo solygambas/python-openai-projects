@@ -2,14 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Pin, Star, File } from "lucide-react";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
+import { formatDate } from "@/lib/utils";
 
 interface PinnedItemProps {
   items: DashboardItem[];
   iconMap: IconMap;
-  formatDate: (date: Date) => string;
 }
 
-export function PinnedItems({ items, iconMap, formatDate }: PinnedItemProps) {
+export function PinnedItems({ items, iconMap }: PinnedItemProps) {
   if (items.length === 0) return null;
 
   return (

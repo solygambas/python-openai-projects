@@ -1,11 +1,14 @@
 import prisma from '@/lib/prisma';
 
-export async function getPinnedItems(userId: string) {
+export async function getPinnedItems(userId: string, limit = 20) {
+  const validatedLimit = Math.max(1, Math.min(limit, 50));
+  
   return prisma.item.findMany({
     where: {
       userId,
       isPinned: true,
     },
+    take: validatedLimit,
     include: {
       itemType: true,
       tags: true,
@@ -22,11 +25,13 @@ export async function getPinnedItems(userId: string) {
 }
 
 export async function getRecentItems(userId: string, limit = 10) {
+  const validatedLimit = Math.max(1, Math.min(limit, 50));
+
   return prisma.item.findMany({
     where: {
       userId,
     },
-    take: limit,
+    take: validatedLimit,
     include: {
       itemType: true,
       tags: true,

@@ -31,6 +31,7 @@ export interface Collection {
   isFavorite: boolean;
   itemCount: number;
   itemTypeIds: string[];
+  createdAt: Date;
   updatedAt: Date;
   borderColor?: string;
 }
