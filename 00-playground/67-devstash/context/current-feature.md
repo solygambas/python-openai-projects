@@ -1,22 +1,24 @@
-# Current Feature: Add Pro Badge to Sidebar
+# Current Feature
+
+[Feature Title]
 
 ## Status
 
-In Progress
+Not Started
 
-## Goals
+## Tasks
 
-- Add a pro badge to the files and the images type in the sidebar
-- Use ShadCN UI badge component
-- Make badge clean and subtle
-- Make PRO all uppercase
-
-## Notes
-
-- Feature loaded from add-pro-badge-sidebar.md
+- [ ] Task 1
+- [ ] Task 2
 
 ## History
 
+- **Add Pro Badge to Sidebar** (Completed)
+    - [x] Added `PRO` badge to "Files" and "Images" in sidebar
+    - [x] Used ShadCN UI `Badge` component
+    - [x] Defined `ItemType` and `Collection` interfaces to fix TypeScript lint errors
+    - [x] Updated `NavItem` for flexible child support
+    - [x] Verified implementation via browser screenshot and lint check
 - **Stats & Sidebar Implementation** (Completed)
     - [x] Added `getItemTypeCounts(userId)` in `src/lib/db/items.ts`
     - [x] Updated `getRecentCollections` in `src/lib/db/collections.ts` to support favorite filtering
