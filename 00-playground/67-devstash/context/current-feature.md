@@ -1,15 +1,19 @@
-# Current Feature
-
-[Feature Title]
+# Current Feature: Add Pro Badge to Sidebar
 
 ## Status
 
-Not Started
+In Progress
 
-## Tasks
+## Goals
 
-- [ ] Task 1
-- [ ] Task 2
+- Add a pro badge to the files and the images type in the sidebar
+- Use ShadCN UI badge component
+- Make badge clean and subtle
+- Make PRO all uppercase
+
+## Notes
+
+- Feature loaded from add-pro-badge-sidebar.md
 
 ## History
 

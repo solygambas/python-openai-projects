@@ -21,7 +21,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 const iconMap: Record<string, LucideIcon> = {
   Code,
@@ -84,10 +86,11 @@ const NavItem = ({
       ) : null}
       {!isCollapsed && (
         <>
-          <span className="flex-1 truncate">{children}</span>
+          {children}
           {count !== undefined && (
             <span className="text-xs text-muted-foreground/60">{count}</span>
           )}
+
           {RightIcon && (
             <RightIcon className={cn("h-3.5 w-3.5", rightIconColor)} fill={rightIconColor ? "currentColor" : "none"} />
           )}
@@ -122,6 +125,20 @@ const SectionHeader = ({
   </button>
 );
 
+interface ItemType {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+}
+
+interface Collection {
+  id: string;
+  name: string;
+  itemCount: number;
+  borderColor?: string;
+}
+
 interface DashboardSidebarProps {
   isCollapsed?: boolean;
   className?: string;
@@ -130,11 +147,12 @@ interface DashboardSidebarProps {
     email: string;
     image: string | null;
   };
-  itemTypes: any[];
+  itemTypes: ItemType[];
   itemTypeCounts: Record<string, number>;
-  favoriteCollections: any[];
-  recentCollections: any[];
+  favoriteCollections: Collection[];
+  recentCollections: Collection[];
 }
+
 
 export function DashboardSidebar({ 
   isCollapsed, 
@@ -191,8 +209,19 @@ export function DashboardSidebar({
                     isCollapsed={isCollapsed}
                     isActive={pathname === `/items/${type.name}s`}
                   >
-                    {type.name.charAt(0).toUpperCase() + type.name.slice(1)}s
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <span className="truncate">{type.name.charAt(0).toUpperCase() + type.name.slice(1)}s</span>
+                      {(type.name === 'file' || type.name === 'image') && (
+                        <Badge 
+                          variant="secondary" 
+                          className="h-3.5 px-1 text-[9px] font-bold leading-none bg-primary/20 text-primary border-none"
+                        >
+                          PRO
+                        </Badge>
+                      )}
+                    </div>
                   </NavItem>
+
                 ))}
               </div>
             )}
@@ -228,50 +257,50 @@ export function DashboardSidebar({
                           isCollapsed={isCollapsed}
                           isActive={pathname === `/collections/${coll.id}`}
                         >
-                          {coll.name}
+                          <span className="flex-1 truncate">{coll.name}</span>
                         </NavItem>
                       ))}
                     </div>
                   </div>
                 )}
-
-                {/* Recent Collections Sub-section */}
-                <div>
-                  {!isCollapsed && (
-                    <h4 className="px-3 mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
-                      Recent
-                    </h4>
-                  )}
-                  <div className="space-y-0.5">
-                    {recentCollections.map((coll) => (
-                      <NavItem 
-                        key={coll.id} 
-                        href={`/collections/${coll.id}`} 
-                        customIcon={
-                          <div 
-                            className="h-2 w-2 rounded-full" 
-                            style={{ backgroundColor: coll.borderColor || '#6b7280' }} 
-                          />
-                        }
-                        count={coll.itemCount}
-                        isCollapsed={isCollapsed}
-                        isActive={pathname === `/collections/${coll.id}`}
-                      >
-                        {coll.name}
-                      </NavItem>
-                    ))}
-                    
-                    {!isCollapsed && (
-                      <div className="mt-2 pt-2 border-t border-muted/30">
-                        <NavItem 
-                          href="/collections" 
-                          isCollapsed={isCollapsed}
-                          isActive={pathname === "/collections"}
-                        >
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground">
-                            View all collections
-                          </span>
-                        </NavItem>
+ 
+                 {/* Recent Collections Sub-section */}
+                 <div>
+                   {!isCollapsed && (
+                     <h4 className="px-3 mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+                       Recent
+                     </h4>
+                   )}
+                   <div className="space-y-0.5">
+                     {recentCollections.map((coll) => (
+                       <NavItem 
+                         key={coll.id} 
+                         href={`/collections/${coll.id}`} 
+                         customIcon={
+                           <div 
+                             className="h-2 w-2 rounded-full" 
+                             style={{ backgroundColor: coll.borderColor || '#6b7280' }} 
+                           />
+                         }
+                         count={coll.itemCount}
+                         isCollapsed={isCollapsed}
+                         isActive={pathname === `/collections/${coll.id}`}
+                       >
+                         <span className="flex-1 truncate">{coll.name}</span>
+                       </NavItem>
+                     ))}
+                     
+                     {!isCollapsed && (
+                       <div className="mt-2 pt-2 border-t border-muted/30">
+                         <NavItem 
+                           href="/collections" 
+                           isCollapsed={isCollapsed}
+                           isActive={pathname === "/collections"}
+                         >
+                           <span className="flex-1 truncate text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground">
+                             View all collections
+                           </span>
+                         </NavItem>
                       </div>
                     )}
                   </div>
