@@ -1,23 +1,16 @@
-# Current Feature: Auth UI - Sign In, Register & Sign Out (Phase 3)
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- [ ] Custom Sign In Page (`/sign-in`) with email/password and GitHub OAuth
-- [ ] Custom Register Page (`/register`) with name/email/password inputs
-- [ ] Component: Reusable Avatar with initials/image logic
-- [ ] Sidebar Update: Bottom avatar with user info and dropdown
-- [ ] Sidebar Update: Sign out functionality
-- [ ] Sidebar Update: Profile link on avatar click
+<!-- Add bullet points of what success looks like -->
 
 ## Notes
 
-- Replace NextAuth default pages with custom UI
-- Form validation for both Sign In and Register
-- Avatar logic: image if available, else initials from name
+<!-- Additional context, constraints, or details from spec -->
 
 ## History
 
@@ -112,10 +105,18 @@ In Progress
     - [x] Implemented clean URL redirect strategy using an `auth-callback-url` cookie
     - [x] Extended `Session` type to include `user.id`
     - [x] Verified build and linting
-
 - **Auth Phase 2 - Credentials Provider** (Completed)
     - [x] Added field definitions to `Credentials` provider for default UI rendering
     - [x] Implemented bcrypt validation in `authorize` callback
     - [x] Created `POST /api/auth/register` with input validation and password hashing
     - [x] Connected `DashboardLayout` to `auth()` to display real user data
     - [x] Verified end-to-end registration and login flow
+- **Auth UI - Sign In, Register & Sign Out (Phase 3)** (Completed)
+    - [x] Custom Sign In Page (`/sign-in`) with email/password and GitHub OAuth
+    - [x] Custom Register Page (`/register`) with name/email/password inputs
+    - [x] Component: Reusable Avatar with initials/image logic
+    - [x] Sidebar Update: Bottom avatar with user info and dropdown
+    - [x] Sidebar Update: Sign out functionality
+    - [x] Sidebar Update: Profile link on avatar click
+    - [x] Integrated `sonner` for themed, system-aware toast notifications
+    - [x] Verified lint-free build
