@@ -1,18 +1,25 @@
-# Current Feature
+# Current Feature: Auth Phase 2 - Credentials Provider
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-- [ ] Task 1
-- [ ] Task 2
+- [x] Add `password` field to `User` model in `prisma/schema.prisma` (already exists)
+- [x] Create and run migration for the new password field (already done)
+- [x] Update `src/auth.config.ts` with Credentials provider placeholder (and field definitions)
+- [x] Update `src/auth.ts` to implement actual bcrypt validation logic
+- [x] Create registration API route at `src/app/api/auth/register/route.ts`
+- [x] Implement password hashing and user creation in registration route
+- [x] Verify registration via curl and signin flow
+- [x] Update `DashboardLayout` to use authenticated user instead of hardcoded demo user
 
 ## Notes
 
-- Add context here
-
+- Use `bcryptjs` for hashing (already installed)
+- Registration route should validate passwords and check for existing users
+- Reference: [Credentials provider](https://authjs.dev/getting-started/authentication/credentials)
 ## History
 
 - Project setup and boilerplate cleanup
@@ -106,3 +113,10 @@ Not Started
     - [x] Implemented clean URL redirect strategy using an `auth-callback-url` cookie
     - [x] Extended `Session` type to include `user.id`
     - [x] Verified build and linting
+
+- **Auth Phase 2 - Credentials Provider** (Completed)
+    - [x] Added field definitions to `Credentials` provider for default UI rendering
+    - [x] Implemented bcrypt validation in `authorize` callback
+    - [x] Created `POST /api/auth/register` with input validation and password hashing
+    - [x] Connected `DashboardLayout` to `auth()` to display real user data
+    - [x] Verified end-to-end registration and login flow

@@ -3,6 +3,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import authConfig from "./auth.config";
 import { cookies } from "next/headers";
+import bcrypt from "bcryptjs";
+import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
 
 export const { 
   handlers: { GET, POST }, 
@@ -36,4 +39,38 @@ export const {
     },
   },
   ...authConfig,
+  providers: [
+    GitHub,
+    Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials || {};
+        
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email: email as string },
+        });
+
+        if (!user || !user.password) return null;
+
+        const isPasswordCorrect = await bcrypt.compare(
+          password as string,
+          user.password
+        );
+
+        if (!isPasswordCorrect) return null;
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
+      },
+    }),
+  ],
 });
