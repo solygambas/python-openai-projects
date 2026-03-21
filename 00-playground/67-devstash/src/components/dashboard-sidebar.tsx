@@ -14,15 +14,22 @@ import {
   Star, 
   ChevronDown,
   ChevronRight,
-  Settings,
   User,
+  LogOut,
   LucideIcon
 } from "lucide-react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { UserAvatar } from "@/components/auth/user-avatar";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
 
 const iconMap: Record<string, LucideIcon> = {
@@ -312,36 +319,44 @@ export function DashboardSidebar({
       </ScrollArea>
 
       {/* User Section */}
-      <div className="mt-auto border-t p-4">
-        <div className={cn(
-          "flex items-center gap-3",
-          isCollapsed && "justify-center"
-        )}>
-          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground overflow-hidden">
-            {user.image ? (
-              <Image 
-                src={user.image} 
-                alt={user.name || ""} 
-                width={36}
-                height={36}
-                className="h-full w-full object-cover" 
-              />
-            ) : (
-              <User className="h-5 w-5" />
-            )}
-          </div>
-          {!isCollapsed && (
-            <>
-              <div className="flex flex-1 flex-col overflow-hidden text-sm">
-                <span className="truncate font-medium text-foreground">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+      <div className="mt-auto border-t p-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-full">
+            <div className={cn(
+              "flex w-full items-center gap-3 rounded-md p-1.5 transition-colors hover:bg-muted/50 cursor-pointer",
+              isCollapsed && "justify-center"
+            )}>
+              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden">
+                <UserAvatar user={user} size="default" />
               </div>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </>
-          )}
-        </div>
+              {!isCollapsed && (
+                <>
+                  <div className="flex flex-1 flex-col overflow-hidden text-left text-sm">
+                    <span className="truncate font-medium text-foreground">{user.name}</span>
+                    <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                </>
+              )}
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[200px]" side={isCollapsed ? "right" : "bottom"}>
+             <DropdownMenuItem>
+               <Link href="/profile" className="flex items-center gap-2 w-full">
+                 <User className="h-4 w-4" />
+                 <span>Profile</span>
+               </Link>
+             </DropdownMenuItem>
+             <DropdownMenuSeparator />
+             <DropdownMenuItem 
+               className="text-destructive focus:text-destructive cursor-pointer flex items-center gap-2"
+               onClick={() => signOut({ callbackUrl: "/sign-in" })}
+             >
+               <LogOut className="h-4 w-4" />
+               <span>Sign out</span>
+             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

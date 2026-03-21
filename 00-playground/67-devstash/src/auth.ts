@@ -38,6 +38,9 @@ export const {
       return baseUrl;
     },
   },
+  pages: {
+    signIn: "/sign-in",
+  },
   ...authConfig,
   providers: [
     GitHub,

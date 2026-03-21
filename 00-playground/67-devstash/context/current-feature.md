@@ -1,4 +1,4 @@
-# Current Feature: Auth Phase 2 - Credentials Provider
+# Current Feature: Auth UI - Sign In, Register & Sign Out (Phase 3)
 
 ## Status
 
@@ -6,20 +6,19 @@ In Progress
 
 ## Goals
 
-- [x] Add `password` field to `User` model in `prisma/schema.prisma` (already exists)
-- [x] Create and run migration for the new password field (already done)
-- [x] Update `src/auth.config.ts` with Credentials provider placeholder (and field definitions)
-- [x] Update `src/auth.ts` to implement actual bcrypt validation logic
-- [x] Create registration API route at `src/app/api/auth/register/route.ts`
-- [x] Implement password hashing and user creation in registration route
-- [x] Verify registration via curl and signin flow
-- [x] Update `DashboardLayout` to use authenticated user instead of hardcoded demo user
+- [ ] Custom Sign In Page (`/sign-in`) with email/password and GitHub OAuth
+- [ ] Custom Register Page (`/register`) with name/email/password inputs
+- [ ] Component: Reusable Avatar with initials/image logic
+- [ ] Sidebar Update: Bottom avatar with user info and dropdown
+- [ ] Sidebar Update: Sign out functionality
+- [ ] Sidebar Update: Profile link on avatar click
 
 ## Notes
 
-- Use `bcryptjs` for hashing (already installed)
-- Registration route should validate passwords and check for existing users
-- Reference: [Credentials provider](https://authjs.dev/getting-started/authentication/credentials)
+- Replace NextAuth default pages with custom UI
+- Form validation for both Sign In and Register
+- Avatar logic: image if available, else initials from name
+
 ## History
 
 - Project setup and boilerplate cleanup

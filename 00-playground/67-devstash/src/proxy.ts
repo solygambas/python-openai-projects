@@ -10,7 +10,7 @@ export const proxy = auth((req) => {
 
   // Protect /dashboard routes
   if (pathname.startsWith("/dashboard") && !isLoggedIn) {
-    const signInUrl = new URL("/api/auth/signin", req.url);
+    const signInUrl = new URL("/sign-in", req.url);
     const response = NextResponse.redirect(signInUrl);
     
     // Store the intended destination in a cookie for later
