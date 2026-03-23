@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { CheckCircle2, XCircle, AlertCircle, ArrowRight, Mail } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

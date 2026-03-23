@@ -65,7 +65,7 @@ Not Started
     - [x] Verified build succeeds and merged to main
 - **Dashboard Collections** (Completed)
     - [x] Created `src/lib/db/collections.ts`, `src/lib/db/items.ts`, `src/lib/db/item-types.ts`, and `src/lib/db/users.ts` with real data fetching functions
-    - [x] Updated `src/app/dashboard/page.tsx` to be an async server component fetching real data
+    - [x] Updated `src/app/(dashboard)/dashboard/page.tsx` to be an async server component fetching real data
     - [x] Implemented border color logic in `getRecentCollections` based on the most frequent content type
     - [x] Updated `RecentCollections`, `PinnedItems`, and `RecentItems` components to use real data from Prisma
     - [x] Verified build succeeds and database connectivity is working

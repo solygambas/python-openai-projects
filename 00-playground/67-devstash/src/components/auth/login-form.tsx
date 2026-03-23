@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Github, Mail, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,6 @@ import {
 
 export function LoginForm() {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const errorParam = searchParams.get("error");
@@ -68,7 +66,7 @@ export function LoginForm() {
         router.push(callbackUrl);
         router.refresh();
       }
-    } catch (err: unknown) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -79,7 +77,7 @@ export function LoginForm() {
     setIsLoading(true);
     try {
       await signIn("github", { callbackUrl });
-    } catch (err: unknown) {
+    } catch {
       setError("Failed to sign in with GitHub.");
       setIsLoading(false);
     }
