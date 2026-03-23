@@ -73,7 +73,12 @@ export function RegisterForm() {
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "Failed to register account.");
+        const message = err.message || "Failed to register account.";
+        if (message.toLowerCase().includes("already exists")) {
+          setError("This email is already registered. Please sign in instead.");
+        } else {
+          setError(message);
+        }
       } else {
         setError("Failed to register account.");
       }

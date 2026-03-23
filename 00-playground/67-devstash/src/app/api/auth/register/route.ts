@@ -60,9 +60,23 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
+      const githubAccount = await prisma.account.findFirst({
+        where: {
+          userId: existingUser.id,
+          provider: "github",
+        },
+        select: { id: true },
+      });
+
       return NextResponse.json(
-        { error: "User already exists with this email" },
-        { status: 400 }
+        {
+          error: githubAccount
+            ? existingUser.password
+              ? "An account already exists with this email. Sign in with GitHub or use your password instead of registering again."
+              : "An account already exists with this email and is linked to GitHub. Please sign in with GitHub."
+            : "An account already exists with this email. Please sign in instead.",
+        },
+        { status: 409 }
       );
     }
 

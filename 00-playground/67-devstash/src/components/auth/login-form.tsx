@@ -96,6 +96,8 @@ export function LoginForm() {
           setError("Too many attempts. Please try again later.");
         } else if (result.error === "EmailNotVerified") {
           setError("Please verify your email address first. Check your inbox.");
+        } else if (result.error === "GitHubOnlyAccount") {
+          setError("This account uses GitHub sign-in. Please continue with GitHub.");
         } else {
           setError("Invalid email or password");
         }

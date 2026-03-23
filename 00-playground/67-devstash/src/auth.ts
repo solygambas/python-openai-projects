@@ -11,10 +11,44 @@ class EmailNotVerifiedError extends CredentialsSignin {
   code = "EmailNotVerified"
 }
 
+class GitHubOnlyAccountError extends CredentialsSignin {
+  code = "GitHubOnlyAccount"
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "github" || !user.email) {
+        return true;
+      }
+
+      const data: { name?: string; image?: string } = {};
+
+      if (typeof user.name === "string" && user.name.trim().length > 0) {
+        data.name = user.name;
+      }
+
+      if (typeof user.image === "string" && user.image.trim().length > 0) {
+        data.image = user.image;
+      }
+
+      if (Object.keys(data).length === 0) {
+        return true;
+      }
+
+      try {
+        await prisma.user.update({
+          where: { email: user.email },
+          data,
+        });
+      } catch {
+        return true;
+      }
+
+      return true;
+    },
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -42,7 +76,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   ...authConfig,
   providers: [
-    GitHub,
+    GitHub({
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
@@ -57,7 +93,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { email: email as string },
         });
 
-        if (!user || !user.password) return null;
+        if (!user) return null;
+
+        if (!user.password) {
+          const githubAccount = await prisma.account.findFirst({
+            where: {
+              userId: user.id,
+              provider: "github",
+            },
+            select: { id: true },
+          });
+
+          if (githubAccount) {
+            throw new GitHubOnlyAccountError();
+          }
+
+          return null;
+        }
 
         const isPasswordCorrect = await bcrypt.compare(
           password as string,
