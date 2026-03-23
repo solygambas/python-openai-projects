@@ -71,7 +71,7 @@ export const {
 
         if (!isPasswordCorrect) return null;
 
-        if (!user.emailVerified) {
+        if (process.env.ENABLE_EMAIL_VERIFICATION === "true" && !user.emailVerified) {
           throw new EmailNotVerifiedError();
         }
 
