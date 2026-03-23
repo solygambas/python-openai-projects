@@ -42,7 +42,7 @@ export async function changePassword(formData: FormData) {
     return { error: 'Incorrect current password' };
   }
 
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
 
   await prisma.user.update({
     where: { id: userId },
