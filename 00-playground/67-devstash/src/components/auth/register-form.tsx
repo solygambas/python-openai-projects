@@ -65,8 +65,12 @@ export function RegisterForm() {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
-      // Success! Redirect to verify-email page
-      router.push(`/verify-email?status=pending&email=${encodeURIComponent(email)}`);
+      // Success! Redirect based on whether email verification is required
+      if (data.requiresVerification) {
+        router.push(`/verify-email?status=pending&email=${encodeURIComponent(email)}`);
+      } else {
+        router.push("/sign-in?registered=true");
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "Failed to register account.");
