@@ -1,16 +1,40 @@
-# Current Feature
+# Current Feature: Forgot Password
 
 ## Status
 
-Not Started
+Completed
 
 ## Goals
 
-<!-- Add bullet points of what success looks like -->
+- [x] Add a "Forgot password?" link on the sign-in page
+- [x] Create a `(auth)/forgot-password` page with an email input form
+- [x] Create `POST /api/auth/forgot-password` endpoint:
+  - Validate the email exists in the database
+  - Generate a secure reset token using `crypto.randomBytes`
+  - Store the token in the existing `VerificationToken` model using identifier pattern `password-reset:{email}`
+  - Set a 1-hour expiry on the token
+  - Send a password reset email via Resend using a new `sendPasswordResetEmail` helper in `src/lib/mail.ts`
+  - Always return a success response (to prevent email enumeration)
+- [x] Create a `(auth)/reset-password` page that reads the `?token=` query param
+- [x] Create `POST /api/auth/reset-password` endpoint:
+  - Look up the `VerificationToken` by token value
+  - Validate it is not expired
+  - Find the user by the identifier (email extracted from `password-reset:{email}`)
+  - Hash and update the user's password
+  - Delete the used token from the database
+  - Return success
+- [x] Show appropriate success/error states on both pages
+- [x] No new database migrations required (reuse `VerificationToken` model)
 
 ## Notes
 
-<!-- Additional context, constraints, or details from spec -->
+- Reuse the existing `VerificationToken` Prisma model (fields: `identifier`, `token`, `expires`)
+- Use `password-reset:{email}` as the `identifier` to distinguish from email verification tokens
+- Follow the same token generation pattern as the existing email verification flow
+- Use the existing `sendVerificationEmail` pattern in `src/lib/mail.ts` — add a new `sendPasswordResetEmail` function alongside it
+- Respect the `ENABLE_EMAIL_VERIFICATION` flag is NOT relevant here — password reset emails are always sent
+- Match the styling of the existing `/sign-in` and `/register` pages (card-based auth layout)
+- Use `sonner` toast for feedback on the forgot-password page (consistent with rest of app)
 
 ## History
 
@@ -135,3 +159,11 @@ Not Started
     - [x] Returns `requiresVerification` boolean in register response
     - [x] Register form redirects to `/sign-in` (flag off) or `/verify-email` (flag on)
     - [x] `auth.ts` authorize callback only blocks unverified users when flag is enabled
+- **Forgot Password** (Completed)
+    - [x] Add a "Forgot password?" link on the sign-in page
+    - [x] Create a `(auth)/forgot-password` page with an email input form
+    - [x] Create `POST /api/auth/forgot-password` endpoint
+    - [x] Create a `(auth)/reset-password` page that reads the `?token=` query param
+    - [x] Create `POST /api/auth/reset-password` endpoint
+    - [x] Show appropriate success/error states on both pages
+    - [x] Verified build succeeds
