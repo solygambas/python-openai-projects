@@ -1,9 +1,35 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import {
+  checkRateLimit,
+  getRateLimitErrorMessage,
+  getRetryAfterSeconds,
+} from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   try {
+    const rateLimitResult = await checkRateLimit({
+      namespace: "auth-reset-password",
+      limit: 5,
+      window: "15 m",
+      request: req,
+    });
+
+    if (!rateLimitResult.success) {
+      const retryAfter = getRetryAfterSeconds(rateLimitResult.reset);
+
+      return NextResponse.json(
+        { error: getRateLimitErrorMessage(rateLimitResult.reset) },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(retryAfter),
+          },
+        }
+      );
+    }
+
     const { token, password } = await req.json();
 
     if (!token || !password) {

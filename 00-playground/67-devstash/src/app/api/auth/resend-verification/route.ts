@@ -2,10 +2,37 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import {
+  checkRateLimit,
+  getRateLimitErrorMessage,
+  getRetryAfterSeconds,
+} from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
+
+    const rateLimitResult = await checkRateLimit({
+      namespace: "auth-resend-verification",
+      limit: 3,
+      window: "15 m",
+      request: req,
+      identifier: typeof email === "string" ? email : undefined,
+    });
+
+    if (!rateLimitResult.success) {
+      const retryAfter = getRetryAfterSeconds(rateLimitResult.reset);
+
+      return NextResponse.json(
+        { error: getRateLimitErrorMessage(rateLimitResult.reset) },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(retryAfter),
+          },
+        }
+      );
+    }
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });

@@ -38,6 +38,41 @@ export function LoginForm() {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+  const extractErrorText = (error: unknown): string => {
+    if (typeof error === "string") {
+      return error;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return "";
+    }
+  };
+
+  const isRateLimitError = (error: unknown): boolean => {
+    if (typeof error === "object" && error !== null) {
+      const maybeStatus = (error as { status?: unknown }).status;
+      const maybeStatusCode = (error as { statusCode?: unknown }).statusCode;
+
+      if (maybeStatus === 429 || maybeStatusCode === 429) {
+        return true;
+      }
+    }
+
+    const normalizedMessage = extractErrorText(error).toLowerCase();
+
+    return (
+      normalizedMessage.includes("429") ||
+      normalizedMessage.includes("too many") ||
+      normalizedMessage.includes("rate limit")
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -57,17 +92,25 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        if (result.error === "EmailNotVerified") {
+        if (result.status === 429 || result.error === "RateLimited") {
+          setError("Too many attempts. Please try again later.");
+        } else if (result.error === "EmailNotVerified") {
           setError("Please verify your email address first. Check your inbox.");
         } else {
           setError("Invalid email or password");
         }
+      } else if (result?.status === 429) {
+        setError("Too many attempts. Please try again later.");
       } else {
         router.push(callbackUrl);
         router.refresh();
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (error: unknown) {
+      if (isRateLimitError(error)) {
+        setError("Too many attempts. Please try again later.");
+      } else {
+        setError("Sign in failed. If you made multiple attempts, please wait a few minutes and try again.");
+      }
     } finally {
       setIsLoading(false);
     }
