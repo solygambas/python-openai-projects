@@ -1,16 +1,27 @@
-# Current Feature
+# Current Feature: Setup Email Verification on Register
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Add bullet points of what success looks like -->
+- Create and store a secure verification token in the database upon user registration.
+- Send an email with a verification link to the newly registered user using Resend.
+- Implement a `/api/auth/verify` endpoint to verify the token when the user clicks the link.
+- Update the user's `emailVerified` status upon successful verification.
+- Create `/verify-email` page to display the verification status (success, error, expired).
+- Block sign in for unverified users.
+- Add a "Resend verification email" functionality if token expires.
+- Handle edge cases: expired tokens, already verified, invalid tokens.
 
 ## Notes
 
-<!-- Additional context, constraints, or details from spec -->
+- We are using Resend for email delivery, which is already installed.
+- The `RESEND_API_KEY` is available in the `.env` file.
+- Use `onboarding@resend.dev` as the `from` email address for now.
+- Users must click the link in their email to complete verification.
+- Token expiration: 24 hours.
 
 ## History
 

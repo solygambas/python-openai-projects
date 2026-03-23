@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -24,9 +24,6 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const errorParam = searchParams.get("error");
-  const registered = searchParams.get("registered");
-  const hasShownToast = useRef(false);
-  
   const [error, setError] = useState<string | null>(
     errorParam === "CredentialsSignin" 
       ? "Invalid email or password" 
@@ -35,20 +32,6 @@ export function LoginForm() {
         : null
   );
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (registered && !hasShownToast.current) {
-      toast.success("Account created successfully! You can now log in.");
-      hasShownToast.current = true;
-      
-      // Clean up the URL to prevent re-triggering on refreshes or navigation
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("registered");
-      const newQuery = params.toString();
-      const newUrl = `${pathname}${newQuery ? `?${newQuery}` : ""}`;
-      router.replace(newUrl);
-    }
-  }, [registered, router, pathname, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,7 +51,11 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        if (result.error === "EmailNotVerified") {
+          setError("Please verify your email address first. Check your inbox.");
+        } else {
+          setError("Invalid email or password");
+        }
       } else {
         router.push(callbackUrl);
         router.refresh();

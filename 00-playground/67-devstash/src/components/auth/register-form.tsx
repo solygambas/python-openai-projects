@@ -65,8 +65,8 @@ export function RegisterForm() {
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
-      // Success! Redirect to sign-in page with success message parameter
-      router.push("/sign-in?registered=true");
+      // Success! Redirect to verify-email page
+      router.push(`/verify-email?status=pending&email=${encodeURIComponent(email)}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "Failed to register account.");

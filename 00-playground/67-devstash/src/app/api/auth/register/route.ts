@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -48,9 +50,12 @@ export async function POST(req: Request) {
       },
     });
 
+    const verificationToken = await generateVerificationToken(user.email);
+    await sendVerificationEmail(verificationToken.identifier, verificationToken.token);
+
     return NextResponse.json(
       {
-        message: "User registered successfully",
+        message: "User registered successfully. Please check your email to verify your account.",
         user: {
           id: user.id,
           name: user.name,
