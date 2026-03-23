@@ -6,6 +6,7 @@ import { getItemTypes } from "@/lib/db/item-types";
 import { getItemTypeCounts } from "@/lib/db/items";
 import { getRecentCollections } from "@/lib/db/collections";
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -31,16 +32,7 @@ export default async function DashboardLayout({
   const user = await getUserById(userId);
 
   if (!user) {
-    return (
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full flex-col bg-background">
-          <DashboardTopBar />
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-muted-foreground">User profile not found. If this is a new account, please try signing in again.</p>
-          </div>
-        </div>
-      </SidebarProvider>
-    );
+    redirect("/sign-in?error=UserNotFound");
   }
 
   const [itemTypes, itemTypeCounts, favoriteCollections, recentCollections] = await Promise.all([

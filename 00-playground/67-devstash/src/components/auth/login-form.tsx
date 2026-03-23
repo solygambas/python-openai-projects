@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Github, Mail, Lock, AlertCircle } from "lucide-react";
+import { Github, Mail, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,18 +24,26 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const errorParam = searchParams.get("error");
+  const deletedParam = searchParams.get("deleted");
+  
   const [error, setError] = useState<string | null>(
     errorParam === "CredentialsSignin" 
       ? "Invalid email or password" 
-      : errorParam 
-        ? "An error occurred during sign in" 
-        : null
+      : errorParam === "UserNotFound"
+        ? "User profile not found. If this is a new account, please try signing in again."
+        : errorParam 
+          ? "An error occurred during sign in" 
+          : null
+  );
+  const [success, setSuccess] = useState<string | null>(
+    deletedParam === "true" ? "Account deleted successfully" : null
   );
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -90,6 +98,13 @@ export function LoginForm() {
           <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-3 rounded-md flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
             <p>{error}</p>
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm p-3 rounded-md flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4" />
+            <p>{success}</p>
           </div>
         )}
         

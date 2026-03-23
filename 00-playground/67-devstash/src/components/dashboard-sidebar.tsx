@@ -341,7 +341,7 @@ export function DashboardSidebar({
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]" side={isCollapsed ? "right" : "bottom"}>
-             <DropdownMenuItem>
+             <DropdownMenuItem className={cn(pathname === "/profile" && "bg-primary/10 text-primary")}>
                <Link href="/profile" className="flex items-center gap-2 w-full">
                  <User className="h-4 w-4" />
                  <span>Profile</span>

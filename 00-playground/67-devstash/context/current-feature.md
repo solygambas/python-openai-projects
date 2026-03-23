@@ -1,16 +1,24 @@
-# Current Feature
+# Current Feature: Profile Page
 
 ## Status
 
-Not Started
-
+In Progress
 ## Goals
 
-<!-- Add specific goals here -->
+- [x] Create profile page at `/profile` route
+- [x] Display user info: email, name, avatar (GitHub or initials), account creation date
+- [x] Show usage stats: total items, total collections, breakdown by item type
+- [x] Add account actions: change password (email users only), delete account with confirmation
 
-## Notes
+## Status
 
-<!-- Add relevant technical notes or constraints here -->
+Complete
+- Avatar logic: Use GitHub avatar from OAuth if available, otherwise generate initials from name/email
+- Change password button should only appear for users who signed up with email/password (not GitHub OAuth)
+- Delete account needs confirmation dialog to prevent accidental deletion
+- Item type breakdown should show counts for each type (snippets, prompts, notes, commands, links, files, images)
+- Route should be protected (require authentication)
+- Follow existing codebase patterns for data fetching and components
 
 ## History
 
@@ -141,3 +149,12 @@ Not Started
     - [x] Integrated with existing `POST /api/auth/forgot-password` and `POST /api/auth/reset-password` endpoints.
     - [x] Added `Suspense` boundary to `/sign-in` page to support `useSearchParams()`.
     - [x] Verified build succeeds.
+- **Profile Page** (Completed)
+    - [x] Created protected `/profile` route
+    - [x] Implemented `ProfilePage` with data fetching for user info and usage stats
+    - [x] Added `ProfileInfo`, `ProfileStats`, and `AccountActions` components
+    - [x] Implemented Change Password (for email users) and Delete Account functionality
+    - [x] **Refactored layout:** Created `(dashboard)` route group to share the sidebar and header layout between dashboard and profile pages.
+    - [x] Updated Sidebar: Added active state for the profile link.
+    - [x] Fixed all linting and TypeScript build errors
+    - [x] Verified build succeeds
