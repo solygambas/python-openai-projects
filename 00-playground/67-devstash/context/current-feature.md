@@ -1,21 +1,16 @@
-# Current Feature: Add Email Verification Flag
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Add a server-side flag (e.g., environment variable) to toggle email verification on or off.
-- Update registration flow to bypass email sending and mark user as verified (or ignore verification status) when disabled.
-- Ensure login and protected routes do not block unverified users when the flag is disabled.
-- Allow simple configuration without code changes.
+<!-- Add bullet points of what success looks like -->
 
 ## Notes
 
-- **Context**: Currently, no domain is linked to Resend, limiting registration testing to the authorized Resend email.
-- **Requirement**: Need a way to disable the email verification step easily.
-- **Implementation Ideas**: Use an environment variable like `ENABLE_EMAIL_VERIFICATION` (defaulting to false or true as desired) and check it during the register API route and in NextAuth's `signIn` callback where we currently block unverified users.
+<!-- Additional context, constraints, or details from spec -->
 
 ## History
 
@@ -134,3 +129,9 @@ In Progress
     - [x] Block sign in for unverified users.
     - [x] Add a "Resend verification email" functionality if token expires.
     - [x] Handle edge cases: expired tokens, already verified, invalid tokens.
+- **Add Email Verification Flag** (Completed)
+    - [x] Added `ENABLE_EMAIL_VERIFICATION` env variable check to register API route
+    - [x] Auto-verifies user (`emailVerified: new Date()`) and skips token/email when flag is disabled
+    - [x] Returns `requiresVerification` boolean in register response
+    - [x] Register form redirects to `/sign-in` (flag off) or `/verify-email` (flag on)
+    - [x] `auth.ts` authorize callback only blocks unverified users when flag is enabled
