@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Code,
   Sparkles,
@@ -18,14 +17,10 @@ import {
   Tag,
   Folder,
   Calendar,
-  X,
-  Save,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -38,8 +33,6 @@ import {
 import { ItemCard } from "@/components/dashboard/item-card";
 import { formatDate } from "@/lib/utils";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
-import { updateItem } from "@/actions/items";
-import { toast } from "sonner";
 
 type ItemsWithDrawerVariant = "grid" | "recent" | "pinned";
 
@@ -103,22 +96,11 @@ const iconMap: IconMap = {
 };
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ItemDetail | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const requestIdRef = useRef(0);
-
-  // Edit mode state
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editContent, setEditContent] = useState("");
-  const [editUrl, setEditUrl] = useState("");
-  const [editLanguage, setEditLanguage] = useState("");
-  const [editTags, setEditTags] = useState("");
 
   const onOpenItem = useCallback(async (itemId: string) => {
     const requestId = requestIdRef.current + 1;
@@ -128,7 +110,6 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     setIsLoading(true);
     setLoadError(null);
     setSelectedItem(null);
-    setIsEditing(false);
 
     try {
       const response = await fetch(`/api/items/${itemId}`);
@@ -161,72 +142,6 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
       }
     }
   }, []);
-
-  const handleEdit = () => {
-    if (!selectedItem) return;
-
-    setEditTitle(selectedItem.title);
-    setEditDescription(selectedItem.description || "");
-    setEditContent(selectedItem.content || "");
-    setEditUrl(selectedItem.url || "");
-    setEditLanguage(selectedItem.language || "");
-    setEditTags(selectedItem.tags.map((t) => t.name).join(", "));
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
-  const handleSave = async () => {
-    if (!selectedItem || !editTitle.trim()) return;
-
-    setIsSaving(true);
-
-    try {
-      const tagsArray = editTags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
-
-      const result = await updateItem({
-        itemId: selectedItem.id,
-        title: editTitle,
-        description: editDescription,
-        content: editContent,
-        url: editUrl,
-        language: editLanguage,
-        tags: tagsArray,
-      });
-
-      if (result.success && result.data) {
-        // Normalize the data for the client component state
-        const updatedItem = {
-          ...result.data,
-          createdAt: result.data.createdAt.toISOString(),
-          updatedAt: result.data.updatedAt.toISOString(),
-          collections: result.data.collections.map(c => ({
-            collection: {
-              id: c.collection.id,
-              name: c.collection.name
-            }
-          }))
-        } as unknown as ItemDetail;
-
-        setSelectedItem(updatedItem);
-        setIsEditing(false);
-        toast.success("Item updated successfully");
-        router.refresh();
-      } else {
-        toast.error(result.error || "Failed to update item");
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
-      console.error(error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const itemCards = useMemo(() => {
     if (variant === "grid") {
@@ -363,8 +278,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     <>
       {itemCards}
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="p-0 gap-0 flex flex-col h-full">
-          <SheetHeader className="px-6 pt-5 pb-3 border-b shrink-0">
+        <SheetContent side="right" className="p-0 gap-0">
+          <SheetHeader className="px-6 pt-5 pb-3 border-b">
             <div className="flex items-start gap-3 pr-8">
               <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
                 {selectedItem ? (
@@ -376,36 +291,18 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   <File className="h-5 w-5 text-muted-foreground" />
                 )}
               </div>
-              <div className="space-y-1 min-w-0 flex-1">
-                {isEditing ? (
-                  <Input
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    placeholder="Item title"
-                    className="h-8 text-lg font-semibold px-2 -ml-2 bg-background border-primary/20 focus-visible:ring-primary/30"
-                    autoFocus
-                  />
-                ) : (
-                  <SheetTitle className="text-xl leading-snug truncate">
-                    {selectedItem?.title ?? "Loading item"}
-                  </SheetTitle>
-                )}
+              <div className="space-y-1 min-w-0">
+                <SheetTitle className="text-xl leading-snug truncate">
+                  {selectedItem?.title ?? "Loading item"}
+                </SheetTitle>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary" className="font-normal">
                     {selectedItem?.itemType.name ?? "Type"}
                   </Badge>
-                  {!isEditing && selectedItem?.language && (
+                  {selectedItem?.language && (
                     <Badge variant="outline" className="font-normal lowercase">
                       {selectedItem.language}
                     </Badge>
-                  )}
-                  {isEditing && (selectedItem?.itemType.name.toLowerCase() === "snippet" || selectedItem?.itemType.name.toLowerCase() === "command") && (
-                    <Input
-                      value={editLanguage}
-                      onChange={(e) => setEditLanguage(e.target.value)}
-                      placeholder="Language (e.g. typescript)"
-                      className="h-6 text-[10px] w-32 px-1.5 bg-background border-primary/20"
-                    />
                   )}
                 </div>
               </div>
@@ -415,93 +312,65 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
             </SheetDescription>
           </SheetHeader>
 
-          <div className="px-6 pb-6 overflow-y-auto flex-1">
-            <div className="flex items-center justify-between gap-4 py-3 border-b sticky top-0 bg-background z-10">
-              {isEditing ? (
-                <div className="flex items-center gap-2 w-full">
-                  <Button
-                    size="sm"
-                    className="flex-1"
-                    onClick={handleSave}
-                    disabled={isSaving || !editTitle.trim()}
-                  >
-                    {isSaving ? "Saving..." : "Save"}
-                    {!isSaving && <Save className="ml-2 h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={handleCancel}
-                    disabled={isSaving}
-                  >
-                    Cancel
-                    <X className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Favorite"
-                      className={selectedItem?.isFavorite ? "text-yellow-500" : "text-foreground"}
-                    >
-                      <Star
-                        className={selectedItem?.isFavorite ? "fill-yellow-500 text-yellow-500" : "text-current"}
-                      />
-                      Favorite
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Pin"
-                    >
-                      <Pin className={selectedItem?.isPinned ? "text-foreground rotate-45" : "text-muted-foreground rotate-45"} />
-                      Pin
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Copy"
-                      onClick={() => {
-                        const copyValue = selectedItem?.content ?? selectedItem?.url ?? "";
-                        if (copyValue) {
-                          void navigator.clipboard.writeText(copyValue);
-                          toast.success("Copied to clipboard");
-                        }
-                      }}
-                    >
-                      <Copy className="text-muted-foreground" />
-                      Copy
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Edit"
-                      className="ml-2"
-                      onClick={handleEdit}
-                    >
-                      <Pencil className="text-muted-foreground" />
-                      Edit
-                    </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={isLoading || !selectedItem}
-                    aria-label="Delete"
-                    className="text-destructive"
-                  >
-                    <Trash2 className="text-destructive" />
-                  </Button>
-                </>
-              )}
+          <div className="px-6 pb-6 overflow-y-auto">
+            <div className="flex items-center justify-between gap-4 py-3 border-b">
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isLoading || !selectedItem}
+                  aria-label="Favorite"
+                  className={selectedItem?.isFavorite ? "text-yellow-500" : "text-foreground"}
+                >
+                  <Star
+                    className={selectedItem?.isFavorite ? "fill-yellow-500 text-yellow-500" : "text-current"}
+                  />
+                  Favorite
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isLoading || !selectedItem}
+                  aria-label="Pin"
+                >
+                  <Pin className={selectedItem?.isPinned ? "text-foreground rotate-45" : "text-muted-foreground rotate-45"} />
+                  Pin
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isLoading || !selectedItem}
+                  aria-label="Copy"
+                  onClick={() => {
+                    const copyValue = selectedItem?.content ?? selectedItem?.url ?? "";
+                    if (copyValue) {
+                      void navigator.clipboard.writeText(copyValue);
+                    }
+                  }}
+                >
+                  <Copy className="text-muted-foreground" />
+                  Copy
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isLoading || !selectedItem}
+                  aria-label="Edit"
+                  className="ml-2"
+                >
+                  <Pencil className="text-muted-foreground" />
+                  Edit
+                </Button>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={isLoading || !selectedItem}
+                aria-label="Delete"
+                className="text-destructive"
+              >
+                <Trash2 className="text-destructive" />
+              </Button>
             </div>
 
             {isLoading ? (
@@ -520,132 +389,74 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
             ) : loadError ? (
               <p className="pt-6 text-sm text-destructive">{loadError}</p>
             ) : selectedItem ? (
-              <div className="space-y-6 pt-6 pb-4">
+              <div className="space-y-6 pt-6">
                 <section className="space-y-2">
-                  <p className="text-muted-foreground text-sm">Description</p>
-                  {isEditing ? (
-                    <Textarea
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      placeholder="Add a description..."
-                      className="min-h-[80px] bg-secondary/20 border-primary/20 resize-none"
-                    />
-                  ) : (
-                    <p className="text-foreground text-base leading-normal">
-                      {selectedItem.description || "No description"}
-                    </p>
-                  )}
+                  <p className="text-muted-foreground">Description</p>
+                  <p className="text-foreground text-base leading-normal">
+                    {selectedItem.description || "No description"}
+                  </p>
                 </section>
 
                 <section className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-muted-foreground text-sm">Content</p>
-                    {isEditing && selectedItem.itemType.name.toLowerCase() === "link" && (
-                      <div className="flex items-center gap-2">
-                        <LinkIcon className="h-3 w-3 text-muted-foreground" />
-                        <p className="text-[10px] text-muted-foreground uppercase">URL</p>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {isEditing ? (
-                    <>
-                      {selectedItem.itemType.name.toLowerCase() === "link" ? (
-                        <Input
-                          value={editUrl}
-                          onChange={(e) => setEditUrl(e.target.value)}
-                          placeholder="https://example.com"
-                          className="bg-secondary/20 border-primary/20"
-                        />
-                      ) : (
-                        <Textarea
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                          placeholder="Paste content here..."
-                          className="min-h-[200px] font-mono text-sm bg-secondary/20 border-primary/20 resize-y"
-                        />
-                      )}
-                    </>
+                  <p className="text-muted-foreground">Content</p>
+                  {selectedItem.itemType.name.toLowerCase() === "link" && selectedItem.url ? (
+                    <a
+                      href={selectedItem.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed break-words text-blue-400 hover:text-blue-300 underline hover:underline-offset-2"
+                    >
+                      {selectedItem.url}
+                    </a>
                   ) : (
-                    <>
-                      {selectedItem.itemType.name.toLowerCase() === "link" && selectedItem.url ? (
-                        <a
-                          href={selectedItem.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed break-words text-blue-400 hover:text-blue-300 underline hover:underline-offset-2"
-                        >
-                          {selectedItem.url}
-                        </a>
-                      ) : (
-                        <pre className="max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed whitespace-pre-wrap break-words text-cyan-200">
-                          {selectedItem.content || selectedItem.url || "No content"}
-                        </pre>
-                      )}
-                    </>
+                    <pre className="max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed whitespace-pre-wrap break-words text-cyan-200">
+                      {selectedItem.content || selectedItem.url || "No content"}
+                    </pre>
                   )}
                 </section>
 
                 <Separator />
 
-                <section className="space-y-2">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Tag className="h-4 w-4" />
-                    <p>Tags</p>
-                  </div>
-                  {isEditing ? (
-                    <div className="pl-6">
-                      <Input
-                        value={editTags}
-                        onChange={(e) => setEditTags(e.target.value)}
-                        placeholder="tag1, tag2, tag3"
-                        className="bg-secondary/20 border-primary/20"
-                      />
-                      <p className="text-[10px] text-muted-foreground mt-1.5">
-                        Separate tags with commas
-                      </p>
+                {selectedItem.tags.length > 0 && (
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Tag className="h-4 w-4" />
+                      <p>Tags</p>
                     </div>
-                  ) : (
                     <div className="flex flex-wrap gap-2 pl-6">
-                      {selectedItem.tags.length > 0 ? (
-                        selectedItem.tags.map((tag) => (
-                          <Badge key={tag.id} variant="secondary" className="font-normal lowercase">
-                            {tag.name}
-                          </Badge>
-                        ))
-                      ) : (
-                        <p className="text-xs text-muted-foreground italic">No tags</p>
-                      )}
+                      {selectedItem.tags.map((tag) => (
+                        <Badge key={tag.id} variant="secondary" className="font-normal lowercase">
+                          {tag.name}
+                        </Badge>
+                      ))}
                     </div>
-                  )}
-                </section>
+                  </section>
+                )}
 
-                <section className="space-y-2">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Folder className="h-4 w-4" />
-                    <p>Collections</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pl-6">
-                    {selectedItem.collections.length > 0 ? (
-                      selectedItem.collections.map((entry) => (
+                {selectedItem.collections.length > 0 && (
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Folder className="h-4 w-4" />
+                      <p>Collections</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 pl-6">
+                      {selectedItem.collections.map((entry) => (
                         <Badge key={entry.collection.id} variant="outline" className="font-normal">
                           {entry.collection.name}
                         </Badge>
-                      ))
-                    ) : (
-                      <p className="text-xs text-muted-foreground italic">No collections</p>
-                    )}
-                  </div>
-                </section>
+                      ))}
+                    </div>
+                  </section>
+                )}
 
                 <Separator />
 
                 <section className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="h-4 w-4" />
                     <p>Details</p>
                   </div>
-                  <div className="space-y-2 pl-6 text-foreground text-sm">
+                  <div className="space-y-2 pl-6 text-foreground">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-muted-foreground">Created</p>
                       <p>{formatDetailsDate(selectedItem.createdAt)}</p>
