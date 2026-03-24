@@ -1,25 +1,16 @@
-# Items List View
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Create dynamic route `/items/[type]` (e.g., /items/snippets, /items/notes)
-- Fetch and display items filtered by type
-- Responsive grid of `ItemCard` components
-- Two columns on medium and up
-- Each card has left border colored by item type
-- Follow existing codebase patterns
+<!-- Add feature goals here -->
 
 ## Notes
 
-- Route path: `/items/[type]`
-- Use existing `ItemCard` component and item-type color mapping if available
-- Server-side fetching should follow patterns in `src/lib/db/*` (e.g., `items.ts`)
-- Responsive grid: 1 column on mobile, 2 columns at `md` breakpoint and above
-- Left-border color should reuse existing type-to-color logic used in dashboard components
+<!-- Add feature notes/constraints here -->
 
 ## History
 
@@ -165,3 +156,8 @@ In Progress
     - [x] Added `429` JSON responses with `Retry-After` header across protected routes
     - [x] Updated sign-in UI error handling for rate-limit scenarios
     - [x] Verified with lint, build, and Playwright MCP reproduction of 429 behavior
+ - **Items List View** (Completed)
+    - [x] Added dynamic route at `src/app/(dashboard)/items/[type]/page.tsx` to list items by type
+    - [x] Implemented `getItemsByType(userId, typeName)` in `src/lib/db/items.ts`
+    - [x] Added `ItemCard` component at `src/components/dashboard/item-card.tsx` with left-border color per item type
+    - [x] Implemented responsive two-column grid (`md:grid-cols-2`) and reused existing item-type colors
