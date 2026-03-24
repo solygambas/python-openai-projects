@@ -35,10 +35,20 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ItemCard } from "@/components/dashboard/item-card";
 import { formatDate } from "@/lib/utils";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
-import { updateItem } from "@/actions/items";
+import { updateItem, deleteItem } from "@/actions/items";
 import { toast } from "sonner";
 
 type ItemsWithDrawerVariant = "grid" | "recent" | "pinned";
@@ -120,6 +130,10 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
   const [editLanguage, setEditLanguage] = useState("");
   const [editTags, setEditTags] = useState("");
 
+  // Delete confirmation state
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const onOpenItem = useCallback(async (itemId: string) => {
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
@@ -129,14 +143,14 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     setLoadError(null);
     setSelectedItem(null);
     setIsEditing(false);
+    setShowDeleteDialog(false);
 
     try {
       const response = await fetch(`/api/items/${itemId}`);
 
       if (!response.ok) {
-        const errorMessage = response.status === 404
-          ? "Item not found"
-          : "Unable to load item";
+        const errorMessage =
+          response.status === 404 ? "Item not found" : "Unable to load item";
 
         throw new Error(errorMessage);
       }
@@ -154,7 +168,9 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
       }
 
       setSelectedItem(null);
-      setLoadError(error instanceof Error ? error.message : "Unable to load item");
+      setLoadError(
+        error instanceof Error ? error.message : "Unable to load item"
+      );
     } finally {
       if (requestIdRef.current === requestId) {
         setIsLoading(false);
@@ -205,12 +221,12 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
           ...result.data,
           createdAt: result.data.createdAt.toISOString(),
           updatedAt: result.data.updatedAt.toISOString(),
-          collections: result.data.collections.map(c => ({
+          collections: result.data.collections.map((c) => ({
             collection: {
               id: c.collection.id,
-              name: c.collection.name
-            }
-          }))
+              name: c.collection.name,
+            },
+          })),
         } as unknown as ItemDetail;
 
         setSelectedItem(updatedItem);
@@ -225,6 +241,35 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
       console.error(error);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedItem) return;
+
+    setIsDeleting(true);
+
+    try {
+      const result = await deleteItem({ itemId: selectedItem.id });
+
+      if (result.success) {
+        toast.success("Item deleted successfully");
+        setOpen(false);
+        setSelectedItem(null);
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to delete item");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
     }
   };
 
@@ -267,7 +312,10 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   <CardContent className="p-4 pl-5 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="h-10 w-10 rounded-lg bg-secondary/50 flex items-center justify-center">
-                        <Icon className="h-5 w-5" style={{ color: borderColor }} />
+                        <Icon
+                          className="h-5 w-5"
+                          style={{ color: borderColor }}
+                        />
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
@@ -370,7 +418,12 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                 {selectedItem ? (
                   (() => {
                     const Icon = iconMap[selectedItem.itemType.icon] || File;
-                    return <Icon className="h-5 w-5" style={{ color: selectedItem.itemType.color }} />;
+                    return (
+                      <Icon
+                        className="h-5 w-5"
+                        style={{ color: selectedItem.itemType.color }}
+                      />
+                    );
                   })()
                 ) : (
                   <File className="h-5 w-5 text-muted-foreground" />
@@ -399,14 +452,17 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                       {selectedItem.language}
                     </Badge>
                   )}
-                  {isEditing && (selectedItem?.itemType.name.toLowerCase() === "snippet" || selectedItem?.itemType.name.toLowerCase() === "command") && (
-                    <Input
-                      value={editLanguage}
-                      onChange={(e) => setEditLanguage(e.target.value)}
-                      placeholder="Language (e.g. typescript)"
-                      className="h-6 text-[10px] w-32 px-1.5 bg-background border-primary/20"
-                    />
-                  )}
+                  {isEditing &&
+                    (selectedItem?.itemType.name.toLowerCase() === "snippet" ||
+                      selectedItem?.itemType.name.toLowerCase() ===
+                        "command") && (
+                      <Input
+                        value={editLanguage}
+                        onChange={(e) => setEditLanguage(e.target.value)}
+                        placeholder="Language (e.g. typescript)"
+                        className="h-6 text-[10px] w-32 px-1.5 bg-background border-primary/20"
+                      />
+                    )}
                 </div>
               </div>
             </div>
@@ -447,10 +503,18 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                       size="sm"
                       disabled={isLoading || !selectedItem}
                       aria-label="Favorite"
-                      className={selectedItem?.isFavorite ? "text-yellow-500" : "text-foreground"}
+                      className={
+                        selectedItem?.isFavorite
+                          ? "text-yellow-500"
+                          : "text-foreground"
+                      }
                     >
                       <Star
-                        className={selectedItem?.isFavorite ? "fill-yellow-500 text-yellow-500" : "text-current"}
+                        className={
+                          selectedItem?.isFavorite
+                            ? "fill-yellow-500 text-yellow-500"
+                            : "text-current"
+                        }
                       />
                       Favorite
                     </Button>
@@ -460,7 +524,13 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                       disabled={isLoading || !selectedItem}
                       aria-label="Pin"
                     >
-                      <Pin className={selectedItem?.isPinned ? "text-foreground rotate-45" : "text-muted-foreground rotate-45"} />
+                      <Pin
+                        className={
+                          selectedItem?.isPinned
+                            ? "text-foreground rotate-45"
+                            : "text-muted-foreground rotate-45"
+                        }
+                      />
                       Pin
                     </Button>
                     <Button
@@ -469,7 +539,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                       disabled={isLoading || !selectedItem}
                       aria-label="Copy"
                       onClick={() => {
-                        const copyValue = selectedItem?.content ?? selectedItem?.url ?? "";
+                        const copyValue =
+                          selectedItem?.content ?? selectedItem?.url ?? "";
                         if (copyValue) {
                           void navigator.clipboard.writeText(copyValue);
                           toast.success("Copied to clipboard");
@@ -497,6 +568,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     disabled={isLoading || !selectedItem}
                     aria-label="Delete"
                     className="text-destructive"
+                    onClick={handleDeleteClick}
                   >
                     <Trash2 className="text-destructive" />
                   </Button>
@@ -540,14 +612,17 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                 <section className="space-y-3">
                   <div className="flex items-center justify-between">
                     <p className="text-muted-foreground text-sm">Content</p>
-                    {isEditing && selectedItem.itemType.name.toLowerCase() === "link" && (
-                      <div className="flex items-center gap-2">
-                        <LinkIcon className="h-3 w-3 text-muted-foreground" />
-                        <p className="text-[10px] text-muted-foreground uppercase">URL</p>
-                      </div>
-                    )}
+                    {isEditing &&
+                      selectedItem.itemType.name.toLowerCase() === "link" && (
+                        <div className="flex items-center gap-2">
+                          <LinkIcon className="h-3 w-3 text-muted-foreground" />
+                          <p className="text-[10px] text-muted-foreground uppercase">
+                            URL
+                          </p>
+                        </div>
+                      )}
                   </div>
-                  
+
                   {isEditing ? (
                     <>
                       {selectedItem.itemType.name.toLowerCase() === "link" ? (
@@ -568,7 +643,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     </>
                   ) : (
                     <>
-                      {selectedItem.itemType.name.toLowerCase() === "link" && selectedItem.url ? (
+                      {selectedItem.itemType.name.toLowerCase() === "link" &&
+                      selectedItem.url ? (
                         <a
                           href={selectedItem.url}
                           target="_blank"
@@ -579,7 +655,9 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                         </a>
                       ) : (
                         <pre className="max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed whitespace-pre-wrap break-words text-cyan-200">
-                          {selectedItem.content || selectedItem.url || "No content"}
+                          {selectedItem.content ||
+                            selectedItem.url ||
+                            "No content"}
                         </pre>
                       )}
                     </>
@@ -609,12 +687,18 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     <div className="flex flex-wrap gap-2 pl-6">
                       {selectedItem.tags.length > 0 ? (
                         selectedItem.tags.map((tag) => (
-                          <Badge key={tag.id} variant="secondary" className="font-normal lowercase">
+                          <Badge
+                            key={tag.id}
+                            variant="secondary"
+                            className="font-normal lowercase"
+                          >
                             {tag.name}
                           </Badge>
                         ))
                       ) : (
-                        <p className="text-xs text-muted-foreground italic">No tags</p>
+                        <p className="text-xs text-muted-foreground italic">
+                          No tags
+                        </p>
                       )}
                     </div>
                   )}
@@ -628,12 +712,18 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   <div className="flex flex-wrap gap-2 pl-6">
                     {selectedItem.collections.length > 0 ? (
                       selectedItem.collections.map((entry) => (
-                        <Badge key={entry.collection.id} variant="outline" className="font-normal">
+                        <Badge
+                          key={entry.collection.id}
+                          variant="outline"
+                          className="font-normal"
+                        >
                           {entry.collection.name}
                         </Badge>
                       ))
                     ) : (
-                      <p className="text-xs text-muted-foreground italic">No collections</p>
+                      <p className="text-xs text-muted-foreground italic">
+                        No collections
+                      </p>
                     )}
                   </div>
                 </section>
@@ -665,6 +755,28 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
           </div>
         </SheetContent>
       </Sheet>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedItem?.title}"? This
+              action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

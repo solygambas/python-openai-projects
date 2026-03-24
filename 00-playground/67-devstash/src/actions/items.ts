@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
-import { updateItem as updateItemQuery } from '@/lib/db/items';
+import { updateItem as updateItemQuery, deleteItem as deleteItemQuery } from '@/lib/db/items';
 import { z } from 'zod';
 
 const UpdateItemSchema = z.object({
@@ -14,7 +14,12 @@ const UpdateItemSchema = z.object({
   tags: z.array(z.string().trim().min(1)).default([]),
 });
 
+const DeleteItemSchema = z.object({
+  itemId: z.string().min(1, 'Item ID is required'),
+});
+
 type UpdateItemInput = z.infer<typeof UpdateItemSchema>;
+type DeleteItemInput = z.infer<typeof DeleteItemSchema>;
 
 interface UpdateItemResult {
   success: boolean;
@@ -47,6 +52,12 @@ interface UpdateItemResult {
       };
     }>;
   };
+  error?: string;
+}
+
+interface DeleteItemResult {
+  success: boolean;
+  data?: { id: string };
   error?: string;
 }
 
@@ -91,6 +102,43 @@ export async function updateItem(
     return {
       success: false,
       error: 'Failed to update item',
+    };
+  }
+}
+
+export async function deleteItem(
+  input: DeleteItemInput
+): Promise<DeleteItemResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  const userId = session.user.id;
+
+  const validatedFields = DeleteItemSchema.safeParse(input);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: validatedFields.error.issues[0].message,
+    };
+  }
+
+  const { itemId } = validatedFields.data;
+
+  try {
+    const result = await deleteItemQuery(userId, itemId);
+
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error('DELETE_ITEM_ERROR', error);
+    return {
+      success: false,
+      error: 'Failed to delete item',
     };
   }
 }

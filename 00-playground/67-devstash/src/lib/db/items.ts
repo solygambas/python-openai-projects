@@ -181,3 +181,37 @@ export async function updateItem(
     return updatedItem;
   });
 }
+
+export async function deleteItem(userId: string, itemId: string) {
+  // First verify ownership
+  const existingItem = await prisma.item.findFirst({
+    where: { id: itemId, userId },
+    select: { id: true },
+  });
+
+  if (!existingItem) {
+    throw new Error('Item not found or not owned by user');
+  }
+
+  // Use a transaction to delete the item
+  // Note: ItemCollection relations cascade delete automatically (schema has onDelete: Cascade)
+  // We need to disconnect tags first
+  return prisma.$transaction(async (tx) => {
+    // Disconnect all tags
+    await tx.item.update({
+      where: { id: itemId },
+      data: {
+        tags: {
+          set: [],
+        },
+      },
+    });
+
+    // Delete the item
+    await tx.item.delete({
+      where: { id: itemId },
+    });
+
+    return { id: itemId };
+  });
+}
