@@ -1,16 +1,30 @@
-# Current Feature
+# Item Create
 
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
-- [ ] Add goals here
+- [x] Wire the "New Item" button in top bar to open a modal dialog
+- [x] Implement type selector (snippet, prompt, command, note, link)
+- [ ] Show/hide fields based on selected type:
+  - All types: title (required), description, tags
+  - snippet/command: content, language
+  - prompt/note: content
+  - link: URL (required)
+- [x] Create `createItem` server action with Zod validation
+- [x] Create `createItem` query function in `lib/db/items.ts`
+- [x] Show toast on success, close modal and refresh page
+- [x] Add unit tests for `createItem` server action and database function
 
 ## Notes
 
-- Add notes here
+- Use shadcn Dialog component for the modal
+- File and Image types are Pro-only, so excluded from the type selector for now
+- Content field for text types (snippet, prompt, command, note)
+- URL field is required for link type
+- Language field only for snippet and command types
 
 ## History
 
@@ -77,7 +91,7 @@ Not Started
 	- [x] Verified stats display correctly using database counts
 - **Stats & Sidebar Implementation** (Completed)
 	- [x] Added `getItemTypeCounts(userId)` in `src/lib/db/items.ts`
-	- [x] Updated `getRecentCollections` in `src/lib/db/collections.ts` to support favorite filtering
+	- [x] Updated `getRecentCollections` in `src/lib/collections.ts` to support favorite filtering
 	- [x] Updated `SidebarProvider` to include `sidebarData` in context
 	- [x] Updated `DashboardLayout` to fetch real sidebar data (user, types, counts, collections)
 	- [x] Updated `DashboardSidebar` to use real data and implemented colored circle indicators for recent collections

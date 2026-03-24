@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
-import { updateItem as updateItemQuery, deleteItem as deleteItemQuery } from '@/lib/db/items';
+import { updateItem as updateItemQuery, deleteItem as deleteItemQuery, createItem as createItemQuery } from '@/lib/db/items';
 import { z } from 'zod';
 
 const UpdateItemSchema = z.object({
@@ -59,6 +59,75 @@ interface DeleteItemResult {
   success: boolean;
   data?: { id: string };
   error?: string;
+}
+
+// Create Item Schema and types
+const CreateItemSchema = z.object({
+  title: z.string().trim().min(1, 'Title is required'),
+  description: z.string().trim().nullish(),
+  content: z.string().nullish(),
+  url: z.string().url('Invalid URL format').nullish().or(z.literal('')),
+  language: z.string().trim().nullish(),
+  tags: z.array(z.string().trim().min(1)).default([]),
+  typeId: z.string().min(1, 'Type is required'),
+});
+
+type CreateItemInput = z.infer<typeof CreateItemSchema>;
+
+interface CreateItemResult {
+  success: boolean;
+  data?: {
+    id: string;
+    title: string;
+    description: string | null;
+    contentType: string;
+    content: string | null;
+    url: string | null;
+    language: string | null;
+    itemType: { id: string; name: string; icon: string; color: string };
+    tags: Array<{ id: string; name: string }>;
+  };
+  error?: string;
+}
+
+export async function createItem(
+  input: CreateItemInput
+): Promise<CreateItemResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  const userId = session.user.id;
+
+  const validatedFields = CreateItemSchema.safeParse(input);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: validatedFields.error.issues[0].message,
+    };
+  }
+
+  const { title, description, content, url, language, tags, typeId } =
+    validatedFields.data;
+
+  try {
+    const newItem = await createItemQuery(userId, {
+      title,
+      description: description || null,
+      content: content || null,
+      url: url || null,
+      language: language || null,
+      tags,
+      typeId,
+    });
+
+    return { success: true, data: newItem };
+  } catch (error) {
+    console.error('CREATE_ITEM_ERROR', error);
+    return { success: false, error: 'Failed to create item' };
+  }
 }
 
 export async function updateItem(

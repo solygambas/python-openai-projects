@@ -761,7 +761,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Item</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{selectedItem?.title}"? This
+              Are you sure you want to delete &quot;{selectedItem?.title}&quot;? This
               action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -215,3 +215,64 @@ export async function deleteItem(userId: string, itemId: string) {
     return { id: itemId };
   });
 }
+
+interface CreateItemData {
+  title: string;
+  description?: string | null;
+  content?: string | null;
+  url?: string | null;
+  language?: string | null;
+  tags?: string[];
+  typeId: string;
+}
+
+export async function createItem(
+  userId: string,
+  data: CreateItemData
+) {
+  // Determine content type based on item type
+  const type = await prisma.itemType.findUnique({
+    where: { id: data.typeId },
+  });
+
+  if (!type) {
+    throw new Error('Invalid item type');
+  }
+
+  // Map type name to content type
+  const contentTypeMap: Record<string, 'TEXT' | 'FILE' | 'URL'> = {
+    snippet: 'TEXT',
+    prompt: 'TEXT',
+    command: 'TEXT',
+    note: 'TEXT',
+    file: 'FILE',
+    image: 'FILE',
+    link: 'URL',
+  };
+
+  const contentType = contentTypeMap[type.name] || 'TEXT';
+
+  // Create the item with tags
+  const tagConnections = (data.tags || []).map((tagName) => ({
+    where: { name: tagName },
+    create: { name: tagName },
+  }));
+
+  return prisma.item.create({
+    data: {
+      title: data.title,
+      description: data.description || null,
+      content: data.content || null,
+      url: data.url || null,
+      language: data.language || null,
+      contentType,
+      userId,
+      itemTypeId: data.typeId,
+      tags: tagConnections.length > 0 ? { connectOrCreate: tagConnections } : undefined,
+    },
+    include: {
+      itemType: true,
+      tags: true,
+    },
+  });
+}
