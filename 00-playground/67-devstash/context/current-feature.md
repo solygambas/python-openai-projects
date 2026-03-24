@@ -1,16 +1,25 @@
-# Current Feature
+# Items List View
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Add feature goals here -->
+- Create dynamic route `/items/[type]` (e.g., /items/snippets, /items/notes)
+- Fetch and display items filtered by type
+- Responsive grid of `ItemCard` components
+- Two columns on medium and up
+- Each card has left border colored by item type
+- Follow existing codebase patterns
 
 ## Notes
 
-<!-- Add feature notes/constraints here -->
+- Route path: `/items/[type]`
+- Use existing `ItemCard` component and item-type color mapping if available
+- Server-side fetching should follow patterns in `src/lib/db/*` (e.g., `items.ts`)
+- Responsive grid: 1 column on mobile, 2 columns at `md` breakpoint and above
+- Left-border color should reuse existing type-to-color logic used in dashboard components
 
 ## History
 
