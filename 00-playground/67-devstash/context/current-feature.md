@@ -1,34 +1,16 @@
-# Item Drawer
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Implement a right-side slide-in item detail drawer using the shadcn `Sheet` component
-- Open drawer when clicking an `ItemCard` (no page navigation)
-- Fetch full item details on click via `/api/items/[id]` and show a skeleton while loading
-- Provide a client wrapper component to manage drawer state (pages are server components)
-- Add an action bar: Favorite (star, yellow when active), Pin, Copy, Edit, Delete (right-aligned)
-- Work across dashboard and items list pages with snappy UX
+<!-- Add feature goals here -->
 
 ## Notes
 
-- Requirements:
-    - Use ShadCN `Sheet` component opening from the right
-    - Clicking an `ItemCard` opens the drawer with that item's full data
-    - Action bar with Favorite, Pin, Copy, Edit, and Delete (Delete right-aligned)
-    - Start with details display; editor/extras will come later
-    - Client wrapper to manage drawer state because pages are server components
-    - UX: fetch on click, show skeleton, avoid navigation
-- Data fetching:
-    - Card-level data remains server-fetched as before
-    - Full item detail should be fetched on click via the API route `/api/items/[id]`
-    - Query function lives in `lib/db/items.ts`; API route should call it with auth checks
-    - Drawer should show a loading skeleton while the fetch is in progress
-- Reference:
-    - Visual design: `context/screenshots/dashboard-ui-drawer.png`
+<!-- Add feature notes/constraints here -->
 
 ## History
 
@@ -174,8 +156,15 @@ In Progress
     - [x] Added `429` JSON responses with `Retry-After` header across protected routes
     - [x] Updated sign-in UI error handling for rate-limit scenarios
     - [x] Verified with lint, build, and Playwright MCP reproduction of 429 behavior
- - **Items List View** (Completed)
+- **Items List View** (Completed)
     - [x] Added dynamic route at `src/app/(dashboard)/items/[type]/page.tsx` to list items by type
     - [x] Implemented `getItemsByType(userId, typeName)` in `src/lib/db/items.ts`
     - [x] Added `ItemCard` component at `src/components/dashboard/item-card.tsx` with left-border color per item type
     - [x] Implemented responsive two-column grid (`md:grid-cols-2`) and reused existing item-type colors
+- **Item Drawer** (Completed)
+    - [x] Implemented a right-side slide-in item detail drawer using the shadcn `Sheet` component
+    - [x] Opened drawer when clicking an `ItemCard` (no page navigation)
+    - [x] Fetched full item details on click via `/api/items/[id]` and showed a skeleton while loading
+    - [x] Provided a client wrapper component to manage drawer state (pages are server components)
+    - [x] Added an action bar: Favorite (star, yellow when active), Pin, Copy, Edit, Delete (right-aligned)
+    - [x] Works across dashboard and items list pages with snappy UX
