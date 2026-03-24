@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "prisma:base": "node --env-file=.env node_modules/prisma/build/index.js",
     "db:migrate": "npm run prisma:base -- migrate dev",
     "db:deploy": "npm run prisma:base -- migrate deploy",
@@ -16,7 +19,7 @@
     "db:studio": "npm run prisma:base -- studio",
     "db:test": "node --experimental-strip-types --env-file=.env scripts/test-db.ts",
     "db:clean-users": "node --experimental-strip-types --env-file=.env scripts/clean-users.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "npm run prisma:base -- generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -52,10 +55,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
+    "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.7",
     "tailwindcss": "^4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.1"
   }
 }
