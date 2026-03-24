@@ -1,27 +1,16 @@
-# Delete Item Functionality
+# Current Feature
 
 ## Status
 
-Completed
+Not Started
 
 ## Goals
 
-Implement item deletion with confirmation and feedback:
-
-- [x] Delete button in item drawer triggers confirmation dialog
-- [x] Shadcn AlertDialog for confirmation
-- [x] Server action `deleteItem` in `src/actions/items.ts`
-- [x] `deleteItem` query function in `lib/db/items.ts`
-- [x] Toast notification on success/error
-- [x] After delete: close drawer and refresh the page
-- [x] Handle related data (tags, collection associations)
+- [ ] Add goals here
 
 ## Notes
 
-- Use cascade delete for ItemCollection relations (already in schema)
-- Disconnect tags before deleting item
-- Return `{ success, error }` pattern for server action
-- Non-owner users should not be able to delete items they don't own
+- Add notes here
 
 ## History
 
@@ -191,3 +180,12 @@ Implement item deletion with confirmation and feedback:
 	- [x] Toast notifications on save success/error
 	- [x] Client-side: disable Save when title empty
 	- [x] After save: refresh drawer data + call `router.refresh()`
+- **Delete Item Functionality** (Completed)
+	- [x] Delete button in item drawer triggers confirmation dialog
+	- [x] Shadcn AlertDialog for confirmation
+	- [x] Server action `deleteItem` in `src/actions/items.ts`
+	- [x] `deleteItem` query function in `lib/db/items.ts`
+	- [x] Toast notification on success/error
+	- [x] After delete: close drawer and refresh the page
+	- [x] Handle related data (tags, collection associations)
+	- [x] Unit tests for deleteItem server action and database function
