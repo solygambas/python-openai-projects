@@ -89,6 +89,44 @@ Example v4 configuration:
 - Return `{ success, data, error }` pattern from actions
 - Display user-friendly error messages via toast
 
+## Testing (Vitest)
+
+**Scope**: Test server actions and utilities only, not React components.
+
+- Run with `npm test` (watch mode) or `npm run test:run` (single run)
+- Test files: `feature.test.ts` co-located with source 
+- Include patterns: `src/lib/**/*.test.ts`, `src/**/actions.test.ts`
+- Exclude: components, `.next/`, `node_modules/`
+- Environment: Node (no jsdom/browser mocks needed)
+
+**What to test:**
+- Server Actions: Happy path, error cases, validation failures, auth checks
+- Utility functions: Edge cases, return types, error handling
+- Database functions: Query results, error states
+
+**What NOT to test:**
+- React components (use manual browser testing or E2E when needed)
+- UI interactions, rendering
+
+**Example server action test:**
+
+```typescript
+import { describe, expect, it, vi } from 'vitest';
+import { changePassword } from '@/app/(dashboard)/profile/actions';
+
+describe('changePassword', () => {
+  it('returns error if not authenticated', async () => {
+    const result = await changePassword(new FormData());
+    expect(result.error).toBe('Unauthorized');
+  });
+});
+```
+
+**Mocking patterns:**
+- Mock Prisma: `vi.mock('@/lib/prisma')`
+- Mock auth: Mock `auth()` from `@/auth`
+- Use `vi.spyOn()` for functions, `vi.mock()` for modules
+
 ## Code Quality
 
 - No commented-out code unless specified
