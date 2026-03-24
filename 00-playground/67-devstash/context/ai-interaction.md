@@ -23,7 +23,7 @@ This is the common workflow that we will use for every single feature/fix:
 9. **Review** - Review AI-generated code periodically and on demand.
 10. Mark as completed in @context/current-feature.md and add to history
 
-Do NOT commit without permission and until the build passes. If build fails, fix the issues first.
+Do NOT commit without permission and until the build and tests pass. If build or tests fail, fix the issues first.
 
 ## Branching
 
