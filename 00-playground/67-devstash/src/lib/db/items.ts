@@ -47,6 +47,27 @@ export async function getRecentItems(userId: string, limit = 10) {
   });
 }
 
+export async function getItemsByType(userId: string, typeName: string, limit = 50) {
+  const validatedLimit = Math.max(1, Math.min(limit, 100));
+
+  return prisma.item.findMany({
+    where: {
+      userId,
+      itemType: {
+        name: typeName,
+      },
+    },
+    take: validatedLimit,
+    include: {
+      itemType: true,
+      tags: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
 export async function getItemTypeCounts(userId: string) {
   const counts = await prisma.item.groupBy({
     by: ['itemTypeId'],
