@@ -1,55 +1,15 @@
-import { Badge } from "@/components/ui/badge";
-import { File } from "lucide-react";
-import { type DashboardItem, type IconMap } from "@/types/dashboard";
-import { formatDate } from "@/lib/utils";
+import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
+import { type DashboardItem } from "@/types/dashboard";
 
 interface RecentItemsProps {
   items: DashboardItem[];
-  iconMap: IconMap;
 }
 
-export function RecentItems({ items, iconMap }: RecentItemsProps) {
+export function RecentItems({ items }: RecentItemsProps) {
   return (
     <section className="space-y-4">
       <h2 className="text-xl font-semibold tracking-tight">Recent Items</h2>
-      <div className="grid gap-4">
-        {items.map((item) => {
-          const itemType = item.itemType;
-          const Icon = iconMap[itemType?.icon || 'File'] || File;
-          const borderColor = itemType?.color || '#6b7280';
-          
-          return (
-            <div key={item.id} className="flex items-center justify-between p-2 pl-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden">
-              {/* Colored border indicator */}
-              <div 
-                className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full" 
-                style={{ backgroundColor: borderColor }}
-              />
-              <div className="flex items-center gap-4">
-                <div className="h-8 w-8 rounded bg-secondary flex items-center justify-center">
-                  <Icon className="h-4 w-4" style={{ color: borderColor }} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                 <div className="hidden sm:flex gap-1">
-                  {item.tags.slice(0, 2).map((tag) => (
-                    <Badge key={tag.id} variant="outline" className="text-[10px] px-1 py-0 h-4 font-normal">
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-                <span className="text-xs text-muted-foreground w-12 text-right">
-                  {formatDate(item.createdAt)}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <ItemsWithDrawer items={items} variant="recent" />
     </section>
   );
 }

@@ -68,6 +68,24 @@ export async function getItemsByType(userId: string, typeName: string, limit = 5
   });
 }
 
+export async function getItemDetailById(userId: string, itemId: string) {
+  return prisma.item.findFirst({
+    where: {
+      id: itemId,
+      userId,
+    },
+    include: {
+      itemType: true,
+      tags: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
+    },
+  });
+}
+
 export async function getItemTypeCounts(userId: string) {
   const counts = await prisma.item.groupBy({
     by: ['itemTypeId'],

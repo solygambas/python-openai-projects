@@ -1,29 +1,9 @@
-import {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
-} from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getUserById } from "@/lib/db/users";
 import { getItemsByType } from "@/lib/db/items";
 import { getItemTypes } from "@/lib/db/item-types";
-import { ItemCard } from "@/components/dashboard/item-card";
-import { type IconMap } from "@/types/dashboard";
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-};
+import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
 
 interface ItemsTypePageProps {
   params: Promise<{ type: string }>;
@@ -68,11 +48,7 @@ export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
           )}
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {items.map((item) => (
-            <ItemCard key={item.id} item={item} iconMap={iconMap} />
-          ))}
-        </div>
+        <ItemsWithDrawer items={items} variant="grid" />
       )}
     </div>
   );

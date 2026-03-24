@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
@@ -6,15 +8,20 @@ import { formatDate } from "@/lib/utils";
 interface ItemCardProps {
   item: DashboardItem;
   iconMap: IconMap;
+  onClick?: () => void;
 }
 
-export function ItemCard({ item, iconMap }: ItemCardProps) {
+export function ItemCard({ item, iconMap, onClick }: ItemCardProps) {
   const itemType = item.itemType;
   const Icon = iconMap[itemType?.icon || "File"] || File;
   const borderColor = itemType?.color || "#6b7280";
 
   return (
-    <div className="flex flex-col gap-3 p-4 pl-5 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer border border-border/50 hover:border-border relative overflow-hidden">
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left flex flex-col gap-3 p-4 pl-5 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer border border-border/50 hover:border-border relative overflow-hidden"
+    >
       {/* Left border colored by item type */}
       <div
         className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
@@ -49,6 +56,6 @@ export function ItemCard({ item, iconMap }: ItemCardProps) {
           ))}
         </div>
       )}
-    </div>
+    </button>
   );
 }
