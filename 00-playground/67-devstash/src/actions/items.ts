@@ -6,6 +6,7 @@ import {
   deleteItem as deleteItemQuery,
   createItem as createItemQuery,
 } from "@/lib/db/items";
+import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
 import { z } from "zod";
 
 const UpdateItemSchema = z.object({
@@ -74,6 +75,10 @@ const CreateItemSchema = z.object({
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
   typeId: z.string().min(1, "Type is required"),
+  // File upload fields
+  fileUrl: z.string().url().nullish(),
+  fileName: z.string().nullish(),
+  fileSize: z.number().int().positive().nullish(),
 });
 
 type CreateItemInput = z.infer<typeof CreateItemSchema>;
@@ -95,7 +100,7 @@ interface CreateItemResult {
 }
 
 export async function createItem(
-  input: CreateItemInput
+  input: CreateItemInput,
 ): Promise<CreateItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -113,8 +118,18 @@ export async function createItem(
     };
   }
 
-  const { title, description, content, url, language, tags, typeId } =
-    validatedFields.data;
+  const {
+    title,
+    description,
+    content,
+    url,
+    language,
+    tags,
+    typeId,
+    fileUrl,
+    fileName,
+    fileSize,
+  } = validatedFields.data;
 
   try {
     const newItem = await createItemQuery(userId, {
@@ -125,6 +140,9 @@ export async function createItem(
       language: language || null,
       tags,
       typeId,
+      fileUrl: fileUrl || null,
+      fileName: fileName || null,
+      fileSize: fileSize || null,
     });
 
     return { success: true, data: newItem };
@@ -135,7 +153,7 @@ export async function createItem(
 }
 
 export async function updateItem(
-  input: UpdateItemInput
+  input: UpdateItemInput,
 ): Promise<UpdateItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -180,7 +198,7 @@ export async function updateItem(
 }
 
 export async function deleteItem(
-  input: DeleteItemInput
+  input: DeleteItemInput,
 ): Promise<DeleteItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -202,6 +220,19 @@ export async function deleteItem(
 
   try {
     const result = await deleteItemQuery(userId, itemId);
+
+    // Delete file from R2 if it exists
+    if (result.fileUrl) {
+      const key = extractKeyFromUrl(result.fileUrl);
+      if (key) {
+        try {
+          await deleteFromR2(key);
+        } catch (r2Error) {
+          // Log but don't fail - the item is already deleted
+          console.error("R2_DELETE_ERROR", r2Error);
+        }
+      }
+    }
 
     return {
       success: true,

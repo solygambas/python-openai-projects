@@ -20,6 +20,7 @@ import {
   Calendar,
   X,
   Save,
+  Download,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,9 @@ interface ItemDetail {
   isPinned: boolean;
   createdAt: string;
   updatedAt: string;
+  fileUrl: string | null;
+  fileName: string | null;
+  fileSize: number | null;
   itemType: {
     id: string;
     name: string;
@@ -104,6 +108,12 @@ function formatDetailsDate(date: string) {
   }).format(new Date(date));
 }
 
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
 const iconMap: IconMap = {
   Code,
   Sparkles,
@@ -124,6 +134,12 @@ function isCodeType(typeName: string): boolean {
 function isMarkdownType(typeName: string): boolean {
   const lower = typeName.toLowerCase();
   return lower === "note" || lower === "prompt";
+}
+
+// Helper to check if item type is file or image
+function isFileType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "file" || lower === "image";
 }
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
@@ -183,7 +199,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
 
       setSelectedItem(null);
       setLoadError(
-        error instanceof Error ? error.message : "Unable to load item"
+        error instanceof Error ? error.message : "Unable to load item",
       );
     } finally {
       if (requestIdRef.current === requestId) {
@@ -562,6 +578,23 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                       <Copy className="text-muted-foreground" />
                       Copy
                     </Button>
+                    {selectedItem?.fileUrl && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isLoading}
+                        aria-label="Download"
+                        onClick={() => {
+                          window.open(
+                            `/api/download/${selectedItem.id}`,
+                            "_blank",
+                          );
+                        }}
+                      >
+                        <Download className="text-muted-foreground" />
+                        Download
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -621,9 +654,14 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   )}
                 </section>
 
+                {/* Content section - handles files/images differently */}
                 <section className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-muted-foreground text-sm">Content</p>
+                    <p className="text-muted-foreground text-sm">
+                      {isFileType(selectedItem.itemType.name)
+                        ? "File"
+                        : "Content"}
+                    </p>
                     {isEditing &&
                       selectedItem.itemType.name.toLowerCase() === "link" && (
                         <div className="flex items-center gap-2">
@@ -670,8 +708,45 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     </>
                   ) : (
                     <>
-                      {selectedItem.itemType.name.toLowerCase() === "link" &&
-                      selectedItem.url ? (
+                      {/* File/Image display */}
+                      {isFileType(selectedItem.itemType.name) &&
+                      selectedItem.fileUrl ? (
+                        selectedItem.itemType.name.toLowerCase() === "image" ? (
+                          // Image preview - use download proxy to avoid R2 auth issues
+                          <div className="rounded-lg border bg-secondary/40 p-4">
+                            <img
+                              src={`/api/download/${selectedItem.id}`}
+                              alt={selectedItem.fileName || "Image"}
+                              className="max-w-full max-h-[400px] rounded object-contain mx-auto"
+                            />
+                            {selectedItem.fileName && selectedItem.fileSize && (
+                              <p className="text-xs text-muted-foreground text-center mt-2">
+                                {selectedItem.fileName} (
+                                {formatFileSize(selectedItem.fileSize)})
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          // File info display
+                          <div className="rounded-lg border bg-secondary/40 p-4 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center">
+                              <File className="h-6 w-6 text-muted-foreground" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">
+                                {selectedItem.fileName || "Unknown file"}
+                              </p>
+                              {selectedItem.fileSize && (
+                                <p className="text-xs text-muted-foreground">
+                                  {formatFileSize(selectedItem.fileSize)}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      ) : /* Regular content display */
+                      selectedItem.itemType.name.toLowerCase() === "link" &&
+                        selectedItem.url ? (
                         <a
                           href={selectedItem.url}
                           target="_blank"

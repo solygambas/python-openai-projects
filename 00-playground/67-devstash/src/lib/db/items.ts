@@ -50,7 +50,7 @@ export async function getRecentItems(userId: string, limit = 10) {
 export async function getItemsByType(
   userId: string,
   typeName: string,
-  limit = 50
+  limit = 50,
 ) {
   const validatedLimit = Math.max(1, Math.min(limit, 100));
 
@@ -106,7 +106,7 @@ export async function getItemTypeCounts(userId: string) {
       acc[type.id] = type.name;
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
 
   // Map to name -> count
@@ -118,7 +118,7 @@ export async function getItemTypeCounts(userId: string) {
       }
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 }
 
@@ -134,7 +134,7 @@ interface UpdateItemData {
 export async function updateItem(
   userId: string,
   itemId: string,
-  data: UpdateItemData
+  data: UpdateItemData,
 ) {
   // First verify ownership
   const existingItem = await prisma.item.findFirst({
@@ -193,10 +193,10 @@ export async function updateItem(
 }
 
 export async function deleteItem(userId: string, itemId: string) {
-  // First verify ownership
+  // First verify ownership and get file info
   const existingItem = await prisma.item.findFirst({
     where: { id: itemId, userId },
-    select: { id: true },
+    select: { id: true, fileUrl: true },
   });
 
   if (!existingItem) {
@@ -222,7 +222,8 @@ export async function deleteItem(userId: string, itemId: string) {
       where: { id: itemId },
     });
 
-    return { id: itemId };
+    // Return file URL for cleanup (to be handled by caller)
+    return { id: itemId, fileUrl: existingItem.fileUrl };
   });
 }
 
@@ -234,6 +235,9 @@ interface CreateItemData {
   language?: string | null;
   tags?: string[];
   typeId: string;
+  fileUrl?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
 }
 
 export async function createItem(userId: string, data: CreateItemData) {
@@ -275,6 +279,9 @@ export async function createItem(userId: string, data: CreateItemData) {
       contentType,
       userId,
       itemTypeId: data.typeId,
+      fileUrl: data.fileUrl || null,
+      fileName: data.fileName || null,
+      fileSize: data.fileSize || null,
       tags:
         tagConnections.length > 0
           ? { connectOrCreate: tagConnections }

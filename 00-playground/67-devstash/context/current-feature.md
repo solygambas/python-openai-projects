@@ -2,13 +2,66 @@
 
 ## Status
 
-Not Started
+Complete
+
+## Title
+
+File Upload with Cloudflare R2
 
 ## Goals
 
-- [ ]
+- [x] Create upload API route for R2
+- [x] Create FileUpload component with drag-and-drop
+- [x] Update create item modal to use FileUpload for file/image types
+- [x] Delete files from R2 when items are deleted
+- [x] Create download proxy API route (avoids CORS issues)
+- [x] Add download button in ItemDrawer for file types
+- [x] Show upload progress indicator
+- [x] Display image preview for images, file info for files
+- [x] Fix TypeScript errors in r2.ts and download route
+- [x] Add environment variables to .env.example for R2 configuration
+- [x] Test end-to-end file upload flow
+- [x] Run build and verify all tests pass
 
 ## Notes
+
+**File Constraints:**
+
+- Images: 5 MB max, `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg`
+- Files: 10 MB max, `.pdf`, `.txt`, `.md`, `.json`, `.yaml`, `.yml`, `.xml`, `.csv`, `.toml`, `.ini`
+
+**MIME Types:**
+
+- Images: `image/png`, `image/jpeg`, `image/gif`, `image/webp`, `image/svg+xml`
+- Files: `application/pdf`, `text/plain`, `text/markdown`, `application/json`, `application/x-yaml`, `text/yaml`, `application/xml`, `text/xml`, `text/csv`, `application/toml`
+
+**Architecture Notes:**
+
+- Stick to `lib/db/items.ts` for Prisma/database functions
+- Use R2 for storage, database for metadata
+
+**Files Created/Modified:**
+
+- `src/lib/r2.ts` - R2 client, upload/delete/get functions, file validation
+- `src/app/api/upload/route.ts` - Upload API endpoint
+- `src/app/api/download/[id]/route.ts` - Download proxy API endpoint
+- `src/components/ui/file-upload.tsx` - Drag-and-drop file upload component
+- `src/components/ui/progress.tsx` - Progress bar component (shadcn)
+- `src/components/dashboard/create-item-dialog.tsx` - Updated for file/image types
+- `src/components/dashboard/items-with-drawer.tsx` - Added download button and file/image display
+- `src/lib/db/items.ts` - Added fileUrl, fileName, fileSize to createItem
+- `src/actions/items.ts` - Added file fields to createItem, deleteFromR2 on delete
+- `src/lib/db/items.test.ts` - Updated tests for new file fields
+- `src/actions/actions.test.ts` - Updated tests for new file fields
+
+**Environment Variables Needed:**
+
+```
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=devstash-files
+```
 
 ## History
 
@@ -212,3 +265,17 @@ Not Started
 - [x] Integrated into `CreateItemDialog` for note/prompt content field
 - [x] Readonly mode shows Preview only, edit mode defaults to Write
 - _Note:_ Build and lint pass.
+- **File Upload with Cloudflare R2** (Completed)
+- [x] Created `src/lib/r2.ts` with R2 client configuration, upload/delete/get functions, and file validation
+- [x] Created `src/app/api/upload/route.ts` - Upload API endpoint for R2
+- [x] Created `src/app/api/download/[id]/route.ts` - Download proxy API endpoint
+- [x] Created `src/components/ui/file-upload.tsx` - Drag-and-drop file upload component with progress indicator
+- [x] Added `src/components/ui/progress.tsx` - Progress bar component (shadcn)
+- [x] Updated `src/components/dashboard/create-item-dialog.tsx` to support file/image types with FileUpload component
+- [x] Updated `src/components/dashboard/items-with-drawer.tsx` with download button and image preview/file info display
+- [x] Updated `src/lib/db/items.ts` - Added fileUrl, fileName, fileSize to createItem function
+- [x] Updated `src/actions/items.ts` - Added file fields to createItem, deleteFromR2 on delete
+- [x] Updated `src/lib/db/items.ts` - deleteItem now returns fileUrl for R2 cleanup
+- [x] Fixed TypeScript error in `src/app/api/download/[id]/route.ts` - Buffer to Uint8Array conversion
+- [x] Updated unit tests for new file fields in createItem and deleteItem
+- [x] Verified build and all tests pass

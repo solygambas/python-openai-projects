@@ -9,6 +9,8 @@ import {
   StickyNote,
   Link as LinkIcon,
   Plus,
+  File,
+  Image as ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -25,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { CodeEditor } from "@/components/ui/code-editor";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
+import { FileUpload } from "@/components/ui/file-upload";
 import { createItem } from "@/actions/items";
 import type { IconMap } from "@/types/dashboard";
 
@@ -50,6 +53,8 @@ const iconMap: IconMap = {
   Terminal,
   StickyNote,
   Link: LinkIcon,
+  File,
+  Image: ImageIcon,
 };
 
 // Types that use text content field
@@ -85,7 +90,7 @@ export function CreateItemDialog({
 
   // Form state
   const [selectedTypeId, setSelectedTypeId] = useState<string>(
-    defaultTypeId || ""
+    defaultTypeId || "",
   );
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -94,11 +99,16 @@ export function CreateItemDialog({
   const [language, setLanguage] = useState("");
   const [tags, setTags] = useState("");
 
-  // Filter out Pro-only types (file, image)
+  // File upload state
+  const [uploadedFile, setUploadedFile] = useState<{
+    fileUrl: string;
+    fileName: string;
+    fileSize: number;
+  } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const availableTypes = itemTypes.filter(
-    (type) => type.name !== "file" && type.name !== "image"
-  );
+  // All types available (including file/image)
+  const availableTypes = itemTypes;
 
   const selectedType = itemTypes.find((t) => t.id === selectedTypeId);
   const typeName = selectedType?.name?.toLowerCase() || "";
@@ -106,6 +116,7 @@ export function CreateItemDialog({
   const showContentField = textContentTypes.includes(typeName);
   const showUrlField = typeName === "link";
   const showLanguageField = languageTypes.includes(typeName);
+  const showFileUpload = typeName === "file" || typeName === "image";
 
   const resetForm = () => {
     setSelectedTypeId(defaultTypeId || "");
@@ -115,6 +126,8 @@ export function CreateItemDialog({
     setUrl("");
     setLanguage("");
     setTags("");
+    setUploadedFile(null);
+    setIsUploading(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -135,6 +148,11 @@ export function CreateItemDialog({
       return;
     }
 
+    if (showFileUpload && !uploadedFile) {
+      toast.error("Please upload a file");
+      return;
+    }
+
     const tagsArray = tags
       .split(",")
       .map((tag) => tag.trim())
@@ -149,6 +167,9 @@ export function CreateItemDialog({
         language: showLanguageField ? language.trim() : null,
         tags: tagsArray,
         typeId: selectedTypeId,
+        fileUrl: showFileUpload && uploadedFile ? uploadedFile.fileUrl : null,
+        fileName: showFileUpload && uploadedFile ? uploadedFile.fileName : null,
+        fileSize: showFileUpload && uploadedFile ? uploadedFile.fileSize : null,
       });
 
       if (result.success) {
@@ -165,17 +186,25 @@ export function CreateItemDialog({
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
     if (newOpen) {
-      // Reset with defaultTypeId when opening
-      setSelectedTypeId(defaultTypeId || "");
-      setTitle("");
-      setDescription("");
-      setContent("");
-      setUrl("");
-      setLanguage("");
-      setTags("");
+      resetForm();
     } else {
       resetForm();
     }
+  };
+
+  const handleFileUploadComplete = (data: {
+    fileUrl: string;
+    fileName: string;
+    fileSize: number;
+  }) => {
+    setUploadedFile(data);
+    setIsUploading(false);
+  };
+
+  const handleFileUploadError = (error: string) => {
+    toast.error(error);
+    setUploadedFile(null);
+    setIsUploading(false);
   };
 
   return (
@@ -194,8 +223,8 @@ export function CreateItemDialog({
         <DialogHeader>
           <DialogTitle>Create New Item</DialogTitle>
           <DialogDescription>
-            Add a new snippet, prompt, command, note, or link to your
-            collection.
+            Add a new snippet, prompt, command, note, file, image, or link to
+            your collection.
           </DialogDescription>
         </DialogHeader>
 
@@ -213,7 +242,10 @@ export function CreateItemDialog({
                   <button
                     key={type.id}
                     type="button"
-                    onClick={() => setSelectedTypeId(type.id)}
+                    onClick={() => {
+                      setSelectedTypeId(type.id);
+                      setUploadedFile(null);
+                    }}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                       isSelected
                         ? "border-primary bg-primary/10"
@@ -305,6 +337,19 @@ export function CreateItemDialog({
             </div>
           )}
 
+          {/* File Upload (for file/image types) */}
+          {showFileUpload && (
+            <div className="space-y-2">
+              <Label>File</Label>
+              <FileUpload
+                type={typeName as "file" | "image"}
+                onUploadComplete={handleFileUploadComplete}
+                onUploadError={handleFileUploadError}
+                disabled={isPending}
+              />
+            </div>
+          )}
+
           {/* Language (for snippet/command types) */}
           {showLanguageField && (
             <div className="space-y-2">
@@ -339,11 +384,14 @@ export function CreateItemDialog({
               type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
-              disabled={isPending}
+              disabled={isPending || isUploading}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || !selectedTypeId}>
+            <Button
+              type="submit"
+              disabled={isPending || !selectedTypeId || isUploading}
+            >
               {isPending ? "Creating..." : "Create Item"}
             </Button>
           </div>
