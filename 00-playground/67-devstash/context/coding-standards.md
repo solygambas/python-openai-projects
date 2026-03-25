@@ -70,6 +70,13 @@ Example v4 configuration:
 - No inline styles
 - Dark mode first, light mode as option
 
+## Formatting
+
+- Prettier with semicolons, double quotes, 2-space indentation
+- Trailing commas always, LF line endings
+- Run `npm run format` before committing
+- Use `npm run format:check` to verify without writing
+
 ## Database
 
 - Use Prisma ORM for all database operations
