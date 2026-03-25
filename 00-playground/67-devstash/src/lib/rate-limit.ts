@@ -1,7 +1,11 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-type RateLimitWindow = `${number} s` | `${number} m` | `${number} h` | `${number} d`;
+type RateLimitWindow =
+  | `${number} s`
+  | `${number} m`
+  | `${number} h`
+  | `${number} d`;
 
 interface CheckRateLimitOptions {
   namespace: string;
@@ -104,8 +108,16 @@ function buildCompositeKey(
 export async function checkRateLimit(
   options: CheckRateLimitOptions
 ): Promise<CheckRateLimitResult> {
-  const { namespace, limit, window, request, identifier, includeIp = true, timeoutMs = 1000, ipContext } =
-    options;
+  const {
+    namespace,
+    limit,
+    window,
+    request,
+    identifier,
+    includeIp = true,
+    timeoutMs = 1000,
+    ipContext,
+  } = options;
 
   if (!redisConfigured) {
     return {
@@ -117,7 +129,13 @@ export async function checkRateLimit(
 
   try {
     const limiter = getLimiter(namespace, limit, window, timeoutMs);
-    const key = buildCompositeKey(namespace, request, identifier, includeIp, ipContext);
+    const key = buildCompositeKey(
+      namespace,
+      request,
+      identifier,
+      includeIp,
+      ipContext
+    );
     const result = await limiter.limit(key);
 
     return {

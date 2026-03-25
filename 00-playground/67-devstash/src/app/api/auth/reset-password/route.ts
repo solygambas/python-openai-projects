@@ -33,7 +33,10 @@ export async function POST(req: Request) {
     const { token, password } = await req.json();
 
     if (!token || !password) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     if (password.length < 6) {
@@ -48,18 +51,32 @@ export async function POST(req: Request) {
     });
 
     if (!resetToken) {
-      return NextResponse.json({ error: "Invalid or expired reset link" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid or expired reset link" },
+        { status: 400 }
+      );
     }
 
     if (resetToken.expires < new Date()) {
       await prisma.verificationToken.delete({
-        where: { identifier_token: { identifier: resetToken.identifier, token: resetToken.token } },
+        where: {
+          identifier_token: {
+            identifier: resetToken.identifier,
+            token: resetToken.token,
+          },
+        },
       });
-      return NextResponse.json({ error: "Reset link has expired" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Reset link has expired" },
+        { status: 400 }
+      );
     }
 
     if (!resetToken.identifier.startsWith("password-reset:")) {
-      return NextResponse.json({ error: "Invalid reset link" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid reset link" },
+        { status: 400 }
+      );
     }
 
     const email = resetToken.identifier.replace("password-reset:", "");
@@ -77,13 +94,21 @@ export async function POST(req: Request) {
         data: { password: hashedPassword },
       }),
       prisma.verificationToken.delete({
-        where: { identifier_token: { identifier: resetToken.identifier, token: resetToken.token } },
+        where: {
+          identifier_token: {
+            identifier: resetToken.identifier,
+            token: resetToken.token,
+          },
+        },
       }),
     ]);
 
     return NextResponse.json({ message: "Password reset successfully" });
   } catch (error) {
     console.error("RESET_PASSWORD_ERROR", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

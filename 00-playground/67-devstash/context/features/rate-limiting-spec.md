@@ -14,13 +14,13 @@ Implement rate limiting on authentication endpoints to prevent brute force attac
 
 ## Endpoints to Protect
 
-| Endpoint | Limit | Window | Key By |
-|----------|-------|--------|--------|
+| Endpoint                                 | Limit      | Window | Key By     |
+| ---------------------------------------- | ---------- | ------ | ---------- |
 | `/api/auth/callback/credentials` (login) | 5 attempts | 15 min | IP + email |
-| `/api/auth/register` | 3 attempts | 1 hour | IP |
-| `/api/auth/forgot-password` | 3 attempts | 1 hour | IP |
-| `/api/auth/reset-password` | 5 attempts | 15 min | IP |
-| `/api/auth/resend-verification` | 3 attempts | 15 min | IP + email |
+| `/api/auth/register`                     | 3 attempts | 1 hour | IP         |
+| `/api/auth/forgot-password`              | 3 attempts | 1 hour | IP         |
+| `/api/auth/reset-password`               | 5 attempts | 15 min | IP         |
+| `/api/auth/resend-verification`          | 3 attempts | 15 min | IP + email |
 
 ## Implementation
 

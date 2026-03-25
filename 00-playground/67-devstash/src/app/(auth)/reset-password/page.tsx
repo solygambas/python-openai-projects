@@ -8,7 +8,9 @@ interface ResetPasswordPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ResetPasswordPage({ searchParams }: ResetPasswordPageProps) {
+export default async function ResetPasswordPage({
+  searchParams,
+}: ResetPasswordPageProps) {
   const params = await searchParams;
   const token = params.token as string | undefined;
 
@@ -21,10 +23,11 @@ export default async function ResetPasswordPage({ searchParams }: ResetPasswordP
             <p className="font-semibold text-base">Missing Reset Token</p>
           </div>
           <p className="text-center text-muted-foreground">
-            The password reset link is invalid or has expired. Please request a new one.
+            The password reset link is invalid or has expired. Please request a
+            new one.
           </p>
-          <Link 
-            href="/forgot-password" 
+          <Link
+            href="/forgot-password"
             title="Request new link"
             className={cn(buttonVariants({ variant: "outline" }), "mt-2")}
           >

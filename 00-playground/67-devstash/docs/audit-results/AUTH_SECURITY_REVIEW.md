@@ -10,11 +10,12 @@ This security audit focused on NextAuth v5 implementation with credentials and G
 - Rate limiting and brute-force protections
 - Token security (generation, storage, comparison, entropy)
 - Email verification flow security
-- Password reset flow security  
+- Password reset flow security
 - Profile page authorization and session validation
 - Safe update patterns for user data
 
 **Files Audited:**
+
 - `src/auth.ts` - NextAuth configuration and credentials provider
 - `src/auth.config.ts` - Provider configuration
 - `src/lib/tokens.ts` - Token generation logic
@@ -32,7 +33,7 @@ This security audit focused on NextAuth v5 implementation with credentials and G
 
 - **Severity**: CRITICAL
 - **Title**: No Rate Limiting on Authentication Endpoints
-- **Files**: 
+- **Files**:
   - `src/app/api/auth/register/route.ts`
   - `src/app/api/auth/forgot-password/route.ts`
   - `src/app/api/auth/reset-password/route.ts`
@@ -44,12 +45,13 @@ This security audit focused on NextAuth v5 implementation with credentials and G
   - Forgot password (`POST /api/auth/forgot-password`)
   - Reset password (`POST /api/auth/reset-password`)
   - Resend verification (`POST /api/auth/resend-verification`)
-- **Impact**: 
+- **Impact**:
   - **Brute Force Attacks**: Attackers can attempt unlimited password guesses against user accounts
   - **Email Bombing**: Unlimited password reset/verification emails can be triggered
   - **Email Enumeration**: Despite code attempting to prevent enumeration (forgot-password/route.ts returns same message), timing attacks and unlimited requests enable account discovery
   - **Resource Exhaustion**: Email service abuse and database query flooding
 - **Fix**: Implement rate limiting using a solution like `@upstash/ratelimit` with Redis or an in-memory store:
+
   ```typescript
   // Example implementation
   import { Ratelimit } from "@upstash/ratelimit";
@@ -67,6 +69,7 @@ This security audit focused on NextAuth v5 implementation with credentials and G
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
   ```
+
   Recommended limits:
   - Sign-in: 5 attempts per 15 minutes per IP
   - Register: 3 attempts per hour per IP
@@ -78,20 +81,21 @@ This security audit focused on NextAuth v5 implementation with credentials and G
 
 - **Severity**: CRITICAL
 - **Title**: Tokens Stored in Plain Text in Database
-- **Files**: 
+- **Files**:
   - `src/lib/tokens.ts` (token generation and storage)
   - `src/app/api/auth/verify/route.ts` (email verification token lookup)
   - `src/app/api/auth/reset-password/route.ts` (password reset token lookup)
-- **Evidence**: 
+- **Evidence**:
   - Tokens generated in `src/lib/tokens.ts` (lines 4, 32) are stored directly in the database without hashing
   - Lookups query plain text: `prisma.verificationToken.findUnique({ where: { token } })`
   - Both email verification tokens (24-hour lifespan) and password reset tokens (1-hour lifespan) stored unhashed
-- **Impact**: 
+- **Impact**:
   - **Database Breach Exposure**: If the database is compromised (SQL injection, backup theft, insider threat), all active tokens are immediately usable by attackers
   - **Account Takeover**: Exposed password reset tokens grant full account access
   - **Privacy Violation**: Email verification tokens reveal user email addresses attempting verification
   - Violates defense-in-depth principle: tokens should be treated like passwords
 - **Fix**: Hash tokens before storage using a cryptographic hash function (SHA-256):
+
   ```typescript
   import crypto from "crypto";
 
@@ -106,7 +110,7 @@ This security audit focused on NextAuth v5 implementation with credentials and G
 
     // Delete existing token for this email
     await prisma.verificationToken.deleteMany({
-      where: { identifier: email }
+      where: { identifier: email },
     });
 
     // Store hashed version
@@ -115,7 +119,7 @@ This security audit focused on NextAuth v5 implementation with credentials and G
         identifier: email,
         token: hashedToken,
         expires,
-      }
+      },
     });
 
     return { identifier: email, token }; // Return raw token for email
@@ -127,6 +131,7 @@ This security audit focused on NextAuth v5 implementation with credentials and G
     where: { token: hashedToken },
   });
   ```
+
   Apply same pattern to password reset tokens. This ensures database compromise doesn't expose usable tokens.
 
 ### HIGH
@@ -146,37 +151,44 @@ This security audit focused on NextAuth v5 implementation with credentials and G
 The following security controls are correctly implemented:
 
 ✅ **Password Hashing with bcrypt**
+
 - Uses `bcrypt.hash(password, 10)` in registration, password reset, and change password flows
 - Salt rounds of 10 is acceptable (12 would be more modern but 10 is not a vulnerability)
 - Files: `src/auth.ts`, `src/app/api/auth/register/route.ts`, `src/app/api/auth/reset-password/route.ts`, `src/app/(dashboard)/profile/actions.ts`
 
 ✅ **Password Verification is Timing-Safe**
+
 - Uses `bcrypt.compare()` which implements constant-time comparison internally
 - Files: `src/auth.ts` (line 66), `src/app/(dashboard)/profile/actions.ts` (line 40)
 
 ✅ **Token Expiration Enforcement**
+
 - Email verification tokens expire after 24 hours
 - Password reset tokens expire after 1 hour
 - Expiration checked before processing in both flows
 - Files: `src/lib/tokens.ts`, `src/app/api/auth/verify/route.ts` (line 23), `src/app/api/auth/reset-password/route.ts` (line 26)
 
 ✅ **Single-Use Token Enforcement**
+
 - Email verification: Token deleted immediately after successful verification (`src/app/api/auth/verify/route.ts` lines 42-49)
 - Password reset: Token deleted in atomic transaction with password update (`src/app/api/auth/reset-password/route.ts` lines 50-58)
 - No token reuse possible after consumption
 
 ✅ **Email Enumeration Prevention Attempt**
+
 - Forgot password returns same message regardless of email existence
-- Resend verification returns generic success message  
+- Resend verification returns generic success message
 - Files: `src/app/api/auth/forgot-password/route.ts` (lines 14-20), `src/app/api/auth/resend-verification/route.ts` (lines 18-22)
 - Note: Without rate limiting, timing attacks can still enable enumeration
 
 ✅ **Profile Authorization and Session Validation**
+
 - All profile actions validate session: `if (!session?.user?.id)` before any operation
 - Database queries scoped to authenticated user's ID
 - Files: `src/app/(dashboard)/profile/actions.ts` (lines 19-24), `src/app/(dashboard)/profile/page.tsx` (lines 13-14)
 
 ✅ **Safe Profile Update Patterns**
+
 - Change password action only updates password field explicitly
 - Validates current password before allowing new password
 - No mass assignment vulnerabilities
@@ -184,22 +196,26 @@ The following security controls are correctly implemented:
 - File: `src/app/(dashboard)/profile/actions.ts`
 
 ✅ **Password Reset Flow Email Validation**
+
 - Verifies identifier prefix to ensure reset token (not verification token) used
 - Validates user existence before allowing password update
 - File: `src/app/api/auth/reset-password/route.ts` (lines 34-40)
 
 ✅ **Atomic Password Reset Transaction**
+
 - Password update and token deletion wrapped in `prisma.$transaction()`
 - Prevents race conditions and ensures consistency
 - File: `src/app/api/auth/reset-password/route.ts` (lines 50-58)
 
 ✅ **Token Generation Uses CSPRNG**
+
 - `crypto.randomUUID()` uses cryptographically secure randomness and is acceptable for unguessable tokens
 - File: `src/lib/tokens.ts`
 
 ## Summary
 
 **Issue Count by Severity:**
+
 - CRITICAL: 2
 - HIGH: 0
 - MEDIUM: 0
@@ -218,8 +234,9 @@ The following security controls are correctly implemented:
    - Use SHA-256 hashing before storage
 
 3. **Hardening - Review rate-limit strategy for distributed deployment**
-  - Ensure chosen limiter works consistently across instances/regions
-  - Add monitoring for 429 events and auth abuse patterns
+
+- Ensure chosen limiter works consistently across instances/regions
+- Add monitoring for 429 events and auth abuse patterns
 
 **Overall Assessment:**
 

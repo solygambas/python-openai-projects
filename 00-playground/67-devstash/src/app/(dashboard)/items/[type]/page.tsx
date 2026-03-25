@@ -4,6 +4,9 @@ import { getUserById } from "@/lib/db/users";
 import { getItemsByType } from "@/lib/db/items";
 import { getItemTypes } from "@/lib/db/item-types";
 import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
+import { CreateItemDialog } from "@/components/dashboard/create-item-dialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface ItemsTypePageProps {
   params: Promise<{ type: string }>;
@@ -33,18 +36,35 @@ export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold tracking-tight">{displayName}</h1>
-        <p className="text-muted-foreground">
-          {items.length} {items.length === 1 ? typeName : type}
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold tracking-tight">{displayName}</h1>
+          <p className="text-muted-foreground">
+            {items.length} {items.length === 1 ? typeName : type}
+          </p>
+        </div>
+
+        {matchedType && (
+          <CreateItemDialog
+            itemTypes={itemTypes}
+            defaultTypeId={matchedType.id}
+            trigger={
+              <Button size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                New {displayName.replace(/s$/, "")}
+              </Button>
+            }
+          />
+        )}
       </div>
 
       {items.length === 0 ? (
         <p className="text-muted-foreground">
           No {type} yet.{" "}
           {!matchedType && (
-            <span className="text-destructive">Unknown type &quot;{type}&quot;.</span>
+            <span className="text-destructive">
+              Unknown type &quot;{type}&quot;.
+            </span>
           )}
         </p>
       ) : (

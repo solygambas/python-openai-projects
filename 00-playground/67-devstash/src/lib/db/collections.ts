@@ -1,6 +1,10 @@
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
-export async function getRecentCollections(userId: string, limit = 6, isFavorite?: boolean) {
+export async function getRecentCollections(
+  userId: string,
+  limit = 6,
+  isFavorite?: boolean
+) {
   // Validate limit
   const validatedLimit = Math.max(1, Math.min(limit, 50));
 
@@ -11,7 +15,7 @@ export async function getRecentCollections(userId: string, limit = 6, isFavorite
     },
     take: validatedLimit,
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: "desc",
     },
     include: {
       _count: {
@@ -45,15 +49,15 @@ export async function getRecentCollections(userId: string, limit = 6, isFavorite
     collection.items.forEach((itemCollection) => {
       const typeId = itemCollection.item.itemTypeId;
       const color = itemCollection.item.itemType.color;
-      
+
       itemTypesMap.set(typeId, color);
       typeFrequency.set(typeId, (typeFrequency.get(typeId) || 0) + 1);
     });
 
     // Find the most frequent type to determine border color
-    let mostFrequentTypeId = '';
+    let mostFrequentTypeId = "";
     let maxFrequency = 0;
-    
+
     typeFrequency.forEach((count, typeId) => {
       if (count > maxFrequency) {
         maxFrequency = count;
@@ -61,11 +65,17 @@ export async function getRecentCollections(userId: string, limit = 6, isFavorite
       }
     });
 
-    const borderColor = mostFrequentTypeId ? itemTypesMap.get(mostFrequentTypeId) : undefined;
+    const borderColor = mostFrequentTypeId
+      ? itemTypesMap.get(mostFrequentTypeId)
+      : undefined;
 
     // Ensure the most frequent type is first in the list
-    const otherTypeIds = Array.from(itemTypesMap.keys()).filter(id => id !== mostFrequentTypeId);
-    const orderedTypeIds = mostFrequentTypeId ? [mostFrequentTypeId, ...otherTypeIds] : otherTypeIds;
+    const otherTypeIds = Array.from(itemTypesMap.keys()).filter(
+      (id) => id !== mostFrequentTypeId
+    );
+    const orderedTypeIds = mostFrequentTypeId
+      ? [mostFrequentTypeId, ...otherTypeIds]
+      : otherTypeIds;
 
     return {
       ...collection,
@@ -77,7 +87,12 @@ export async function getRecentCollections(userId: string, limit = 6, isFavorite
 }
 
 export async function getCollectionStats(userId: string) {
-  const [itemCount, collectionCount, favoriteItemCount, favoriteCollectionCount] = await Promise.all([
+  const [
+    itemCount,
+    collectionCount,
+    favoriteItemCount,
+    favoriteCollectionCount,
+  ] = await Promise.all([
     prisma.item.count({ where: { userId } }),
     prisma.collection.count({ where: { userId } }),
     prisma.item.count({ where: { userId, isFavorite: true } }),

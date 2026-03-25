@@ -28,10 +28,10 @@ interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export function SidebarProvider({ 
+export function SidebarProvider({
   children,
-  sidebarData
-}: { 
+  sidebarData,
+}: {
   children: React.ReactNode;
   sidebarData?: SidebarData;
 }) {
@@ -39,13 +39,13 @@ export function SidebarProvider({
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <SidebarContext.Provider 
-      value={{ 
-        isCollapsed, 
-        setIsCollapsed, 
-        isMobileOpen, 
+    <SidebarContext.Provider
+      value={{
+        isCollapsed,
+        setIsCollapsed,
+        isMobileOpen,
         setIsMobileOpen,
-        sidebarData
+        sidebarData,
       }}
     >
       {children}

@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Code, Sparkles, Terminal, StickyNote, Link as LinkIcon, Plus } from "lucide-react";
+import {
+  Code,
+  Sparkles,
+  Terminal,
+  StickyNote,
+  Link as LinkIcon,
+  Plus,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -16,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { CodeEditor } from "@/components/ui/code-editor";
 import { createItem } from "@/actions/items";
 import type { IconMap } from "@/types/dashboard";
 
@@ -29,6 +37,10 @@ interface ItemType {
 
 interface CreateItemDialogProps {
   itemTypes: ItemType[];
+  defaultTypeId?: string;
+  trigger?: React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const iconMap: IconMap = {
@@ -44,13 +56,25 @@ const textContentTypes = ["snippet", "prompt", "command", "note"];
 // Types that require language field
 const languageTypes = ["snippet", "command"];
 
-export function CreateItemDialog({ itemTypes }: CreateItemDialogProps) {
+export function CreateItemDialog({
+  itemTypes,
+  defaultTypeId,
+  trigger,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+}: CreateItemDialogProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? setControlledOpen! : setInternalOpen;
+
   const [isPending, startTransition] = useTransition();
 
   // Form state
-  const [selectedTypeId, setSelectedTypeId] = useState<string>("");
+  const [selectedTypeId, setSelectedTypeId] = useState<string>(
+    defaultTypeId || ""
+  );
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
@@ -59,6 +83,7 @@ export function CreateItemDialog({ itemTypes }: CreateItemDialogProps) {
   const [tags, setTags] = useState("");
 
   // Filter out Pro-only types (file, image)
+
   const availableTypes = itemTypes.filter(
     (type) => type.name !== "file" && type.name !== "image"
   );
@@ -136,13 +161,15 @@ export function CreateItemDialog({ itemTypes }: CreateItemDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
         render={
-          <Button size="sm" className="bg-primary hover:bg-primary/90">
-            <Plus className="mr-2 h-4 w-4" />
-            New Item
-          </Button>
+          trigger || (
+            <Button size="sm" className="bg-primary hover:bg-primary/90">
+              <Plus className="mr-2 h-4 w-4" />
+              New Item
+            </Button>
+          )
         }
       />
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg" key={defaultTypeId}>
         <DialogHeader>
           <DialogTitle>Create New Item</DialogTitle>
           <DialogDescription>
@@ -157,7 +184,8 @@ export function CreateItemDialog({ itemTypes }: CreateItemDialogProps) {
             <Label>Type</Label>
             <div className="flex flex-wrap gap-2">
               {availableTypes.map((type) => {
-                const IconComponent = iconMap[type.icon as keyof typeof iconMap];
+                const IconComponent =
+                  iconMap[type.icon as keyof typeof iconMap];
                 const isSelected = selectedTypeId === type.id;
 
                 return (
@@ -213,13 +241,24 @@ export function CreateItemDialog({ itemTypes }: CreateItemDialogProps) {
           {showContentField && (
             <div className="space-y-2">
               <Label htmlFor="content">Content</Label>
-              <Textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Paste your content here..."
-                className="font-mono text-sm resize-y min-h-[120px]"
-              />
+              {languageTypes.includes(typeName) ? (
+                <CodeEditor
+                  value={content}
+                  onChange={setContent}
+                  language={language || "plaintext"}
+                  readOnly={false}
+                  maxHeight={200}
+                  className="bg-secondary/20 border-primary/20"
+                />
+              ) : (
+                <Textarea
+                  id="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Paste your content here..."
+                  className="font-mono text-sm resize-y min-h-[120px]"
+                />
+              )}
             </div>
           )}
 

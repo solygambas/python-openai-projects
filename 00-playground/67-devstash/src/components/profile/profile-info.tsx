@@ -1,7 +1,7 @@
-import { UserAvatar } from '@/components/auth/user-avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatDate } from '@/lib/utils';
-import { User } from '@prisma/client';
+import { UserAvatar } from "@/components/auth/user-avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/lib/utils";
+import { User } from "@prisma/client";
 
 interface ProfileInfoProps {
   user: User;
@@ -21,10 +21,12 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
             <p className="text-muted-foreground">{user.email}</p>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Account Status</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Account Status
+            </p>
             <p className="text-base font-medium">
               {user.isPro ? (
                 <span className="text-primary">Pro Member</span>
@@ -34,8 +36,12 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
             </p>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Member Since</p>
-            <p className="text-base font-medium">{formatDate(user.createdAt)}</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Member Since
+            </p>
+            <p className="text-base font-medium">
+              {formatDate(user.createdAt)}
+            </p>
           </div>
         </div>
       </CardContent>

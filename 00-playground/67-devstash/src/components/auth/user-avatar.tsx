@@ -22,9 +22,7 @@ export function UserAvatar({ user, className, size }: UserAvatarProps) {
 
   return (
     <Avatar className={className} size={size}>
-      {user.image && (
-        <AvatarImage src={user.image} alt={user.name || "User"} />
-      )}
+      {user.image && <AvatarImage src={user.image} alt={user.name || "User"} />}
       <AvatarFallback className="bg-primary/10 text-primary font-bold">
         {initials}
       </AvatarFallback>

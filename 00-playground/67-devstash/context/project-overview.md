@@ -394,22 +394,22 @@ model Tag {
 ```typescript
 // prisma/seed.ts
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const systemItemTypes = [
-  { name: 'snippet', icon: 'Code', color: '#3b82f6', isSystem: true },
-  { name: 'prompt', icon: 'Sparkles', color: '#8b5cf6', isSystem: true },
-  { name: 'command', icon: 'Terminal', color: '#f97316', isSystem: true },
-  { name: 'note', icon: 'StickyNote', color: '#fde047', isSystem: true },
-  { name: 'file', icon: 'File', color: '#6b7280', isSystem: true },
-  { name: 'image', icon: 'Image', color: '#ec4899', isSystem: true },
-  { name: 'link', icon: 'Link', color: '#10b981', isSystem: true },
+  { name: "snippet", icon: "Code", color: "#3b82f6", isSystem: true },
+  { name: "prompt", icon: "Sparkles", color: "#8b5cf6", isSystem: true },
+  { name: "command", icon: "Terminal", color: "#f97316", isSystem: true },
+  { name: "note", icon: "StickyNote", color: "#fde047", isSystem: true },
+  { name: "file", icon: "File", color: "#6b7280", isSystem: true },
+  { name: "image", icon: "Image", color: "#ec4899", isSystem: true },
+  { name: "link", icon: "Link", color: "#10b981", isSystem: true },
 ];
 
 async function main() {
-  console.log('Seeding system item types...');
+  console.log("Seeding system item types...");
 
   for (const type of systemItemTypes) {
     await prisma.itemType.upsert({
@@ -419,7 +419,7 @@ async function main() {
     });
   }
 
-  console.log('Seeding complete!');
+  console.log("Seeding complete!");
 }
 
 main()
@@ -641,7 +641,7 @@ import {
   File,
   Image,
   Link,
-} from 'lucide-react';
+} from "lucide-react";
 
 export const ITEM_TYPE_ICONS = {
   snippet: Code,
@@ -654,13 +654,13 @@ export const ITEM_TYPE_ICONS = {
 } as const;
 
 export const ITEM_TYPE_COLORS = {
-  snippet: '#3b82f6',
-  prompt: '#8b5cf6',
-  command: '#f97316',
-  note: '#fde047',
-  file: '#6b7280',
-  image: '#ec4899',
-  link: '#10b981',
+  snippet: "#3b82f6",
+  prompt: "#8b5cf6",
+  command: "#f97316",
+  note: "#fde047",
+  file: "#6b7280",
+  image: "#ec4899",
+  link: "#10b981",
 } as const;
 ```
 

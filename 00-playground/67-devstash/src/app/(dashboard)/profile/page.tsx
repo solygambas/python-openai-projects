@@ -1,21 +1,21 @@
-import { auth } from '@/auth';
-import { getUserById } from '@/lib/db/users';
-import { getItemTypeCounts } from '@/lib/db/items';
-import { getCollectionStats } from '@/lib/db/collections';
-import { ProfileInfo } from '@/components/profile/profile-info';
-import { ProfileStats } from '@/components/profile/profile-stats';
-import { AccountActions } from '@/components/profile/account-actions';
-import { redirect } from 'next/navigation';
+import { auth } from "@/auth";
+import { getUserById } from "@/lib/db/users";
+import { getItemTypeCounts } from "@/lib/db/items";
+import { getCollectionStats } from "@/lib/db/collections";
+import { ProfileInfo } from "@/components/profile/profile-info";
+import { ProfileStats } from "@/components/profile/profile-stats";
+import { AccountActions } from "@/components/profile/account-actions";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   const userId = session.user.id;
-  
+
   const [user, itemTypeCounts, collectionStats] = await Promise.all([
     getUserById(userId),
     getItemTypeCounts(userId),
@@ -23,7 +23,7 @@ export default async function ProfilePage() {
   ]);
 
   if (!user) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   const isEmailUser = !!user.password;
@@ -39,9 +39,9 @@ export default async function ProfilePage() {
 
       <div className="flex flex-col gap-8">
         <ProfileInfo user={user} />
-        <ProfileStats 
-          itemTypeCounts={itemTypeCounts} 
-          collectionStats={collectionStats} 
+        <ProfileStats
+          itemTypeCounts={itemTypeCounts}
+          collectionStats={collectionStats}
         />
         <AccountActions isEmailUser={isEmailUser} />
       </div>

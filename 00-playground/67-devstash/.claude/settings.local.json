@@ -1,4 +1,7 @@
 {
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": ["neon"],
-  "enableAllProjectMcpServers": true
+  "permissions": {
+    "allow": ["mcp__playwright__browser_take_screenshot"]
+  }
 }

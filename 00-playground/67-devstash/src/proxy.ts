@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
@@ -9,10 +9,13 @@ export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Protect /dashboard and /profile routes
-  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/profile")) && !isLoggedIn) {
+  if (
+    (pathname.startsWith("/dashboard") || pathname.startsWith("/profile")) &&
+    !isLoggedIn
+  ) {
     const signInUrl = new URL("/sign-in", req.url);
     const response = NextResponse.redirect(signInUrl);
-    
+
     // Store the intended destination in a cookie for later
     response.cookies.set("auth-callback-url", pathname, {
       path: "/",
@@ -20,14 +23,14 @@ export const proxy = auth((req) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
-    
+
     return response;
   }
-  
+
   return NextResponse.next();
 });
 
 export const config = {
   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

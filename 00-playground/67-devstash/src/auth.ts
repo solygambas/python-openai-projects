@@ -8,11 +8,11 @@ import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 
 class EmailNotVerifiedError extends CredentialsSignin {
-  code = "EmailNotVerified"
+  code = "EmailNotVerified";
 }
 
 class GitHubOnlyAccountError extends CredentialsSignin {
-  code = "GitHubOnlyAccount"
+  code = "GitHubOnlyAccount";
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -62,7 +62,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       if (callbackUrl) {
         // Return relative or absolute URL based on baseUrl
-        return callbackUrl.startsWith("/") ? `${baseUrl}${callbackUrl}` : callbackUrl;
+        return callbackUrl.startsWith("/")
+          ? `${baseUrl}${callbackUrl}`
+          : callbackUrl;
       }
 
       // Default behavior
@@ -86,7 +88,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         const { email, password } = credentials || {};
-        
+
         if (!email || !password) return null;
 
         const user = await prisma.user.findUnique({
@@ -118,7 +120,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!isPasswordCorrect) return null;
 
-        if (process.env.ENABLE_EMAIL_VERIFICATION === "true" && !user.emailVerified) {
+        if (
+          process.env.ENABLE_EMAIL_VERIFICATION === "true" &&
+          !user.emailVerified
+        ) {
           throw new EmailNotVerifiedError();
         }
 

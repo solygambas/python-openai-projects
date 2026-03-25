@@ -1,379 +1,390 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { authMock, updateItemQueryMock, deleteItemQueryMock, createItemQueryMock } = vi.hoisted(() => ({
- authMock: vi.fn(),
- updateItemQueryMock: vi.fn(),
- deleteItemQueryMock: vi.fn(),
- createItemQueryMock: vi.fn(),
+const {
+  authMock,
+  updateItemQueryMock,
+  deleteItemQueryMock,
+  createItemQueryMock,
+} = vi.hoisted(() => ({
+  authMock: vi.fn(),
+  updateItemQueryMock: vi.fn(),
+  deleteItemQueryMock: vi.fn(),
+  createItemQueryMock: vi.fn(),
 }));
 
-vi.mock('@/auth', () => ({
- auth: authMock,
+vi.mock("@/auth", () => ({
+  auth: authMock,
 }));
 
-vi.mock('@/lib/db/items', () => ({
- updateItem: updateItemQueryMock,
- deleteItem: deleteItemQueryMock,
- createItem: createItemQueryMock,
+vi.mock("@/lib/db/items", () => ({
+  updateItem: updateItemQueryMock,
+  deleteItem: deleteItemQueryMock,
+  createItem: createItemQueryMock,
 }));
 
-import { updateItem, deleteItem, createItem } from '@/actions/items';
+import { updateItem, deleteItem, createItem } from "@/actions/items";
 
-describe('actions/updateItem', () => {
- beforeEach(() => {
- authMock.mockReset();
- updateItemQueryMock.mockReset();
- vi.restoreAllMocks();
- });
+describe("actions/updateItem", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    updateItemQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
 
- it('returns unauthorized when no session user id exists', async () => {
- authMock.mockResolvedValueOnce(null);
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
 
- const result = await updateItem({
- itemId: 'item-1',
- title: 'Valid title',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- });
+    const result = await updateItem({
+      itemId: "item-1",
+      title: "Valid title",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Unauthorized',
- });
- expect(updateItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(updateItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when title is empty after trim', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when title is empty after trim", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await updateItem({
- itemId: 'item-1',
- title: ' ',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- });
+    const result = await updateItem({
+      itemId: "item-1",
+      title: " ",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Title is required',
- });
- expect(updateItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Title is required",
+    });
+    expect(updateItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when url is invalid', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when url is invalid", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await updateItem({
- itemId: 'item-1',
- title: 'Valid title',
- description: null,
- content: null,
- url: 'not-a-url',
- language: null,
- tags: [],
- });
+    const result = await updateItem({
+      itemId: "item-1",
+      title: "Valid title",
+      description: null,
+      content: null,
+      url: "not-a-url",
+      language: null,
+      tags: [],
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Invalid URL format',
- });
- expect(updateItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Invalid URL format",
+    });
+    expect(updateItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('calls query with normalized optional fields and returns success payload', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("calls query with normalized optional fields and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const updatedItem = {
- id: 'item-1',
- title: 'Updated title',
- description: null,
- contentType: 'TEXT',
- content: null,
- url: null,
- language: null,
- isFavorite: false,
- isPinned: true,
- createdAt: new Date('2026-03-20T10:00:00.000Z'),
- updatedAt: new Date('2026-03-20T12:00:00.000Z'),
- itemType: {
- id: 'type-1',
- name: 'Snippet',
- icon: 'Code',
- color: '#3b82f6',
- },
- tags: [{ id: 'tag-1', name: 'tag1' }],
- collections: [{ collection: { id: 'col-1', name: 'Main' } }],
- };
+    const updatedItem = {
+      id: "item-1",
+      title: "Updated title",
+      description: null,
+      contentType: "TEXT",
+      content: null,
+      url: null,
+      language: null,
+      isFavorite: false,
+      isPinned: true,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [{ id: "tag-1", name: "tag1" }],
+      collections: [{ collection: { id: "col-1", name: "Main" } }],
+    };
 
- updateItemQueryMock.mockResolvedValueOnce(updatedItem);
+    updateItemQueryMock.mockResolvedValueOnce(updatedItem);
 
- const result = await updateItem({
- itemId: 'item-1',
- title: 'Updated title',
- description: '',
- content: '',
- url: '',
- language: ' ',
- tags: ['tag1'],
- });
+    const result = await updateItem({
+      itemId: "item-1",
+      title: "Updated title",
+      description: "",
+      content: "",
+      url: "",
+      language: " ",
+      tags: ["tag1"],
+    });
 
- expect(updateItemQueryMock).toHaveBeenCalledWith('user-1', 'item-1', {
- title: 'Updated title',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: ['tag1'],
- });
+    expect(updateItemQueryMock).toHaveBeenCalledWith("user-1", "item-1", {
+      title: "Updated title",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: ["tag1"],
+    });
 
- expect(result).toEqual({
- success: true,
- data: updatedItem,
- });
- });
+    expect(result).toEqual({
+      success: true,
+      data: updatedItem,
+    });
+  });
 
- it('returns generic error when update query throws', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
- updateItemQueryMock.mockRejectedValueOnce(new Error('db unavailable'));
- const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  it("returns generic error when update query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    updateItemQueryMock.mockRejectedValueOnce(new Error("db unavailable"));
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
 
- const result = await updateItem({
- itemId: 'item-1',
- title: 'Updated title',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- });
+    const result = await updateItem({
+      itemId: "item-1",
+      title: "Updated title",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+    });
 
- expect(consoleErrorSpy).toHaveBeenCalled();
- expect(result).toEqual({
- success: false,
- error: 'Failed to update item',
- });
- });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to update item",
+    });
+  });
 });
 
-describe('actions/deleteItem', () => {
- beforeEach(() => {
- authMock.mockReset();
- deleteItemQueryMock.mockReset();
- vi.restoreAllMocks();
- });
+describe("actions/deleteItem", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    deleteItemQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
 
- it('returns unauthorized when no session user id exists', async () => {
- authMock.mockResolvedValueOnce(null);
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
 
- const result = await deleteItem({ itemId: 'item-1' });
+    const result = await deleteItem({ itemId: "item-1" });
 
- expect(result).toEqual({
- success: false,
- error: 'Unauthorized',
- });
- expect(deleteItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(deleteItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when itemId is empty', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when itemId is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await deleteItem({ itemId: '' });
+    const result = await deleteItem({ itemId: "" });
 
- expect(result).toEqual({
- success: false,
- error: 'Item ID is required',
- });
- expect(deleteItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Item ID is required",
+    });
+    expect(deleteItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('calls delete query and returns success payload', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
- deleteItemQueryMock.mockResolvedValueOnce({ id: 'item-1' });
+  it("calls delete query and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    deleteItemQueryMock.mockResolvedValueOnce({ id: "item-1" });
 
- const result = await deleteItem({ itemId: 'item-1' });
+    const result = await deleteItem({ itemId: "item-1" });
 
- expect(deleteItemQueryMock).toHaveBeenCalledWith('user-1', 'item-1');
- expect(result).toEqual({
- success: true,
- data: { id: 'item-1' },
- });
- });
+    expect(deleteItemQueryMock).toHaveBeenCalledWith("user-1", "item-1");
+    expect(result).toEqual({
+      success: true,
+      data: { id: "item-1" },
+    });
+  });
 
- it('returns generic error when delete query throws', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
- deleteItemQueryMock.mockRejectedValueOnce(new Error('db unavailable'));
- const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  it("returns generic error when delete query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    deleteItemQueryMock.mockRejectedValueOnce(new Error("db unavailable"));
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
 
- const result = await deleteItem({ itemId: 'item-1' });
+    const result = await deleteItem({ itemId: "item-1" });
 
- expect(consoleErrorSpy).toHaveBeenCalled();
- expect(result).toEqual({
- success: false,
- error: 'Failed to delete item',
- });
- });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to delete item",
+    });
+  });
 });
 
-describe('actions/createItem', () => {
- beforeEach(() => {
- authMock.mockReset();
- createItemQueryMock.mockReset();
- vi.restoreAllMocks();
- });
+describe("actions/createItem", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    createItemQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
 
- it('returns unauthorized when no session user id exists', async () => {
- authMock.mockResolvedValueOnce(null);
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
 
- const result = await createItem({
- title: 'New Item',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- typeId: 'type-1',
- });
+    const result = await createItem({
+      title: "New Item",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+      typeId: "type-1",
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Unauthorized',
- });
- expect(createItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(createItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when title is empty after trim', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when title is empty after trim", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await createItem({
- title: ' ',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- typeId: 'type-1',
- });
+    const result = await createItem({
+      title: " ",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+      typeId: "type-1",
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Title is required',
- });
- expect(createItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Title is required",
+    });
+    expect(createItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when typeId is empty', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when typeId is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await createItem({
- title: 'Valid title',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- typeId: '',
- });
+    const result = await createItem({
+      title: "Valid title",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+      typeId: "",
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Type is required',
- });
- expect(createItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Type is required",
+    });
+    expect(createItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('returns zod validation error when url is invalid', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("returns zod validation error when url is invalid", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const result = await createItem({
- title: 'Valid title',
- description: null,
- content: null,
- url: 'not-a-url',
- language: null,
- tags: [],
- typeId: 'type-1',
- });
+    const result = await createItem({
+      title: "Valid title",
+      description: null,
+      content: null,
+      url: "not-a-url",
+      language: null,
+      tags: [],
+      typeId: "type-1",
+    });
 
- expect(result).toEqual({
- success: false,
- error: 'Invalid URL format',
- });
- expect(createItemQueryMock).not.toHaveBeenCalled();
- });
+    expect(result).toEqual({
+      success: false,
+      error: "Invalid URL format",
+    });
+    expect(createItemQueryMock).not.toHaveBeenCalled();
+  });
 
- it('calls query with normalized optional fields and returns success payload', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
+  it("calls query with normalized optional fields and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
 
- const newItem = {
- id: 'item-1',
- title: 'New Item',
- description: null,
- contentType: 'TEXT',
- content: null,
- url: null,
- language: null,
- itemType: {
- id: 'type-1',
- name: 'Snippet',
- icon: 'Code',
- color: '#3b82f6',
- },
- tags: [{ id: 'tag-1', name: 'tag1' }],
- };
+    const newItem = {
+      id: "item-1",
+      title: "New Item",
+      description: null,
+      contentType: "TEXT",
+      content: null,
+      url: null,
+      language: null,
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [{ id: "tag-1", name: "tag1" }],
+    };
 
- createItemQueryMock.mockResolvedValueOnce(newItem);
+    createItemQueryMock.mockResolvedValueOnce(newItem);
 
- const result = await createItem({
- title: 'New Item',
- description: '',
- content: '',
- url: '',
- language: ' ',
- tags: ['tag1'],
- typeId: 'type-1',
- });
+    const result = await createItem({
+      title: "New Item",
+      description: "",
+      content: "",
+      url: "",
+      language: " ",
+      tags: ["tag1"],
+      typeId: "type-1",
+    });
 
- expect(createItemQueryMock).toHaveBeenCalledWith('user-1', {
- title: 'New Item',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: ['tag1'],
- typeId: 'type-1',
- });
+    expect(createItemQueryMock).toHaveBeenCalledWith("user-1", {
+      title: "New Item",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: ["tag1"],
+      typeId: "type-1",
+    });
 
- expect(result).toEqual({
- success: true,
- data: newItem,
- });
- });
+    expect(result).toEqual({
+      success: true,
+      data: newItem,
+    });
+  });
 
- it('returns generic error when create query throws', async () => {
- authMock.mockResolvedValueOnce({ user: { id: 'user-1' } });
- createItemQueryMock.mockRejectedValueOnce(new Error('db unavailable'));
- const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  it("returns generic error when create query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    createItemQueryMock.mockRejectedValueOnce(new Error("db unavailable"));
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
 
- const result = await createItem({
- title: 'New Item',
- description: null,
- content: null,
- url: null,
- language: null,
- tags: [],
- typeId: 'type-1',
- });
+    const result = await createItem({
+      title: "New Item",
+      description: null,
+      content: null,
+      url: null,
+      language: null,
+      tags: [],
+      typeId: "type-1",
+    });
 
- expect(consoleErrorSpy).toHaveBeenCalled();
- expect(result).toEqual({
- success: false,
- error: 'Failed to create item',
- });
- });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to create item",
+    });
+  });
 });

@@ -1,8 +1,8 @@
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
 export async function getPinnedItems(userId: string, limit = 20) {
   const validatedLimit = Math.max(1, Math.min(limit, 50));
-  
+
   return prisma.item.findMany({
     where: {
       userId,
@@ -19,7 +19,7 @@ export async function getPinnedItems(userId: string, limit = 20) {
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: "desc",
     },
   });
 }
@@ -42,12 +42,16 @@ export async function getRecentItems(userId: string, limit = 10) {
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 }
 
-export async function getItemsByType(userId: string, typeName: string, limit = 50) {
+export async function getItemsByType(
+  userId: string,
+  typeName: string,
+  limit = 50
+) {
   const validatedLimit = Math.max(1, Math.min(limit, 100));
 
   return prisma.item.findMany({
@@ -63,7 +67,7 @@ export async function getItemsByType(userId: string, typeName: string, limit = 5
       tags: true,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 }
@@ -88,28 +92,34 @@ export async function getItemDetailById(userId: string, itemId: string) {
 
 export async function getItemTypeCounts(userId: string) {
   const counts = await prisma.item.groupBy({
-    by: ['itemTypeId'],
+    by: ["itemTypeId"],
     where: { userId },
     _count: {
       _all: true,
     },
   });
-  
+
   // Get item types to map IDs to names
   const itemTypes = await prisma.itemType.findMany();
-  const typeMap = itemTypes.reduce((acc, type) => {
-    acc[type.id] = type.name;
-    return acc;
-  }, {} as Record<string, string>);
+  const typeMap = itemTypes.reduce(
+    (acc, type) => {
+      acc[type.id] = type.name;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 
   // Map to name -> count
-  return counts.reduce((acc, curr) => {
-    const name = typeMap[curr.itemTypeId];
-    if (name) {
-      acc[name] = curr._count._all;
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  return counts.reduce(
+    (acc, curr) => {
+      const name = typeMap[curr.itemTypeId];
+      if (name) {
+        acc[name] = curr._count._all;
+      }
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 }
 
 interface UpdateItemData {
@@ -133,7 +143,7 @@ export async function updateItem(
   });
 
   if (!existingItem) {
-    throw new Error('Item not found or not owned by user');
+    throw new Error("Item not found or not owned by user");
   }
 
   // Use a transaction to update item and sync tags
@@ -190,7 +200,7 @@ export async function deleteItem(userId: string, itemId: string) {
   });
 
   if (!existingItem) {
-    throw new Error('Item not found or not owned by user');
+    throw new Error("Item not found or not owned by user");
   }
 
   // Use a transaction to delete the item
@@ -226,31 +236,28 @@ interface CreateItemData {
   typeId: string;
 }
 
-export async function createItem(
-  userId: string,
-  data: CreateItemData
-) {
+export async function createItem(userId: string, data: CreateItemData) {
   // Determine content type based on item type
   const type = await prisma.itemType.findUnique({
     where: { id: data.typeId },
   });
 
   if (!type) {
-    throw new Error('Invalid item type');
+    throw new Error("Invalid item type");
   }
 
   // Map type name to content type
-  const contentTypeMap: Record<string, 'TEXT' | 'FILE' | 'URL'> = {
-    snippet: 'TEXT',
-    prompt: 'TEXT',
-    command: 'TEXT',
-    note: 'TEXT',
-    file: 'FILE',
-    image: 'FILE',
-    link: 'URL',
+  const contentTypeMap: Record<string, "TEXT" | "FILE" | "URL"> = {
+    snippet: "TEXT",
+    prompt: "TEXT",
+    command: "TEXT",
+    note: "TEXT",
+    file: "FILE",
+    image: "FILE",
+    link: "URL",
   };
 
-  const contentType = contentTypeMap[type.name] || 'TEXT';
+  const contentType = contentTypeMap[type.name] || "TEXT";
 
   // Create the item with tags
   const tagConnections = (data.tags || []).map((tagName) => ({
@@ -268,7 +275,10 @@ export async function createItem(
       contentType,
       userId,
       itemTypeId: data.typeId,
-      tags: tagConnections.length > 0 ? { connectOrCreate: tagConnections } : undefined,
+      tags:
+        tagConnections.length > 0
+          ? { connectOrCreate: tagConnections }
+          : undefined,
     },
     include: {
       itemType: true,

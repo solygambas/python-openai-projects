@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { CodeEditor } from "@/components/ui/code-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -111,6 +112,12 @@ const iconMap: IconMap = {
   Image: ImageIcon,
   Link: LinkIcon,
 };
+
+// Helper to check if item type should use CodeEditor
+function isCodeType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "snippet" || lower === "command";
+}
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
   const router = useRouter();
@@ -453,9 +460,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     </Badge>
                   )}
                   {isEditing &&
-                    (selectedItem?.itemType.name.toLowerCase() === "snippet" ||
-                      selectedItem?.itemType.name.toLowerCase() ===
-                        "command") && (
+                    isCodeType(selectedItem?.itemType.name || "") && (
                       <Input
                         value={editLanguage}
                         onChange={(e) => setEditLanguage(e.target.value)}
@@ -632,6 +637,14 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                           placeholder="https://example.com"
                           className="bg-secondary/20 border-primary/20"
                         />
+                      ) : isCodeType(selectedItem.itemType.name) ? (
+                        <CodeEditor
+                          value={editContent}
+                          onChange={(v) => setEditContent(v)}
+                          language={editLanguage || "plaintext"}
+                          readOnly={false}
+                          maxHeight={400}
+                        />
                       ) : (
                         <Textarea
                           value={editContent}
@@ -653,6 +666,13 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                         >
                           {selectedItem.url}
                         </a>
+                      ) : isCodeType(selectedItem.itemType.name) ? (
+                        <CodeEditor
+                          value={selectedItem.content || ""}
+                          language={selectedItem.language || "plaintext"}
+                          readOnly={true}
+                          maxHeight={400}
+                        />
                       ) : (
                         <pre className="max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed whitespace-pre-wrap break-words text-cyan-200">
                           {selectedItem.content ||
@@ -761,8 +781,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Item</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete &quot;{selectedItem?.title}&quot;? This
-              action cannot be undone.
+              Are you sure you want to delete &quot;{selectedItem?.title}&quot;?
+              This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

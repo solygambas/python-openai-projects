@@ -8,13 +8,13 @@ import { Github, Mail, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 export function LoginForm() {
@@ -23,14 +23,14 @@ export function LoginForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const errorParam = searchParams.get("error");
   const deletedParam = searchParams.get("deleted");
-  
+
   const [error, setError] = useState<string | null>(
-    errorParam === "CredentialsSignin" 
-      ? "Invalid email or password" 
+    errorParam === "CredentialsSignin"
+      ? "Invalid email or password"
       : errorParam === "UserNotFound"
         ? "User profile not found. If this is a new account, please try signing in again."
-        : errorParam 
-          ? "An error occurred during sign in" 
+        : errorParam
+          ? "An error occurred during sign in"
           : null
   );
   const [success, setSuccess] = useState<string | null>(
@@ -97,7 +97,9 @@ export function LoginForm() {
         } else if (result.error === "EmailNotVerified") {
           setError("Please verify your email address first. Check your inbox.");
         } else if (result.error === "GitHubOnlyAccount") {
-          setError("This account uses GitHub sign-in. Please continue with GitHub.");
+          setError(
+            "This account uses GitHub sign-in. Please continue with GitHub."
+          );
         } else {
           setError("Invalid email or password");
         }
@@ -111,7 +113,9 @@ export function LoginForm() {
       if (isRateLimitError(error)) {
         setError("Too many attempts. Please try again later.");
       } else {
-        setError("Sign in failed. If you made multiple attempts, please wait a few minutes and try again.");
+        setError(
+          "Sign in failed. If you made multiple attempts, please wait a few minutes and try again."
+        );
       }
     } finally {
       setIsLoading(false);
@@ -131,7 +135,9 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border-primary/10">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Sign In to DevStash</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Sign In to DevStash
+        </CardTitle>
         <CardDescription className="text-center">
           Enter your credentials or use GitHub to sign in
         </CardDescription>
@@ -150,7 +156,7 @@ export function LoginForm() {
             <p>{success}</p>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -179,12 +185,12 @@ export function LoginForm() {
             </div>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input 
-                id="password" 
-                name="password" 
-                type="password" 
+              <Input
+                id="password"
+                name="password"
+                type="password"
                 className="pl-10"
-                required 
+                required
                 disabled={isLoading}
               />
             </div>
@@ -205,10 +211,10 @@ export function LoginForm() {
           </div>
         </div>
 
-        <Button 
-          variant="outline" 
-          type="button" 
-          className="w-full" 
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full"
           onClick={handleGithubSignIn}
           disabled={isLoading}
         >
@@ -219,7 +225,10 @@ export function LoginForm() {
       <CardFooter>
         <div className="text-sm text-center w-full text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary hover:underline font-medium">
+          <Link
+            href="/register"
+            className="text-primary hover:underline font-medium"
+          >
             Register for free
           </Link>
         </div>

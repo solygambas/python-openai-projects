@@ -7,13 +7,13 @@ import { Lock, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 interface ResetPasswordFormProps {
@@ -62,7 +62,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       }
 
       setSuccess(data.message);
-      
+
       // Redirect to sign in after 3 seconds
       setTimeout(() => {
         router.push("/sign-in");
@@ -86,7 +86,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             <Lock className="h-6 w-6" />
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold text-center">Reset Password</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Reset Password
+        </CardTitle>
         <CardDescription className="text-center">
           Enter your new password below to reset your account access.
         </CardDescription>
@@ -105,7 +107,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             <p>{success} Redirecting to sign in...</p>
           </div>
         )}
-        
+
         {!success && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -144,8 +146,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-sm text-center w-full text-muted-foreground">
-          <Link 
-            href="/sign-in" 
+          <Link
+            href="/sign-in"
             className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
           >
             <ArrowLeft className="h-4 w-4" />

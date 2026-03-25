@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { changePassword } from '@/app/(dashboard)/profile/actions';
-import { toast } from 'sonner';
-import { AlertCircle, Lock } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { changePassword } from "@/app/(dashboard)/profile/actions";
+import { toast } from "sonner";
+import { AlertCircle, Lock } from "lucide-react";
 
 interface ChangePasswordFormProps {
   onSuccess?: () => void;
@@ -28,7 +28,7 @@ export function ChangePasswordForm({ onSuccess }: ChangePasswordFormProps) {
       setError(result.error);
       setIsLoading(false);
     } else {
-      toast.success('Password updated successfully');
+      toast.success("Password updated successfully");
       // Reset form or close dialog
       (e.target as HTMLFormElement).reset();
       setIsLoading(false);
@@ -44,7 +44,7 @@ export function ChangePasswordForm({ onSuccess }: ChangePasswordFormProps) {
           <p>{error}</p>
         </div>
       )}
-      
+
       <div className="space-y-2">
         <Label htmlFor="currentPassword">Current Password</Label>
         <div className="relative">

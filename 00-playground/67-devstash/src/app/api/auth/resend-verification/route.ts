@@ -44,19 +44,32 @@ export async function POST(req: Request) {
 
     if (!existingUser) {
       // Don't leak whether user exists or not
-      return NextResponse.json({ message: "Verification email sent if account exists" });
+      return NextResponse.json({
+        message: "Verification email sent if account exists",
+      });
     }
 
     if (existingUser.emailVerified) {
-      return NextResponse.json({ error: "Email is already verified" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email is already verified" },
+        { status: 400 }
+      );
     }
 
-    const verificationToken = await generateVerificationToken(existingUser.email);
-    await sendVerificationEmail(verificationToken.identifier, verificationToken.token);
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+    await sendVerificationEmail(
+      verificationToken.identifier,
+      verificationToken.token
+    );
 
     return NextResponse.json({ message: "Verification email sent" });
   } catch (error) {
     console.error("RESEND_VERIFICATION_ERROR", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

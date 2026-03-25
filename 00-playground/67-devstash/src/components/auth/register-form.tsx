@@ -7,18 +7,18 @@ import { User, Mail, Lock, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 export function RegisterForm() {
   const router = useRouter();
-  
+
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,12 +62,16 @@ export function RegisterForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Something went wrong. Please try again.");
+        throw new Error(
+          data.error || "Something went wrong. Please try again."
+        );
       }
 
       // Success! Redirect based on whether email verification is required
       if (data.requiresVerification) {
-        router.push(`/verify-email?status=pending&email=${encodeURIComponent(email)}`);
+        router.push(
+          `/verify-email?status=pending&email=${encodeURIComponent(email)}`
+        );
       } else {
         router.push("/sign-in?registered=true");
       }
@@ -90,7 +94,9 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border-primary/10">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Create an account
+        </CardTitle>
         <CardDescription className="text-center">
           Enter your details to create your DevStash account
         </CardDescription>
@@ -102,7 +108,7 @@ export function RegisterForm() {
             <p>{error}</p>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
@@ -138,12 +144,12 @@ export function RegisterForm() {
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input 
-                id="password" 
-                name="password" 
-                type="password" 
+              <Input
+                id="password"
+                name="password"
+                type="password"
                 className="pl-10"
-                required 
+                required
                 disabled={isLoading}
               />
             </div>
@@ -152,12 +158,12 @@ export function RegisterForm() {
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input 
-                id="confirmPassword" 
-                name="confirmPassword" 
-                type="password" 
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
                 className="pl-10"
-                required 
+                required
                 disabled={isLoading}
               />
             </div>
@@ -170,7 +176,10 @@ export function RegisterForm() {
       <CardFooter>
         <div className="text-sm text-center w-full text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/sign-in" className="text-primary hover:underline font-medium">
+          <Link
+            href="/sign-in"
+            className="text-primary hover:underline font-medium"
+          >
             Sign in
           </Link>
         </div>

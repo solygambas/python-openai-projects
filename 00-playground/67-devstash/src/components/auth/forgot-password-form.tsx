@@ -6,13 +6,13 @@ import { Mail, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 export function ForgotPasswordForm() {
@@ -62,9 +62,12 @@ export function ForgotPasswordForm() {
             <Mail className="h-6 w-6" />
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold text-center">Forgot Password</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">
+          Forgot Password
+        </CardTitle>
         <CardDescription className="text-center">
-          Enter your email address and we&apos;ll send you a link to reset your password.
+          Enter your email address and we&apos;ll send you a link to reset your
+          password.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -81,7 +84,7 @@ export function ForgotPasswordForm() {
             <p>{success}</p>
           </div>
         )}
-        
+
         {!success && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -107,8 +110,8 @@ export function ForgotPasswordForm() {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-sm text-center w-full text-muted-foreground">
-          <Link 
-            href="/sign-in" 
+          <Link
+            href="/sign-in"
             className="inline-flex items-center gap-2 text-primary hover:underline font-medium"
           >
             <ArrowLeft className="h-4 w-4" />

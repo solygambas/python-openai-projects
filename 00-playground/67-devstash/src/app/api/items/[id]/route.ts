@@ -6,10 +6,7 @@ interface GetItemRouteContext {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(
-  _req: Request,
-  { params }: GetItemRouteContext
-) {
+export async function GET(_req: Request, { params }: GetItemRouteContext) {
   try {
     const session = await auth();
     const userId = session?.user?.id;
@@ -29,6 +26,9 @@ export async function GET(
     return NextResponse.json({ item });
   } catch (error) {
     console.error("GET_ITEM_DETAIL_ERROR", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

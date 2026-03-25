@@ -22,7 +22,9 @@ export default async function DashboardLayout({
         <div className="flex min-h-screen w-full flex-col bg-background">
           <DashboardTopBar />
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-muted-foreground">Please sign in to view your dashboard.</p>
+            <p className="text-muted-foreground">
+              Please sign in to view your dashboard.
+            </p>
           </div>
         </div>
       </SidebarProvider>
@@ -35,26 +37,27 @@ export default async function DashboardLayout({
     redirect("/sign-in?error=UserNotFound");
   }
 
-  const [itemTypes, itemTypeCounts, favoriteCollections, recentCollections] = await Promise.all([
-    getItemTypes(),
-    getItemTypeCounts(user.id),
-    getRecentCollections(user.id, 5, true),
-    getRecentCollections(user.id, 5, false)
-  ]);
+  const [itemTypes, itemTypeCounts, favoriteCollections, recentCollections] =
+    await Promise.all([
+      getItemTypes(),
+      getItemTypeCounts(user.id),
+      getRecentCollections(user.id, 5, true),
+      getRecentCollections(user.id, 5, false),
+    ]);
 
   return (
-    <SidebarProvider sidebarData={{
-      user,
-      itemTypes,
-      itemTypeCounts,
-      favoriteCollections,
-      recentCollections
-    }}>
+    <SidebarProvider
+      sidebarData={{
+        user,
+        itemTypes,
+        itemTypeCounts,
+        favoriteCollections,
+        recentCollections,
+      }}
+    >
       <div className="flex min-h-screen w-full flex-col bg-background">
         <DashboardTopBar />
-        <DashboardContent>
-          {children}
-        </DashboardContent>
+        <DashboardContent>{children}</DashboardContent>
       </div>
     </SidebarProvider>
   );

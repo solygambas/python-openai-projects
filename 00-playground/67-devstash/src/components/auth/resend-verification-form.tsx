@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function ResendVerificationForm({ initialEmail }: { initialEmail?: string }) {
+export function ResendVerificationForm({
+  initialEmail,
+}: {
+  initialEmail?: string;
+}) {
   const [email, setEmail] = useState(initialEmail || "");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +33,9 @@ export function ResendVerificationForm({ initialEmail }: { initialEmail?: string
       if (!response.ok) {
         toast.error(data.error || "Failed to send email");
       } else {
-        toast.success(data.message || "Verification email sent. Check your inbox.");
+        toast.success(
+          data.message || "Verification email sent. Check your inbox."
+        );
         setEmail("");
       }
     } catch {
@@ -42,7 +48,9 @@ export function ResendVerificationForm({ initialEmail }: { initialEmail?: string
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="email" className="sr-only">Email Configuration</Label>
+        <Label htmlFor="email" className="sr-only">
+          Email Configuration
+        </Label>
         <div className="relative">
           <Input
             id="email"
@@ -57,7 +65,7 @@ export function ResendVerificationForm({ initialEmail }: { initialEmail?: string
           <Mail className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
         </div>
       </div>
-      
+
       <Button type="submit" disabled={isLoading || !email} className="w-full">
         {isLoading ? (
           <>

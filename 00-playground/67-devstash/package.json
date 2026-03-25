@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preclean": "npm run format && npm run lint:fix",
-    "validate": "npm run format:check && npm run lint && npm run type-check",
+    "validate": "npm run preclean && npm run type-check",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",

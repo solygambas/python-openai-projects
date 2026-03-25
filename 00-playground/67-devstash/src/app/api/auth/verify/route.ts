@@ -7,7 +7,9 @@ export async function GET(req: Request) {
     const token = searchParams.get("token");
 
     if (!token) {
-      return NextResponse.redirect(new URL("/verify-email?status=error", req.url));
+      return NextResponse.redirect(
+        new URL("/verify-email?status=error", req.url)
+      );
     }
 
     const verificationToken = await prisma.verificationToken.findUnique({
@@ -17,13 +19,20 @@ export async function GET(req: Request) {
     });
 
     if (!verificationToken) {
-      return NextResponse.redirect(new URL("/verify-email?status=invalid", req.url));
+      return NextResponse.redirect(
+        new URL("/verify-email?status=invalid", req.url)
+      );
     }
 
     const hasExpired = new Date(verificationToken.expires) < new Date();
 
     if (hasExpired) {
-      return NextResponse.redirect(new URL(`/verify-email?status=expired&email=${encodeURIComponent(verificationToken.identifier)}`, req.url));
+      return NextResponse.redirect(
+        new URL(
+          `/verify-email?status=expired&email=${encodeURIComponent(verificationToken.identifier)}`,
+          req.url
+        )
+      );
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -31,7 +40,9 @@ export async function GET(req: Request) {
     });
 
     if (!existingUser) {
-      return NextResponse.redirect(new URL("/verify-email?status=error", req.url));
+      return NextResponse.redirect(
+        new URL("/verify-email?status=error", req.url)
+      );
     }
 
     await prisma.user.update({
@@ -51,9 +62,13 @@ export async function GET(req: Request) {
       },
     });
 
-    return NextResponse.redirect(new URL("/verify-email?status=success", req.url));
+    return NextResponse.redirect(
+      new URL("/verify-email?status=success", req.url)
+    );
   } catch (error) {
     console.error("VERIFICATION_ERROR", error);
-    return NextResponse.redirect(new URL("/verify-email?status=error", req.url));
+    return NextResponse.redirect(
+      new URL("/verify-email?status=error", req.url)
+    );
   }
 }

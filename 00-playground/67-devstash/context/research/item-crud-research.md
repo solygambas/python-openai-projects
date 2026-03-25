@@ -7,6 +7,7 @@
 ## Research
 
 Design a unified CRUD system for all 7 item types:
+
 - Mutations (create, update, delete) in one action file
 - Data fetching in lib/db (called directly from server components)
 - One dynamic route, shared components that adapt by type

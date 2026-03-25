@@ -5,7 +5,7 @@ export async function generateVerificationToken(email: string) {
   const expires = new Date(new Date().getTime() + 3600 * 1000 * 24); // 24 hours
 
   const existingToken = await prisma.verificationToken.findFirst({
-    where: { identifier: email }
+    where: { identifier: email },
   });
 
   if (existingToken) {
@@ -13,9 +13,9 @@ export async function generateVerificationToken(email: string) {
       where: {
         identifier_token: {
           identifier: existingToken.identifier,
-          token: existingToken.token
-        }
-      }
+          token: existingToken.token,
+        },
+      },
     });
   }
 
@@ -24,7 +24,7 @@ export async function generateVerificationToken(email: string) {
       identifier: email,
       token,
       expires,
-    }
+    },
   });
 
   return verificationToken;
@@ -36,7 +36,7 @@ export async function generatePasswordResetToken(email: string) {
   const expires = new Date(new Date().getTime() + 3600 * 1000); // 1 hour
 
   const existingToken = await prisma.verificationToken.findFirst({
-    where: { identifier }
+    where: { identifier },
   });
 
   if (existingToken) {
@@ -44,13 +44,13 @@ export async function generatePasswordResetToken(email: string) {
       where: {
         identifier_token: {
           identifier: existingToken.identifier,
-          token: existingToken.token
-        }
-      }
+          token: existingToken.token,
+        },
+      },
     });
   }
 
   return prisma.verificationToken.create({
-    data: { identifier, token, expires }
+    data: { identifier, token, expires },
   });
 }

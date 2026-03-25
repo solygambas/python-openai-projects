@@ -1,21 +1,25 @@
-'use server';
+"use server";
 
-import { auth } from '@/auth';
-import { updateItem as updateItemQuery, deleteItem as deleteItemQuery, createItem as createItemQuery } from '@/lib/db/items';
-import { z } from 'zod';
+import { auth } from "@/auth";
+import {
+  updateItem as updateItemQuery,
+  deleteItem as deleteItemQuery,
+  createItem as createItemQuery,
+} from "@/lib/db/items";
+import { z } from "zod";
 
 const UpdateItemSchema = z.object({
-  itemId: z.string().min(1, 'Item ID is required'),
-  title: z.string().trim().min(1, 'Title is required'),
+  itemId: z.string().min(1, "Item ID is required"),
+  title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().nullish(),
   content: z.string().nullish(),
-  url: z.string().url('Invalid URL format').nullish().or(z.literal('')),
+  url: z.string().url("Invalid URL format").nullish().or(z.literal("")),
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
 });
 
 const DeleteItemSchema = z.object({
-  itemId: z.string().min(1, 'Item ID is required'),
+  itemId: z.string().min(1, "Item ID is required"),
 });
 
 type UpdateItemInput = z.infer<typeof UpdateItemSchema>;
@@ -63,13 +67,13 @@ interface DeleteItemResult {
 
 // Create Item Schema and types
 const CreateItemSchema = z.object({
-  title: z.string().trim().min(1, 'Title is required'),
+  title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().nullish(),
   content: z.string().nullish(),
-  url: z.string().url('Invalid URL format').nullish().or(z.literal('')),
+  url: z.string().url("Invalid URL format").nullish().or(z.literal("")),
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
-  typeId: z.string().min(1, 'Type is required'),
+  typeId: z.string().min(1, "Type is required"),
 });
 
 type CreateItemInput = z.infer<typeof CreateItemSchema>;
@@ -95,7 +99,7 @@ export async function createItem(
 ): Promise<CreateItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' };
+    return { success: false, error: "Unauthorized" };
   }
 
   const userId = session.user.id;
@@ -125,8 +129,8 @@ export async function createItem(
 
     return { success: true, data: newItem };
   } catch (error) {
-    console.error('CREATE_ITEM_ERROR', error);
-    return { success: false, error: 'Failed to create item' };
+    console.error("CREATE_ITEM_ERROR", error);
+    return { success: false, error: "Failed to create item" };
   }
 }
 
@@ -135,7 +139,7 @@ export async function updateItem(
 ): Promise<UpdateItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' };
+    return { success: false, error: "Unauthorized" };
   }
 
   const userId = session.user.id;
@@ -167,10 +171,10 @@ export async function updateItem(
       data: updatedItem,
     };
   } catch (error) {
-    console.error('UPDATE_ITEM_ERROR', error);
+    console.error("UPDATE_ITEM_ERROR", error);
     return {
       success: false,
-      error: 'Failed to update item',
+      error: "Failed to update item",
     };
   }
 }
@@ -180,7 +184,7 @@ export async function deleteItem(
 ): Promise<DeleteItemResult> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: 'Unauthorized' };
+    return { success: false, error: "Unauthorized" };
   }
 
   const userId = session.user.id;
@@ -204,10 +208,10 @@ export async function deleteItem(
       data: result,
     };
   } catch (error) {
-    console.error('DELETE_ITEM_ERROR', error);
+    console.error("DELETE_ITEM_ERROR", error);
     return {
       success: false,
-      error: 'Failed to delete item',
+      error: "Failed to delete item",
     };
   }
 }

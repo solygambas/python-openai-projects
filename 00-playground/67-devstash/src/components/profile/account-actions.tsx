@@ -1,32 +1,38 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogTrigger 
-} from '@/components/ui/alert-dialog';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
-} from '@/components/ui/dialog';
-import { deleteAccount } from '@/app/(dashboard)/profile/actions';
-import { toast } from 'sonner';
-import { ChangePasswordForm } from './change-password-form';
-import { signOut } from 'next-auth/react';
-import { CheckCircle } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { deleteAccount } from "@/app/(dashboard)/profile/actions";
+import { toast } from "sonner";
+import { ChangePasswordForm } from "./change-password-form";
+import { signOut } from "next-auth/react";
+import { CheckCircle } from "lucide-react";
 
 interface AccountActionsProps {
   isEmailUser: boolean;
@@ -55,11 +61,11 @@ export function AccountActions({ isEmailUser }: AccountActionsProps) {
       if (result.success) {
         setDeleteSuccess(true);
       } else {
-        toast.error(result.error || 'Failed to delete account');
+        toast.error(result.error || "Failed to delete account");
         setIsDeleting(false);
       }
     } catch {
-      toast.error('Something went wrong');
+      toast.error("Something went wrong");
       setIsDeleting(false);
     }
   };
@@ -77,13 +83,16 @@ export function AccountActions({ isEmailUser }: AccountActionsProps) {
           <div>
             <p className="font-semibold">Change Password</p>
             <p className="text-sm text-muted-foreground">
-              {isEmailUser 
-                ? "Update your password regularly to keep your account secure." 
+              {isEmailUser
+                ? "Update your password regularly to keep your account secure."
                 : "You are logged in with an external provider (GitHub)."}
             </p>
           </div>
           {isEmailUser && (
-            <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+            <Dialog
+              open={isChangePasswordOpen}
+              onOpenChange={setIsChangePasswordOpen}
+            >
               <DialogTrigger render={<Button variant="outline" />}>
                 Change Password
               </DialogTrigger>
@@ -94,7 +103,9 @@ export function AccountActions({ isEmailUser }: AccountActionsProps) {
                     Enter your current password and a new password.
                   </DialogDescription>
                 </DialogHeader>
-                <ChangePasswordForm onSuccess={() => setIsChangePasswordOpen(false)} />
+                <ChangePasswordForm
+                  onSuccess={() => setIsChangePasswordOpen(false)}
+                />
               </DialogContent>
             </Dialog>
           )}
@@ -107,12 +118,15 @@ export function AccountActions({ isEmailUser }: AccountActionsProps) {
               Permanently delete your account and all of your data.
             </p>
           </div>
-          <AlertDialog open={isDeleteDialogOpen} onOpenChange={(open) => {
-            setIsDeleteDialogOpen(open);
-            if (!open) {
-              setDeleteSuccess(false);
-            }
-          }}>
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={(open) => {
+              setIsDeleteDialogOpen(open);
+              if (!open) {
+                setDeleteSuccess(false);
+              }
+            }}
+          >
             <AlertDialogTrigger render={<Button variant="destructive" />}>
               Delete Account
             </AlertDialogTrigger>
@@ -123,22 +137,25 @@ export function AccountActions({ isEmailUser }: AccountActionsProps) {
                   <div className="text-center space-y-2">
                     <AlertDialogTitle>Account Deleted</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Your account has been permanently deleted. Redirecting to sign in...
+                      Your account has been permanently deleted. Redirecting to
+                      sign in...
                     </AlertDialogDescription>
                   </div>
                 </div>
               ) : (
                 <>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete your account
-                      and remove your data from our servers.
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
+                    <AlertDialogAction
                       onClick={handleDeleteAccount}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       disabled={isDeleting}
