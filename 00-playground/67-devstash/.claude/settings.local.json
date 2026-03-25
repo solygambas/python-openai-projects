@@ -1,7 +1,28 @@
 {
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": ["neon"],
-  "permissions": {
-    "allow": ["mcp__playwright__browser_take_screenshot"]
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/prettier-normalize.ts"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/prettier-write.ts"
+          }
+        ]
+      }
+    ]
   }
 }
