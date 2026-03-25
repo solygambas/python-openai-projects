@@ -4,7 +4,7 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "node --experimental-strip-types --env-file=.env prisma/seed.ts"
+    seed: "node --experimental-strip-types --env-file=.env prisma/seed.ts",
   },
   datasource: {
     // In Prisma 7, the 'url' in prisma.config.ts is what the CLI (migrations) uses.

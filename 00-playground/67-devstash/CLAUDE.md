@@ -16,21 +16,27 @@ Read the following to get the full context of the project:
 - **Dev server**: `npm run dev` (runs on http://localhost:3000)
 - **Build**: `npm run build`
 - **Production server**: `npm run start`
+- **Format**: `npm run format`
+- **Check types**: `npm run type-check`
 - **Lint**: `npm run lint`
+- **Pre-clean**: `npm run preclean`
+- **Validate**: `npm run validate`
 
 ## Neon Database
 
-  **Project:** `old-tooth-67280089` (devstash)
+**Project:** `old-tooth-67280089` (devstash)
 
-  **Branch Policy:**
-  - **ALWAYS use the `development` branch** (`br-spring-art-ag1e2x14`) for all database
-   operations
-  - **NEVER touch the `production` branch** unless explicitly requested by the user    
-  - When using Neon MCP tools, always include `branchId: "br-spring-art-ag1e2x14"`     
+**Branch Policy:**
+
+- **ALWAYS use the `development` branch** (`br-spring-art-ag1e2x14`) for all database
+  operations
+- **NEVER touch the `production` branch** unless explicitly requested by the user
+- When using Neon MCP tools, always include `branchId: "br-spring-art-ag1e2x14"`  
   parameter
 
-  **Defaults for Neon MCP calls:**
-  - `projectId`: `old-tooth-67280089`
-  - `branchId`: `br-spring-art-ag1e2x14`
+**Defaults for Neon MCP calls:**
 
-  This ensures any Neon MCP tool calls will default to the development branch and avoid accidental production data modifications.
+- `projectId`: `old-tooth-67280089`
+- `branchId`: `br-spring-art-ag1e2x14`
+
+This ensures any Neon MCP tool calls will default to the development branch and avoid accidental production data modifications.

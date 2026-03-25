@@ -1,6 +1,4 @@
 {
-  "enabledMcpjsonServers": [
-    "neon"
-  ],
+  "enabledMcpjsonServers": ["neon"],
   "enableAllProjectMcpServers": true
 }

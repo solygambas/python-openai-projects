@@ -40,7 +40,7 @@
 
 Example v4 configuration:
 
-```css
+````css
 @import "tailwindcss";
 
 @theme {
@@ -94,7 +94,7 @@ Example v4 configuration:
 **Scope**: Test server actions and utilities only, not React components.
 
 - Run with `npm test` (watch mode) or `npm run test:run` (single run)
-- Test files: `feature.test.ts` co-located with source 
+- Test files: `feature.test.ts` co-located with source
 - Include patterns: `src/lib/**/*.test.ts`, `src/**/actions.test.ts`
 - Exclude: components, `.next/`, `node_modules/`
 - Environment: Node (no jsdom/browser mocks needed)
@@ -120,9 +120,10 @@ describe('changePassword', () => {
     expect(result.error).toBe('Unauthorized');
   });
 });
-```
+````
 
 **Mocking patterns:**
+
 - Mock Prisma: `vi.mock('@/lib/prisma')`
 - Mock auth: Mock `auth()` from `@/auth`
 - Use `vi.spyOn()` for functions, `vi.mock()` for modules
@@ -132,4 +133,7 @@ describe('changePassword', () => {
 - No commented-out code unless specified
 - No unused imports or variables
 - Keep functions under 50 lines when possible
+
+```
+
 ```
