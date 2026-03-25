@@ -27,6 +27,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CodeEditor } from "@/components/ui/code-editor";
+import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -117,6 +118,12 @@ const iconMap: IconMap = {
 function isCodeType(typeName: string): boolean {
   const lower = typeName.toLowerCase();
   return lower === "snippet" || lower === "command";
+}
+
+// Helper to check if item type should use MarkdownEditor
+function isMarkdownType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "note" || lower === "prompt";
 }
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
@@ -645,6 +652,13 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                           readOnly={false}
                           maxHeight={400}
                         />
+                      ) : isMarkdownType(selectedItem.itemType.name) ? (
+                        <MarkdownEditor
+                          value={editContent}
+                          onChange={(v) => setEditContent(v)}
+                          readOnly={false}
+                          maxHeight={400}
+                        />
                       ) : (
                         <Textarea
                           value={editContent}
@@ -670,6 +684,12 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                         <CodeEditor
                           value={selectedItem.content || ""}
                           language={selectedItem.language || "plaintext"}
+                          readOnly={true}
+                          maxHeight={400}
+                        />
+                      ) : isMarkdownType(selectedItem.itemType.name) ? (
+                        <MarkdownEditor
+                          value={selectedItem.content || ""}
                           readOnly={true}
                           maxHeight={400}
                         />

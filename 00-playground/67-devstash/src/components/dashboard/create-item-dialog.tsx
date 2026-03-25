@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { CodeEditor } from "@/components/ui/code-editor";
+import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { createItem } from "@/actions/items";
 import type { IconMap } from "@/types/dashboard";
 
@@ -55,6 +56,17 @@ const iconMap: IconMap = {
 const textContentTypes = ["snippet", "prompt", "command", "note"];
 // Types that require language field
 const languageTypes = ["snippet", "command"];
+// Types that use MarkdownEditor
+const markdownTypes = ["note", "prompt"];
+
+// Helper functions
+function isCodeType(typeName: string): boolean {
+  return languageTypes.includes(typeName);
+}
+
+function isMarkdownType(typeName: string): boolean {
+  return markdownTypes.includes(typeName);
+}
 
 export function CreateItemDialog({
   itemTypes,
@@ -96,7 +108,7 @@ export function CreateItemDialog({
   const showLanguageField = languageTypes.includes(typeName);
 
   const resetForm = () => {
-    setSelectedTypeId("");
+    setSelectedTypeId(defaultTypeId || "");
     setTitle("");
     setDescription("");
     setContent("");
@@ -152,7 +164,16 @@ export function CreateItemDialog({
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    if (!newOpen) {
+    if (newOpen) {
+      // Reset with defaultTypeId when opening
+      setSelectedTypeId(defaultTypeId || "");
+      setTitle("");
+      setDescription("");
+      setContent("");
+      setUrl("");
+      setLanguage("");
+      setTags("");
+    } else {
       resetForm();
     }
   };
@@ -241,7 +262,7 @@ export function CreateItemDialog({
           {showContentField && (
             <div className="space-y-2">
               <Label htmlFor="content">Content</Label>
-              {languageTypes.includes(typeName) ? (
+              {isCodeType(typeName) ? (
                 <CodeEditor
                   value={content}
                   onChange={setContent}
@@ -249,6 +270,13 @@ export function CreateItemDialog({
                   readOnly={false}
                   maxHeight={200}
                   className="bg-secondary/20 border-primary/20"
+                />
+              ) : isMarkdownType(typeName) ? (
+                <MarkdownEditor
+                  value={content}
+                  onChange={setContent}
+                  readOnly={false}
+                  maxHeight={200}
                 />
               ) : (
                 <Textarea
