@@ -1,5 +1,9 @@
-import { spawnSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import * as fs from "node:fs";
+
+function shellQuote(value: string): string {
+  return `"${value.replace(/"/g, '\\"')}"`;
+}
 
 function main() {
   try {
@@ -13,9 +17,10 @@ function main() {
       process.exit(0);
     }
 
-    spawnSync("npx", ["prettier", "--write", filePath], {
+    execSync(`npx prettier --write ${shellQuote(filePath)}`, {
       stdio: "ignore",
       timeout: 15000,
+      shell: process.platform === "win32" ? "cmd.exe" : "/bin/bash",
     });
 
     process.exit(0);
