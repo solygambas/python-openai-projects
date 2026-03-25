@@ -49,7 +49,7 @@ export function CodeEditor({
     if (editorRef.current) {
       const contentHeight = Math.min(
         maxHeight,
-        Math.max(minHeight, editorRef.current.getContentHeight())
+        Math.max(minHeight, editorRef.current.getContentHeight()),
       );
       setEditorHeight(contentHeight);
       editorRef.current.layout();

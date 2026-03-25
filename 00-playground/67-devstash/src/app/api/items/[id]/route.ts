@@ -28,7 +28,7 @@ export async function GET(_req: Request, { params }: GetItemRouteContext) {
     console.error("GET_ITEM_DETAIL_ERROR", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

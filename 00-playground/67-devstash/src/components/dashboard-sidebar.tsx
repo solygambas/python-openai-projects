@@ -76,7 +76,7 @@ const NavItem = ({
         isActive
           ? "bg-primary/10 text-primary font-medium"
           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-        isCollapsed && "justify-center px-2"
+        isCollapsed && "justify-center px-2",
       )}
     >
       {customIcon ? (
@@ -126,7 +126,7 @@ const SectionHeader = ({
     onClick={onToggle}
     className={cn(
       "flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 hover:text-foreground transition-colors",
-      isCollapsed && "justify-center"
+      isCollapsed && "justify-center",
     )}
   >
     {!isCollapsed && <span>{title}</span>}
@@ -204,7 +204,7 @@ export function DashboardSidebar({
       className={cn(
         "flex h-full flex-col bg-background transition-all duration-300",
         isCollapsed ? "w-16" : "w-64",
-        className
+        className,
       )}
     >
       <ScrollArea className="flex-1">
@@ -342,7 +342,7 @@ export function DashboardSidebar({
             <div
               className={cn(
                 "flex w-full items-center gap-3 rounded-md p-1.5 transition-colors hover:bg-muted/50 cursor-pointer",
-                isCollapsed && "justify-center"
+                isCollapsed && "justify-center",
               )}
             >
               <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden">
@@ -370,7 +370,7 @@ export function DashboardSidebar({
           >
             <DropdownMenuItem
               className={cn(
-                pathname === "/profile" && "bg-primary/10 text-primary"
+                pathname === "/profile" && "bg-primary/10 text-primary",
               )}
             >
               <Link href="/profile" className="flex items-center gap-2 w-full">

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
           headers: {
             "Retry-After": String(retryAfter),
           },
-        }
+        },
       );
     }
 
@@ -35,14 +35,14 @@ export async function POST(req: Request) {
     if (!token || !password) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     if (!resetToken) {
       return NextResponse.json(
         { error: "Invalid or expired reset link" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -68,14 +68,14 @@ export async function POST(req: Request) {
       });
       return NextResponse.json(
         { error: "Reset link has expired" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!resetToken.identifier.startsWith("password-reset:")) {
       return NextResponse.json(
         { error: "Invalid reset link" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
     console.error("RESET_PASSWORD_ERROR", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
           headers: {
             "Retry-After": String(retryAfter),
           },
-        }
+        },
       );
     }
 
@@ -52,16 +52,16 @@ export async function POST(req: Request) {
     if (existingUser.emailVerified) {
       return NextResponse.json(
         { error: "Email is already verified" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const verificationToken = await generateVerificationToken(
-      existingUser.email
+      existingUser.email,
     );
     await sendVerificationEmail(
       verificationToken.identifier,
-      verificationToken.token
+      verificationToken.token,
     );
 
     return NextResponse.json({ message: "Verification email sent" });
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     console.error("RESEND_VERIFICATION_ERROR", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

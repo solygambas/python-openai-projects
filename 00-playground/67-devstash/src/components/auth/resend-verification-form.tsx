@@ -34,7 +34,7 @@ export function ResendVerificationForm({
         toast.error(data.error || "Failed to send email");
       } else {
         toast.success(
-          data.message || "Verification email sent. Check your inbox."
+          data.message || "Verification email sent. Check your inbox.",
         );
         setEmail("");
       }

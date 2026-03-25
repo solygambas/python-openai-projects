@@ -63,14 +63,14 @@ export function RegisterForm() {
 
       if (!response.ok) {
         throw new Error(
-          data.error || "Something went wrong. Please try again."
+          data.error || "Something went wrong. Please try again.",
         );
       }
 
       // Success! Redirect based on whether email verification is required
       if (data.requiresVerification) {
         router.push(
-          `/verify-email?status=pending&email=${encodeURIComponent(email)}`
+          `/verify-email?status=pending&email=${encodeURIComponent(email)}`,
         );
       } else {
         router.push("/sign-in?registered=true");

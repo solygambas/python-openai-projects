@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 export async function getRecentCollections(
   userId: string,
   limit = 6,
-  isFavorite?: boolean
+  isFavorite?: boolean,
 ) {
   // Validate limit
   const validatedLimit = Math.max(1, Math.min(limit, 50));
@@ -71,7 +71,7 @@ export async function getRecentCollections(
 
     // Ensure the most frequent type is first in the list
     const otherTypeIds = Array.from(itemTypesMap.keys()).filter(
-      (id) => id !== mostFrequentTypeId
+      (id) => id !== mostFrequentTypeId,
     );
     const orderedTypeIds = mostFrequentTypeId
       ? [mostFrequentTypeId, ...otherTypeIds]

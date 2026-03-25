@@ -9,7 +9,7 @@ import {
 export const { GET } = handlers;
 
 async function getLoginEmailFromRequest(
-  request: Request
+  request: Request,
 ): Promise<string | undefined> {
   try {
     const contentType =
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Retry-After": String(retryAfter),
           },
-        }
+        },
       );
     }
   }

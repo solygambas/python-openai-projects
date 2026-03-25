@@ -25,7 +25,7 @@ interface CheckRateLimitResult {
 }
 
 const redisConfigured = Boolean(
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
 );
 
 const redis = redisConfigured ? Redis.fromEnv() : null;
@@ -36,7 +36,7 @@ function getLimiter(
   namespace: string,
   limit: number,
   window: RateLimitWindow,
-  timeoutMs: number
+  timeoutMs: number,
 ): Ratelimit {
   const cacheKey = `${namespace}:${limit}:${window}:${timeoutMs}`;
   const existingLimiter = limiterCache.get(cacheKey);
@@ -90,7 +90,7 @@ function buildCompositeKey(
   request?: Request,
   identifier?: string,
   includeIp = true,
-  ipContext?: string
+  ipContext?: string,
 ): string {
   const keyParts: string[] = [namespace];
 
@@ -106,7 +106,7 @@ function buildCompositeKey(
 }
 
 export async function checkRateLimit(
-  options: CheckRateLimitOptions
+  options: CheckRateLimitOptions,
 ): Promise<CheckRateLimitResult> {
   const {
     namespace,
@@ -134,7 +134,7 @@ export async function checkRateLimit(
       request,
       identifier,
       includeIp,
-      ipContext
+      ipContext,
     );
     const result = await limiter.limit(key);
 

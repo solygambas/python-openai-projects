@@ -27,7 +27,7 @@ export async function POST(req: Request) {
           headers: {
             "Retry-After": String(retryAfter),
           },
-        }
+        },
       );
     }
 
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     console.error("FORGOT_PASSWORD_ERROR", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

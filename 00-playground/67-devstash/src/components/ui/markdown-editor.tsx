@@ -48,7 +48,7 @@ export function MarkdownEditor({
     <div
       className={cn(
         "relative flex flex-col rounded-lg border border-white/10 overflow-hidden bg-[#1e1e1e]",
-        className
+        className,
       )}
     >
       {/* macOS-style window header */}
@@ -71,7 +71,7 @@ export function MarkdownEditor({
                   "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
                   effectiveTab === "write"
                     ? "bg-white/10 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
                 )}
               >
                 <Pencil className="h-3 w-3" />
@@ -84,7 +84,7 @@ export function MarkdownEditor({
                   "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
                   effectiveTab === "preview"
                     ? "bg-white/10 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
                 )}
               >
                 <Eye className="h-3 w-3" />

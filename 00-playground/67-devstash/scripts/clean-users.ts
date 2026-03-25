@@ -13,7 +13,7 @@ async function main() {
     });
 
     console.log(
-      `✅ Deleted ${result.count} users and all their associated data via cascade delete.`
+      `✅ Deleted ${result.count} users and all their associated data via cascade delete.`,
     );
     console.log("\n--- Cleanup Complete ---");
   } catch (error) {

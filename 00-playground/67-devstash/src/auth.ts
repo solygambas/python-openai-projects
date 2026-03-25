@@ -115,7 +115,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const isPasswordCorrect = await bcrypt.compare(
           password as string,
-          user.password
+          user.password,
         );
 
         if (!isPasswordCorrect) return null;

@@ -28,7 +28,7 @@ export async function POST(req: Request) {
           headers: {
             "Retry-After": String(retryAfter),
           },
-        }
+        },
       );
     }
 
@@ -37,21 +37,21 @@ export async function POST(req: Request) {
     if (!name || !email || !password || confirmPassword === undefined) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password !== confirmPassword) {
       return NextResponse.json(
         { error: "Passwords do not match" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
               : "An account already exists with this email and is linked to GitHub. Please sign in with GitHub."
             : "An account already exists with this email. Please sign in instead.",
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       const verificationToken = await generateVerificationToken(user.email);
       await sendVerificationEmail(
         verificationToken.identifier,
-        verificationToken.token
+        verificationToken.token,
       );
     }
 
@@ -114,13 +114,13 @@ export async function POST(req: Request) {
           email: user.email,
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("REGISTRATION_ERROR", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

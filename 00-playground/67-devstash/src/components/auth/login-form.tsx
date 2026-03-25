@@ -31,10 +31,10 @@ export function LoginForm() {
         ? "User profile not found. If this is a new account, please try signing in again."
         : errorParam
           ? "An error occurred during sign in"
-          : null
+          : null,
   );
   const [success, setSuccess] = useState<string | null>(
-    deletedParam === "true" ? "Account deleted successfully" : null
+    deletedParam === "true" ? "Account deleted successfully" : null,
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -98,7 +98,7 @@ export function LoginForm() {
           setError("Please verify your email address first. Check your inbox.");
         } else if (result.error === "GitHubOnlyAccount") {
           setError(
-            "This account uses GitHub sign-in. Please continue with GitHub."
+            "This account uses GitHub sign-in. Please continue with GitHub.",
           );
         } else {
           setError("Invalid email or password");
@@ -114,7 +114,7 @@ export function LoginForm() {
         setError("Too many attempts. Please try again later.");
       } else {
         setError(
-          "Sign in failed. If you made multiple attempts, please wait a few minutes and try again."
+          "Sign in failed. If you made multiple attempts, please wait a few minutes and try again.",
         );
       }
     } finally {

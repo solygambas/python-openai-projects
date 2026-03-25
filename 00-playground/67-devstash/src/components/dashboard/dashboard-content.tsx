@@ -15,7 +15,7 @@ export function DashboardContent({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "hidden md:block h-full transition-all duration-300 border-r",
-          isCollapsed ? "w-16" : "w-64"
+          isCollapsed ? "w-16" : "w-64",
         )}
       >
         <DashboardSidebar
