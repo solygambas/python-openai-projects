@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ItemCard } from "@/components/dashboard/item-card";
 import { ImageCard } from "@/components/dashboard/image-card";
+import { FileListCard } from "@/components/dashboard/file-list-card";
 import {
   ItemDrawerHeader,
   ItemDrawerActionBar,
@@ -50,7 +51,7 @@ import { type DashboardItem, type IconMap } from "@/types/dashboard";
 import { updateItem, deleteItem } from "@/actions/items";
 import { toast } from "sonner";
 
-type ItemsWithDrawerVariant = "grid" | "recent" | "pinned";
+type ItemsWithDrawerVariant = "grid" | "recent" | "pinned" | "list";
 
 interface ItemCollectionJoin {
   collection: {
@@ -293,6 +294,32 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
         );
       }
 
+      // Check if all items are files
+      const allFiles = items.every(
+        (item) => item.itemType?.name === "file" && item.fileUrl,
+      );
+
+      if (allFiles) {
+        // Use list view for files
+        return (
+          <div className="flex flex-col gap-1">
+            {items.map((item) => (
+              <FileListCard
+                key={item.id}
+                id={item.id}
+                fileName={item.fileName || item.title}
+                fileSize={item.fileSize ?? null}
+                createdAt={new Date(item.createdAt)}
+                onClick={() => onOpenItem(item.id)}
+                onDownload={() =>
+                  window.open(`/api/download/${item.id}`, "_blank")
+                }
+              />
+            ))}
+          </div>
+        );
+      }
+
       // Regular grid for other item types
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -302,6 +329,26 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
               item={item}
               iconMap={iconMap}
               onClick={() => onOpenItem(item.id)}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    if (variant === "list") {
+      return (
+        <div className="flex flex-col gap-1">
+          {items.map((item) => (
+            <FileListCard
+              key={item.id}
+              id={item.id}
+              fileName={item.fileName || item.title}
+              fileSize={item.fileSize ?? null}
+              createdAt={new Date(item.createdAt)}
+              onClick={() => onOpenItem(item.id)}
+              onDownload={() =>
+                window.open(`/api/download/${item.id}`, "_blank")
+              }
             />
           ))}
         </div>

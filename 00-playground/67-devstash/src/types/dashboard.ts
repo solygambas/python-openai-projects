@@ -19,6 +19,8 @@ export interface DashboardItem {
   isFavorite: boolean;
   isPinned?: boolean;
   fileUrl?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
   createdAt: Date;
   updatedAt: Date;
   itemType: ItemType;
