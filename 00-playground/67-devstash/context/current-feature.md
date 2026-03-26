@@ -2,19 +2,41 @@
 
 ## Status
 
-Not Started
+In Progress
 
 ## Title
 
-TBD
+Refactor: Extract Components from Item Files
 
 ## Goals
 
-- [ ] TBD
+- [x] Create `src/components/items/` directory for item-related components
+- [x] Extract `ItemDrawerHeader` component (icon + title + type badges)
+- [x] Extract `ItemDrawerActionBar` component (Favorite, Pin, Copy, Download, Edit, Delete buttons)
+- [x] Extract `ItemDrawerEditBar` component (Save/Cancel buttons for edit mode)
+- [x] Extract `ItemDrawerContent` component (content display logic for different types)
+- [x] Extract `ItemDrawerMeta` component (Tags, Collections, Details sections)
+- [x] Extract `ItemTypeSelector` component from `CreateItemDialog` (type selection buttons)
+- [x] Extract `ItemContentEditor` component (CodeEditor/MarkdownEditor/Textarea logic)
+- [x] Refactor `items-with-drawer.tsx` to use extracted components
+- [x] Refactor `create-item-dialog.tsx` to use extracted components
+- [x] Ensure build passes and functionality is preserved
 
 ## Notes
 
-TBD
+Both `items-with-drawer.tsx` (~900 lines) and `create-item-dialog.tsx` (~400 lines) are too large. This refactoring extracts shared UI patterns into dedicated components for better maintainability and reusability.
+
+**Component extraction plan:**
+
+From `items-with-drawer.tsx`:
+
+1. `ItemDrawerHeader` - The header section with icon, title, type badge, language input
+2. `ItemDrawerActionBar` - The action buttons row (Favorite, Pin, Copy, Download, Edit, Delete)
+3. `ItemDrawerEditBar` - The Save/Cancel buttons shown in edit mode
+4. `ItemDrawerContent` - The main content display (handles file/image/link/code/markdown)
+5. `ItemDrawerMeta` - The metadata sections (Tags, Collections, Details)
+
+From `create-item-dialog.tsx`: 6. `ItemTypeSelector` - The type selection buttons grid 7. `ItemContentEditor` - The content field that switches between CodeEditor/MarkdownEditor/Textarea
 
 ## History
 

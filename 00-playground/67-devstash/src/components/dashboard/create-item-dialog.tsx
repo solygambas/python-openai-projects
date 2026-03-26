@@ -2,16 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  Link as LinkIcon,
-  Plus,
-  File,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -25,11 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { CodeEditor } from "@/components/ui/code-editor";
-import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { FileUpload } from "@/components/ui/file-upload";
+import { ItemTypeSelector, ItemContentEditor } from "@/components/items";
 import { createItem } from "@/actions/items";
-import type { IconMap } from "@/types/dashboard";
 
 interface ItemType {
   id: string;
@@ -45,32 +34,6 @@ interface CreateItemDialogProps {
   trigger?: React.ReactElement;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-}
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  Link: LinkIcon,
-  File,
-  Image: ImageIcon,
-};
-
-// Types that use text content field
-const textContentTypes = ["snippet", "prompt", "command", "note"];
-// Types that require language field
-const languageTypes = ["snippet", "command"];
-// Types that use MarkdownEditor
-const markdownTypes = ["note", "prompt"];
-
-// Helper functions
-function isCodeType(typeName: string): boolean {
-  return languageTypes.includes(typeName);
-}
-
-function isMarkdownType(typeName: string): boolean {
-  return markdownTypes.includes(typeName);
 }
 
 export function CreateItemDialog({
@@ -107,15 +70,14 @@ export function CreateItemDialog({
   } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // All types available (including file/image)
-  const availableTypes = itemTypes;
-
   const selectedType = itemTypes.find((t) => t.id === selectedTypeId);
   const typeName = selectedType?.name?.toLowerCase() || "";
 
-  const showContentField = textContentTypes.includes(typeName);
+  const showContentField = ["snippet", "prompt", "command", "note"].includes(
+    typeName,
+  );
   const showUrlField = typeName === "link";
-  const showLanguageField = languageTypes.includes(typeName);
+  const showLanguageField = typeName === "snippet" || typeName === "command";
   const showFileUpload = typeName === "file" || typeName === "image";
 
   const resetForm = () => {
@@ -185,11 +147,7 @@ export function CreateItemDialog({
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    if (newOpen) {
-      resetForm();
-    } else {
-      resetForm();
-    }
+    resetForm();
   };
 
   const handleFileUploadComplete = (data: {
@@ -230,40 +188,14 @@ export function CreateItemDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Type Selector */}
-          <div className="space-y-2">
-            <Label>Type</Label>
-            <div className="flex flex-wrap gap-2">
-              {availableTypes.map((type) => {
-                const IconComponent =
-                  iconMap[type.icon as keyof typeof iconMap];
-                const isSelected = selectedTypeId === type.id;
-
-                return (
-                  <button
-                    key={type.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedTypeId(type.id);
-                      setUploadedFile(null);
-                    }}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
-                      isSelected
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50 hover:bg-secondary/50"
-                    }`}
-                  >
-                    {IconComponent && (
-                      <IconComponent
-                        className="h-4 w-4"
-                        style={{ color: type.color }}
-                      />
-                    )}
-                    <span className="text-sm capitalize">{type.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <ItemTypeSelector
+            types={itemTypes}
+            selectedTypeId={selectedTypeId}
+            onSelect={(typeId) => {
+              setSelectedTypeId(typeId);
+              setUploadedFile(null);
+            }}
+          />
 
           {/* Title */}
           <div className="space-y-2">
@@ -294,31 +226,12 @@ export function CreateItemDialog({
           {showContentField && (
             <div className="space-y-2">
               <Label htmlFor="content">Content</Label>
-              {isCodeType(typeName) ? (
-                <CodeEditor
-                  value={content}
-                  onChange={setContent}
-                  language={language || "plaintext"}
-                  readOnly={false}
-                  maxHeight={200}
-                  className="bg-secondary/20 border-primary/20"
-                />
-              ) : isMarkdownType(typeName) ? (
-                <MarkdownEditor
-                  value={content}
-                  onChange={setContent}
-                  readOnly={false}
-                  maxHeight={200}
-                />
-              ) : (
-                <Textarea
-                  id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Paste your content here..."
-                  className="font-mono text-sm resize-y min-h-[120px]"
-                />
-              )}
+              <ItemContentEditor
+                typeName={typeName}
+                value={content}
+                onChange={setContent}
+                language={language || "plaintext"}
+              />
             </div>
           )}
 

@@ -10,25 +10,12 @@ import {
   File,
   Image as ImageIcon,
   Link as LinkIcon,
-  Copy,
   Pin,
-  Pencil,
   Star,
-  Trash2,
-  Tag,
-  Folder,
-  Calendar,
-  X,
-  Save,
-  Download,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CodeEditor } from "@/components/ui/code-editor";
-import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -49,6 +36,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ItemCard } from "@/components/dashboard/item-card";
+import {
+  ItemDrawerHeader,
+  ItemDrawerActionBar,
+  ItemDrawerEditBar,
+  ItemDrawerContent,
+  ItemDrawerContentSection,
+  ItemDrawerMeta,
+} from "@/components/items";
 import { formatDate } from "@/lib/utils";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
 import { updateItem, deleteItem } from "@/actions/items";
@@ -100,20 +95,6 @@ interface ItemsWithDrawerProps {
   variant: ItemsWithDrawerVariant;
 }
 
-function formatDetailsDate(date: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(date));
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-}
-
 const iconMap: IconMap = {
   Code,
   Sparkles,
@@ -123,24 +104,6 @@ const iconMap: IconMap = {
   Image: ImageIcon,
   Link: LinkIcon,
 };
-
-// Helper to check if item type should use CodeEditor
-function isCodeType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "snippet" || lower === "command";
-}
-
-// Helper to check if item type should use MarkdownEditor
-function isMarkdownType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "note" || lower === "prompt";
-}
-
-// Helper to check if item type is file or image
-function isFileType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "file" || lower === "image";
-}
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
   const router = useRouter();
@@ -246,7 +209,6 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
       });
 
       if (result.success && result.data) {
-        // Normalize the data for the client component state
         const updatedItem = {
           ...result.data,
           createdAt: result.data.createdAt.toISOString(),
@@ -274,10 +236,6 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     }
   };
 
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true);
-  };
-
   const handleDeleteConfirm = async () => {
     if (!selectedItem) return;
 
@@ -300,6 +258,14 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     } finally {
       setIsDeleting(false);
       setShowDeleteDialog(false);
+    }
+  };
+
+  const handleCopy = () => {
+    const copyValue = selectedItem?.content ?? selectedItem?.url ?? "";
+    if (copyValue) {
+      void navigator.clipboard.writeText(copyValue);
+      toast.success("Copied to clipboard");
     }
   };
 
@@ -443,57 +409,29 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="p-0 gap-0 flex flex-col h-full">
           <SheetHeader className="px-6 pt-5 pb-3 border-b shrink-0">
-            <div className="flex items-start gap-3 pr-8">
-              <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                {selectedItem ? (
-                  (() => {
-                    const Icon = iconMap[selectedItem.itemType.icon] || File;
-                    return (
-                      <Icon
-                        className="h-5 w-5"
-                        style={{ color: selectedItem.itemType.color }}
-                      />
-                    );
-                  })()
-                ) : (
+            {selectedItem ? (
+              <ItemDrawerHeader
+                icon={selectedItem.itemType.icon}
+                color={selectedItem.itemType.color}
+                typeName={selectedItem.itemType.name}
+                title={selectedItem.title}
+                language={selectedItem.language}
+                isEditing={isEditing}
+                editTitle={editTitle}
+                editLanguage={editLanguage}
+                onTitleChange={setEditTitle}
+                onLanguageChange={setEditLanguage}
+              />
+            ) : (
+              <div className="flex items-start gap-3 pr-8">
+                <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
                   <File className="h-5 w-5 text-muted-foreground" />
-                )}
-              </div>
-              <div className="space-y-1 min-w-0 flex-1">
-                {isEditing ? (
-                  <Input
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    placeholder="Item title"
-                    className="h-8 text-lg font-semibold px-2 -ml-2 bg-background border-primary/20 focus-visible:ring-primary/30"
-                    autoFocus
-                  />
-                ) : (
-                  <SheetTitle className="text-xl leading-snug truncate">
-                    {selectedItem?.title ?? "Loading item"}
-                  </SheetTitle>
-                )}
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="font-normal">
-                    {selectedItem?.itemType.name ?? "Type"}
-                  </Badge>
-                  {!isEditing && selectedItem?.language && (
-                    <Badge variant="outline" className="font-normal lowercase">
-                      {selectedItem.language}
-                    </Badge>
-                  )}
-                  {isEditing &&
-                    isCodeType(selectedItem?.itemType.name || "") && (
-                      <Input
-                        value={editLanguage}
-                        onChange={(e) => setEditLanguage(e.target.value)}
-                        placeholder="Language (e.g. typescript)"
-                        className="h-6 text-[10px] w-32 px-1.5 bg-background border-primary/20"
-                      />
-                    )}
                 </div>
+                <SheetTitle className="text-xl leading-snug truncate">
+                  Loading item
+                </SheetTitle>
               </div>
-            </div>
+            )}
             <SheetDescription className="sr-only">
               Item details drawer
             </SheetDescription>
@@ -502,123 +440,29 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
           <div className="px-6 pb-6 overflow-y-auto flex-1">
             <div className="flex items-center justify-between gap-4 py-3 border-b sticky top-0 bg-background z-10">
               {isEditing ? (
-                <div className="flex items-center gap-2 w-full">
-                  <Button
-                    size="sm"
-                    className="flex-1"
-                    onClick={handleSave}
-                    disabled={isSaving || !editTitle.trim()}
-                  >
-                    {isSaving ? "Saving..." : "Save"}
-                    {!isSaving && <Save className="ml-2 h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={handleCancel}
-                    disabled={isSaving}
-                  >
-                    Cancel
-                    <X className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Favorite"
-                      className={
-                        selectedItem?.isFavorite
-                          ? "text-yellow-500"
-                          : "text-foreground"
-                      }
-                    >
-                      <Star
-                        className={
-                          selectedItem?.isFavorite
-                            ? "fill-yellow-500 text-yellow-500"
-                            : "text-current"
-                        }
-                      />
-                      Favorite
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Pin"
-                    >
-                      <Pin
-                        className={
-                          selectedItem?.isPinned
-                            ? "text-foreground rotate-45"
-                            : "text-muted-foreground rotate-45"
-                        }
-                      />
-                      Pin
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Copy"
-                      onClick={() => {
-                        const copyValue =
-                          selectedItem?.content ?? selectedItem?.url ?? "";
-                        if (copyValue) {
-                          void navigator.clipboard.writeText(copyValue);
-                          toast.success("Copied to clipboard");
-                        }
-                      }}
-                    >
-                      <Copy className="text-muted-foreground" />
-                      Copy
-                    </Button>
-                    {selectedItem?.fileUrl && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={isLoading}
-                        aria-label="Download"
-                        onClick={() => {
-                          window.open(
-                            `/api/download/${selectedItem.id}`,
-                            "_blank",
-                          );
-                        }}
-                      >
-                        <Download className="text-muted-foreground" />
-                        Download
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isLoading || !selectedItem}
-                      aria-label="Edit"
-                      className="ml-2"
-                      onClick={handleEdit}
-                    >
-                      <Pencil className="text-muted-foreground" />
-                      Edit
-                    </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={isLoading || !selectedItem}
-                    aria-label="Delete"
-                    className="text-destructive"
-                    onClick={handleDeleteClick}
-                  >
-                    <Trash2 className="text-destructive" />
-                  </Button>
-                </>
-              )}
+                <ItemDrawerEditBar
+                  isSaving={isSaving}
+                  hasTitle={editTitle.trim().length > 0}
+                  onSave={handleSave}
+                  onCancel={handleCancel}
+                />
+              ) : selectedItem ? (
+                <ItemDrawerActionBar
+                  isLoading={isLoading}
+                  isFavorite={selectedItem.isFavorite}
+                  isPinned={selectedItem.isPinned}
+                  hasFile={!!selectedItem.fileUrl}
+                  hasContent={!!(selectedItem.content || selectedItem.url)}
+                  onFavorite={() => {}}
+                  onPin={() => {}}
+                  onCopy={handleCopy}
+                  onDownload={() =>
+                    window.open(`/api/download/${selectedItem.id}`, "_blank")
+                  }
+                  onEdit={handleEdit}
+                  onDelete={() => setShowDeleteDialog(true)}
+                />
+              ) : null}
             </div>
 
             {isLoading ? (
@@ -654,213 +498,39 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   )}
                 </section>
 
-                {/* Content section - handles files/images differently */}
-                <section className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-muted-foreground text-sm">
-                      {isFileType(selectedItem.itemType.name)
-                        ? "File"
-                        : "Content"}
-                    </p>
-                    {isEditing &&
-                      selectedItem.itemType.name.toLowerCase() === "link" && (
-                        <div className="flex items-center gap-2">
-                          <LinkIcon className="h-3 w-3 text-muted-foreground" />
-                          <p className="text-[10px] text-muted-foreground uppercase">
-                            URL
-                          </p>
-                        </div>
-                      )}
-                  </div>
-
-                  {isEditing ? (
-                    <>
-                      {selectedItem.itemType.name.toLowerCase() === "link" ? (
-                        <Input
-                          value={editUrl}
-                          onChange={(e) => setEditUrl(e.target.value)}
-                          placeholder="https://example.com"
-                          className="bg-secondary/20 border-primary/20"
-                        />
-                      ) : isCodeType(selectedItem.itemType.name) ? (
-                        <CodeEditor
-                          value={editContent}
-                          onChange={(v) => setEditContent(v)}
-                          language={editLanguage || "plaintext"}
-                          readOnly={false}
-                          maxHeight={400}
-                        />
-                      ) : isMarkdownType(selectedItem.itemType.name) ? (
-                        <MarkdownEditor
-                          value={editContent}
-                          onChange={(v) => setEditContent(v)}
-                          readOnly={false}
-                          maxHeight={400}
-                        />
-                      ) : (
-                        <Textarea
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                          placeholder="Paste content here..."
-                          className="min-h-[200px] font-mono text-sm bg-secondary/20 border-primary/20 resize-y"
-                        />
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {/* File/Image display */}
-                      {isFileType(selectedItem.itemType.name) &&
-                      selectedItem.fileUrl ? (
-                        selectedItem.itemType.name.toLowerCase() === "image" ? (
-                          // Image preview - use download proxy to avoid R2 auth issues
-                          <div className="rounded-lg border bg-secondary/40 p-4">
-                            <img
-                              src={`/api/download/${selectedItem.id}`}
-                              alt={selectedItem.fileName || "Image"}
-                              className="max-w-full max-h-[400px] rounded object-contain mx-auto"
-                            />
-                            {selectedItem.fileName && selectedItem.fileSize && (
-                              <p className="text-xs text-muted-foreground text-center mt-2">
-                                {selectedItem.fileName} (
-                                {formatFileSize(selectedItem.fileSize)})
-                              </p>
-                            )}
-                          </div>
-                        ) : (
-                          // File info display
-                          <div className="rounded-lg border bg-secondary/40 p-4 flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center">
-                              <File className="h-6 w-6 text-muted-foreground" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">
-                                {selectedItem.fileName || "Unknown file"}
-                              </p>
-                              {selectedItem.fileSize && (
-                                <p className="text-xs text-muted-foreground">
-                                  {formatFileSize(selectedItem.fileSize)}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      ) : /* Regular content display */
-                      selectedItem.itemType.name.toLowerCase() === "link" &&
-                        selectedItem.url ? (
-                        <a
-                          href={selectedItem.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed break-words text-blue-400 hover:text-blue-300 underline hover:underline-offset-2"
-                        >
-                          {selectedItem.url}
-                        </a>
-                      ) : isCodeType(selectedItem.itemType.name) ? (
-                        <CodeEditor
-                          value={selectedItem.content || ""}
-                          language={selectedItem.language || "plaintext"}
-                          readOnly={true}
-                          maxHeight={400}
-                        />
-                      ) : isMarkdownType(selectedItem.itemType.name) ? (
-                        <MarkdownEditor
-                          value={selectedItem.content || ""}
-                          readOnly={true}
-                          maxHeight={400}
-                        />
-                      ) : (
-                        <pre className="max-h-[280px] overflow-auto rounded-lg border bg-secondary/40 p-4 text-sm leading-relaxed whitespace-pre-wrap break-words text-cyan-200">
-                          {selectedItem.content ||
-                            selectedItem.url ||
-                            "No content"}
-                        </pre>
-                      )}
-                    </>
-                  )}
-                </section>
+                <ItemDrawerContentSection
+                  typeName={selectedItem.itemType.name}
+                  isEditing={isEditing}
+                >
+                  <ItemDrawerContent
+                    typeName={selectedItem.itemType.name}
+                    content={selectedItem.content}
+                    url={selectedItem.url}
+                    fileUrl={selectedItem.fileUrl}
+                    fileName={selectedItem.fileName}
+                    fileSize={selectedItem.fileSize}
+                    language={selectedItem.language}
+                    itemId={selectedItem.id}
+                    isEditing={isEditing}
+                    editContent={editContent}
+                    editUrl={editUrl}
+                    editLanguage={editLanguage}
+                    onContentChange={setEditContent}
+                    onUrlChange={setEditUrl}
+                  />
+                </ItemDrawerContentSection>
 
                 <Separator />
 
-                <section className="space-y-2">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Tag className="h-4 w-4" />
-                    <p>Tags</p>
-                  </div>
-                  {isEditing ? (
-                    <div className="pl-6">
-                      <Input
-                        value={editTags}
-                        onChange={(e) => setEditTags(e.target.value)}
-                        placeholder="tag1, tag2, tag3"
-                        className="bg-secondary/20 border-primary/20"
-                      />
-                      <p className="text-[10px] text-muted-foreground mt-1.5">
-                        Separate tags with commas
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-2 pl-6">
-                      {selectedItem.tags.length > 0 ? (
-                        selectedItem.tags.map((tag) => (
-                          <Badge
-                            key={tag.id}
-                            variant="secondary"
-                            className="font-normal lowercase"
-                          >
-                            {tag.name}
-                          </Badge>
-                        ))
-                      ) : (
-                        <p className="text-xs text-muted-foreground italic">
-                          No tags
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </section>
-
-                <section className="space-y-2">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Folder className="h-4 w-4" />
-                    <p>Collections</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pl-6">
-                    {selectedItem.collections.length > 0 ? (
-                      selectedItem.collections.map((entry) => (
-                        <Badge
-                          key={entry.collection.id}
-                          variant="outline"
-                          className="font-normal"
-                        >
-                          {entry.collection.name}
-                        </Badge>
-                      ))
-                    ) : (
-                      <p className="text-xs text-muted-foreground italic">
-                        No collections
-                      </p>
-                    )}
-                  </div>
-                </section>
-
-                <Separator />
-
-                <section className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Calendar className="h-4 w-4" />
-                    <p>Details</p>
-                  </div>
-                  <div className="space-y-2 pl-6 text-foreground text-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-muted-foreground">Created</p>
-                      <p>{formatDetailsDate(selectedItem.createdAt)}</p>
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-muted-foreground">Updated</p>
-                      <p>{formatDetailsDate(selectedItem.updatedAt)}</p>
-                    </div>
-                  </div>
-                </section>
+                <ItemDrawerMeta
+                  tags={selectedItem.tags}
+                  collections={selectedItem.collections}
+                  createdAt={selectedItem.createdAt}
+                  updatedAt={selectedItem.updatedAt}
+                  isEditing={isEditing}
+                  editTags={editTags}
+                  onTagsChange={setEditTags}
+                />
               </div>
             ) : (
               <p className="pt-6 text-sm text-muted-foreground">
