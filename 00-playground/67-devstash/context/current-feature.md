@@ -246,3 +246,10 @@ TBD
 - [x] Reduced `items-with-drawer.tsx` from ~900 to 567 lines (37% reduction)
 - [x] Reduced `create-item-dialog.tsx` from ~400 to 315 lines (21% reduction)
 - [x] Build and all tests pass
+- **Image Gallery View** (Completed)
+- [x] Created `ImageCard` component with 16:9 aspect ratio and hover zoom effect
+- [x] Used download proxy for R2 authentication
+- [x] Implemented 3-column responsive grid for images (`sm:grid-cols-2 lg:grid-cols-3`)
+- [x] Applied consistent 3-column grid to all item types
+- [x] Added `fileUrl` to `DashboardItem` type
+- _Note:_ Build and lint pass.
