@@ -36,6 +36,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ItemCard } from "@/components/dashboard/item-card";
+import { ImageCard } from "@/components/dashboard/image-card";
 import {
   ItemDrawerHeader,
   ItemDrawerActionBar,
@@ -271,8 +272,30 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
 
   const itemCards = useMemo(() => {
     if (variant === "grid") {
+      // Check if all items are images
+      const allImages = items.every(
+        (item) => item.itemType?.name === "image" && item.fileUrl,
+      );
+
+      if (allImages) {
+        // Use image gallery grid for images
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {items.map((item) => (
+              <ImageCard
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                onClick={() => onOpenItem(item.id)}
+              />
+            ))}
+          </div>
+        );
+      }
+
+      // Regular grid for other item types
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((item) => (
             <ItemCard
               key={item.id}

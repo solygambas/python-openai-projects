@@ -18,6 +18,7 @@ export interface DashboardItem {
   description: string | null;
   isFavorite: boolean;
   isPinned?: boolean;
+  fileUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;
   itemType: ItemType;
