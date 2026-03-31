@@ -73,17 +73,10 @@ Review AI-generated code periodically, especially for:
 
 ## File Editing
 
-Hooks automatically format files and inject updated content into context after every Edit/Write — you don't need to re-read between edits unless a tool call fails.
+A post-hook formats and injects updated file content into context after every Edit/Write/MultiEdit — no need to re-read between edits unless a tool call fails.
 
-### Edit failures ("String not found")
+**Rules:**
 
-1. Re-read the file — the hook may have failed silently
-2. Copy the exact string from the Read output, with 2–3 lines of surrounding context
-3. If Edit fails again — use Write to overwrite the full file (safe for files under 200 lines; risky for larger ones with concurrent changes)
-
-### Long files (200+ lines)
-
-- Never edit from memory — always confirm you have post-edit content in context
-- Prefer MultiEdit over multiple sequential Edits to reduce stale-context risk
-
-**Common causes of failures:** trailing whitespace, CRLF vs LF (mostly handled by hooks)
+- Multiple changes to the same file → always use MultiEdit, never sequential Edits
+- Edit fails → re-read the file, then retry with exact string + 2–3 lines of context
+- Edit fails twice → use Write to overwrite (safe under 200 lines)

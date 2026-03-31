@@ -2,17 +2,6 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": ["neon"],
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/prettier-normalize.ts"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -20,10 +9,6 @@
           {
             "type": "command",
             "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/prettier-write.ts"
-          },
-          {
-            "type": "command",
-            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/post-read-after-edit.ts"
           }
         ]
       }
