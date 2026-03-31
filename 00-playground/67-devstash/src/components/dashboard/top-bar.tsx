@@ -2,7 +2,6 @@
 
 import { Search, Sparkles, PanelLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +14,7 @@ import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { CreateItemDialog } from "@/components/dashboard/create-item-dialog";
 import { CreateCollectionDialog } from "@/components/dashboard/create-collection-dialog";
 import { useSidebar } from "./sidebar-provider";
+import { useSearch } from "@/components/search/search-provider";
 
 export function DashboardTopBar() {
   const {
@@ -24,6 +24,7 @@ export function DashboardTopBar() {
     setIsMobileOpen,
     sidebarData,
   } = useSidebar();
+  const { openSearch } = useSearch();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4">
@@ -76,18 +77,18 @@ export function DashboardTopBar() {
 
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <div className="ml-auto flex-1 sm:flex-initial">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-            <Input
-              type="search"
-              placeholder="Search items..."
-              className="pl-9 h-10 sm:w-[300px] md:w-[200px] lg:w-[500px] bg-muted/30 border-none focus-visible:ring-1 focus-visible:ring-primary/20"
-            />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded border bg-background text-[10px] font-medium text-muted-foreground/50">
+          <button
+            type="button"
+            onClick={openSearch}
+            className="relative flex items-center h-10 w-full sm:w-[300px] md:w-[200px] lg:w-[500px] px-3 rounded-md bg-muted/30 text-muted-foreground text-sm cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <Search className="h-4 w-4 mr-2 text-muted-foreground/50" />
+            <span className="flex-1 text-left">Search items...</span>
+            <div className="hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded border bg-background text-[10px] font-medium text-muted-foreground/50">
               <span className="text-xs">⌘</span>
               <span>K</span>
             </div>
-          </div>
+          </button>
         </div>
         <div className="flex items-center gap-2 ml-auto sm:ml-0">
           <CreateCollectionDialog />

@@ -292,6 +292,26 @@ interface CreateItemData {
   collectionIds?: string[];
 }
 
+export async function getAllItemsForSearch(userId: string) {
+  return prisma.item.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      itemType: {
+        select: {
+          id: true,
+          name: true,
+          icon: true,
+          color: true,
+        },
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
 export async function createItem(userId: string, data: CreateItemData) {
   // Determine content type based on item type
   const type = await prisma.itemType.findUnique({

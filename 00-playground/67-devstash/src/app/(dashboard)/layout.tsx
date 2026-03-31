@@ -1,6 +1,9 @@
 import { SidebarProvider } from "@/components/dashboard/sidebar-provider";
 import { DashboardTopBar } from "@/components/dashboard/top-bar";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
+import { SearchProvider } from "@/components/search/search-provider";
+import { GlobalItemDrawer } from "@/components/search/global-item-drawer";
+import { ItemDrawerProvider } from "@/contexts/item-drawer-context";
 import { getUserById } from "@/lib/db/users";
 import { getItemTypes } from "@/lib/db/item-types";
 import { getItemTypeCounts } from "@/lib/db/items";
@@ -19,14 +22,19 @@ export default async function DashboardLayout({
   if (!userId) {
     return (
       <SidebarProvider>
-        <div className="flex min-h-screen w-full flex-col bg-background">
-          <DashboardTopBar />
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-muted-foreground">
-              Please sign in to view your dashboard.
-            </p>
-          </div>
-        </div>
+        <ItemDrawerProvider>
+          <SearchProvider>
+            <div className="flex min-h-screen w-full flex-col bg-background">
+              <DashboardTopBar />
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-muted-foreground">
+                  Please sign in to view your dashboard.
+                </p>
+              </div>
+              <GlobalItemDrawer />
+            </div>
+          </SearchProvider>
+        </ItemDrawerProvider>
       </SidebarProvider>
     );
   }
@@ -55,10 +63,15 @@ export default async function DashboardLayout({
         recentCollections,
       }}
     >
-      <div className="flex min-h-screen w-full flex-col bg-background">
-        <DashboardTopBar />
-        <DashboardContent>{children}</DashboardContent>
-      </div>
+      <ItemDrawerProvider>
+        <SearchProvider>
+          <div className="flex min-h-screen w-full flex-col bg-background">
+            <DashboardTopBar />
+            <DashboardContent>{children}</DashboardContent>
+            <GlobalItemDrawer />
+          </div>
+        </SearchProvider>
+      </ItemDrawerProvider>
     </SidebarProvider>
   );
 }

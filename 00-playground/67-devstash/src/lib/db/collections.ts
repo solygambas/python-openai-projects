@@ -86,6 +86,20 @@ export async function getRecentCollections(
   });
 }
 
+export async function getAllCollectionsForSearch(userId: string) {
+  return prisma.collection.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      name: true,
+      _count: {
+        select: { items: true },
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
 export async function createCollection(
   userId: string,
   data: {
