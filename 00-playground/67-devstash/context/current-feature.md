@@ -2,31 +2,19 @@
 
 ## Status
 
-Complete
+Not Started
 
 ## Title
 
-Quick Copy Icon on Cards
+TBD
 
 ## Goals
 
-- [x] Add a copy icon button to `ItemCard` that appears on hover
-- [x] Add a copy icon button to pinned items section
-- [x] Add a copy icon button to recent items section
-- [x] Copy functionality copies item content (text types) or URL (link type)
-- [x] Show toast notification on successful copy
-- [x] Copy button should stop propagation to prevent opening drawer
-- [x] Consistent hover behavior across all card types
-- [x] No copy icon for images and files (not applicable)
+- [ ] TBD
 
 ## Notes
 
-- Copy behavior matches the drawer's copy functionality: copy `content` for text types, `url` for link type
-- Uses the same toast message "Copied to clipboard" for consistency
-- The copy icon uses `lucide-react` `Copy` icon
-- Design: subtle appearance, visible on hover
-- Images and files don't have copyable text content, so no copy button for those types
-- Fixed ESLint `react-hooks/static-components` error by using a `FileIcon` component with switch statement instead of dynamically creating components during render
+TBD
 
 ## History
 
@@ -276,11 +264,11 @@ Quick Copy Icon on Cards
 - _Note:_ Build and lint pass.
 - **Quick Copy Icon on Cards** (Completed)
 - [x] Added copy icon button to `ItemCard` with hover visibility
-- [x] Added copy icon button to `ImageCard` with hover visibility
-- [x] Added copy icon button to `FileListCard` alongside download button
-- [x] Added copy icon to pinned items and recent items sections
+- [x] Added copy icon to pinned items section (text types only)
+- [x] Added copy icon to recent items section (text types only)
 - [x] Implemented `handleCopyItem` function that fetches item data and copies content/url
 - [x] Toast notifications for copy success/error
 - [x] Copy button stops propagation to prevent opening drawer
+- [x] No copy button for images and files (not applicable)
 - [x] Fixed ESLint `react-hooks/static-components` error by using switch-based `FileIcon` component
 - _Note:_ Build and lint pass.
