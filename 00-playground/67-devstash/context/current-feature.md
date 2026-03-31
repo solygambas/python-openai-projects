@@ -2,27 +2,19 @@
 
 ## Status
 
-Complete
+Not Started
 
 ## Title
 
-Item-to-Collection Assignment
+_None_
 
 ## Goals
 
-- [x] Add collection multi-select input to Create Item dialog
-- [x] Add collection multi-select input to Edit Item drawer
-- [x] Create/update server actions to handle item-collection relationships
-- [x] Display selected collections in item drawer view mode
-- [x] Add unit tests for collection assignment functionality
+_None_
 
 ## Notes
 
-- User should be able to select one or more collections when creating/editing an item
-- Collection selector should be a multi-select dropdown/combobox
-- Should show all collections available to the user
-- Don't need to implement collection pages display yet
-- Need to sync collections on item update (disconnect old, connect new)
+_None_
 
 ## History
 
@@ -301,3 +293,10 @@ Item-to-Collection Assignment
 - [x] Implemented router.refresh() after successful creation to update sidebar and dashboard
 - [x] Added unit tests for createCollection server action (5 tests) and database function (2 tests)
 - _Note:_ Build and all 50 tests pass.
+- **Item-to-Collection Assignment** (Completed)
+- [x] Add collection multi-select input to Create Item dialog
+- [x] Add collection multi-select input to Edit Item drawer
+- [x] Create/update server actions to handle item-collection relationships
+- [x] Display selected collections in item drawer view mode
+- [x] Add unit tests for collection assignment functionality
+- _Note:_ Build and all 55 tests pass.
