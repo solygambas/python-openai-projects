@@ -25,6 +25,11 @@ export async function GET(
         id: true,
         fileUrl: true,
         fileName: true,
+        itemType: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -54,14 +59,24 @@ export async function GET(
       .replace(/[^\x20-\x7E]/g, "") // Remove non-printable ASCII characters
       .substring(0, 255); // Limit length
 
+    // Determine if this is an image (should display inline) or other file (should download)
+    const isImage = item.itemType?.name === "image";
+    const contentDisposition = isImage
+      ? `inline; filename="${sanitizedFileName}"`
+      : `attachment; filename="${sanitizedFileName}"`;
+
     // Return the file with proper headers
     // Convert Buffer to Uint8Array for NextResponse compatibility
     const uint8Array = new Uint8Array(fileData.body);
     return new NextResponse(uint8Array, {
       headers: {
         "Content-Type": fileData.contentType,
-        "Content-Disposition": `attachment; filename="${sanitizedFileName}"`,
+        "Content-Disposition": contentDisposition,
         "Content-Length": uint8Array.byteLength.toString(),
+        // Cache control for images
+        ...(isImage && {
+          "Cache-Control": "public, max-age=31536000, immutable",
+        }),
       },
     });
   } catch (error) {

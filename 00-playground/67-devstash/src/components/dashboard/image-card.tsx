@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface ImageCardProps {
   id: string;
@@ -26,16 +27,17 @@ export function ImageCard({ id, title, onClick }: ImageCardProps) {
       )}
 
       {/* Image with hover zoom effect */}
-      <img
+      <Image
         src={imageUrl}
         alt={title}
-        loading="lazy"
+        fill
+        unoptimized
         onLoad={() => setImageLoaded(true)}
-        className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+        className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
       />
 
       {/* Overlay with title on hover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
         <div className="absolute bottom-0 left-0 right-0 p-3">
           <p className="text-sm font-medium text-white truncate">{title}</p>
         </div>

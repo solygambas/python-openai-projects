@@ -120,6 +120,7 @@ export function ItemDrawerContent({
               alt={fileName || "Image"}
               width={800}
               height={400}
+              unoptimized
               className="max-w-full max-h-[400px] rounded object-contain"
             />
           </div>

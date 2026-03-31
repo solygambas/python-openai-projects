@@ -9,6 +9,7 @@ const {
   findUniqueMock,
   deleteManyMock,
   createManyMock,
+  findManyMock,
 } = vi.hoisted(() => ({
   findFirstMock: vi.fn(),
   updateMock: vi.fn(),
@@ -29,12 +30,14 @@ const {
   findUniqueMock: vi.fn(),
   deleteManyMock: vi.fn(),
   createManyMock: vi.fn(),
+  findManyMock: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({
   default: {
     item: {
       findFirst: findFirstMock,
+      findMany: findManyMock,
       update: updateMock,
       delete: deleteMock,
       create: createMock,
@@ -51,6 +54,7 @@ import {
   updateItem,
   deleteItem,
   createItem,
+  getItemsByCollection,
 } from "@/lib/db/items";
 
 describe("getItemDetailById", () => {
@@ -561,5 +565,102 @@ describe("createItem", () => {
     });
 
     expect(result.collections).toEqual([]);
+  });
+});
+
+describe("getItemsByCollection", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+  });
+
+  it("returns items for a collection owned by the user", async () => {
+    const mockItems = [
+      {
+        id: "item-1",
+        title: "Item 1",
+        itemType: {
+          id: "type-1",
+          name: "snippet",
+          icon: "Code",
+          color: "#3b82f6",
+        },
+        tags: [],
+        collections: [],
+      },
+      {
+        id: "item-2",
+        title: "Item 2",
+        itemType: {
+          id: "type-2",
+          name: "note",
+          icon: "StickyNote",
+          color: "#fde047",
+        },
+        tags: [],
+        collections: [],
+      },
+    ];
+
+    findManyMock.mockResolvedValueOnce(mockItems);
+
+    const result = await getItemsByCollection("user-1", "col-1");
+
+    expect(findManyMock).toHaveBeenCalledWith({
+      where: {
+        userId: "user-1",
+        collections: {
+          some: {
+            collectionId: "col-1",
+          },
+        },
+      },
+      take: 100,
+      include: {
+        itemType: true,
+        tags: true,
+        collections: {
+          include: {
+            collection: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    expect(result).toHaveLength(2);
+    expect(result[0].title).toBe("Item 1");
+    expect(result[1].title).toBe("Item 2");
+  });
+
+  it("returns empty array when collection has no items", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+
+    const result = await getItemsByCollection("user-1", "empty-col");
+
+    expect(result).toEqual([]);
+  });
+
+  it("respects limit parameter", async () => {
+    const mockItems = Array(10)
+      .fill(null)
+      .map((_, i) => ({
+        id: `item-${i}`,
+        title: `Item ${i}`,
+        itemType: { id: "type-1", name: "snippet" },
+        tags: [],
+        collections: [],
+      }));
+
+    findManyMock.mockResolvedValueOnce(mockItems);
+
+    await getItemsByCollection("user-1", "col-1", 10);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        take: 10,
+      }),
+    );
   });
 });

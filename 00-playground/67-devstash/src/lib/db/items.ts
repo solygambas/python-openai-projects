@@ -72,6 +72,38 @@ export async function getItemsByType(
   });
 }
 
+export async function getItemsByCollection(
+  userId: string,
+  collectionId: string,
+  limit = 100,
+) {
+  const validatedLimit = Math.max(1, Math.min(limit, 100));
+
+  return prisma.item.findMany({
+    where: {
+      userId,
+      collections: {
+        some: {
+          collectionId,
+        },
+      },
+    },
+    take: validatedLimit,
+    include: {
+      itemType: true,
+      tags: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
 export async function getItemDetailById(userId: string, itemId: string) {
   return prisma.item.findFirst({
     where: {
