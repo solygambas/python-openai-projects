@@ -2,19 +2,31 @@
 
 ## Status
 
-Not Started
+In Progress
 
 ## Title
 
-TBD
+Collection Create
 
 ## Goals
 
-- [ ] TBD
+- [x] Wire "New Collection" button in top bar (next to New Item button)
+- [x] Create modal dialog for new collection with name and description fields
+- [x] Create `createCollection` server action in `src/actions/collections.ts` with Zod validation
+- [x] Create `createCollection` query function in `src/lib/db/collections.ts`
+- [x] Show toast notification on success/failure
+- [x] Refresh data after successful creation (sidebar, dashboard collections)
+- [x] Add unit tests for createCollection server action and database function
 
 ## Notes
 
-TBD
+- Follow the same patterns used for item creation (`CreateItemDialog`, `createItem` action)
+- Collections are user-scoped (userId required)
+- Use existing `Dialog` component from shadcn
+- Use existing `sonner` toast for notifications
+- Server action should validate with Zod before database write
+- After creation, refresh sidebar collections and dashboard recent collections
+- Consider adding a default item type selector (optional enhancement)
 
 ## History
 
@@ -284,3 +296,12 @@ TBD
 - [x] Created useDebouncedCallback hook in src/hooks/use-debounce.ts
 - [x] Reduced items-with-drawer.tsx from 677 to 516 lines (24% reduction)
 - _Note:_ Build and all 43 tests pass.
+- **Collection Create** (Completed)
+- [x] Wired "New Collection" button in top bar (next to New Item button)
+- [x] Created `CreateCollectionDialog` modal component with name and description fields
+- [x] Created `createCollection` server action in `src/actions/collections.ts` with Zod validation
+- [x] Created `createCollection` query function in `src/lib/db/collections.ts`
+- [x] Integrated toast notifications on success/failure
+- [x] Implemented router.refresh() after successful creation to update sidebar and dashboard
+- [x] Added unit tests for createCollection server action (5 tests) and database function (2 tests)
+- _Note:_ Build and all 50 tests pass.

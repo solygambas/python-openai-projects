@@ -5,11 +5,13 @@ const {
   updateItemQueryMock,
   deleteItemQueryMock,
   createItemQueryMock,
+  createCollectionQueryMock,
 } = vi.hoisted(() => ({
   authMock: vi.fn(),
   updateItemQueryMock: vi.fn(),
   deleteItemQueryMock: vi.fn(),
   createItemQueryMock: vi.fn(),
+  createCollectionQueryMock: vi.fn(),
 }));
 
 vi.mock("@/auth", () => ({
@@ -22,7 +24,12 @@ vi.mock("@/lib/db/items", () => ({
   createItem: createItemQueryMock,
 }));
 
+vi.mock("@/lib/db/collections", () => ({
+  createCollection: createCollectionQueryMock,
+}));
+
 import { updateItem, deleteItem, createItem } from "@/actions/items";
+import { createCollection } from "@/actions/collections";
 
 describe("actions/updateItem", () => {
   beforeEach(() => {
@@ -388,6 +395,113 @@ describe("actions/createItem", () => {
     expect(result).toEqual({
       success: false,
       error: "Failed to create item",
+    });
+  });
+});
+
+describe("actions/createCollection", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    createCollectionQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
+
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await createCollection({
+      name: "New Collection",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(createCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when name is empty after trim", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await createCollection({
+      name: " ",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Name is required",
+    });
+    expect(createCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when name exceeds max length", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await createCollection({
+      name: "a".repeat(101),
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Name is too long",
+    });
+    expect(createCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("calls query with normalized optional fields and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const newCollection = {
+      id: "col-1",
+      name: "New Collection",
+      description: null,
+      isFavorite: false,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemCount: 0,
+      itemTypeIds: [],
+      borderColor: undefined,
+    };
+
+    createCollectionQueryMock.mockResolvedValueOnce(newCollection);
+
+    const result = await createCollection({
+      name: "New Collection",
+      description: "",
+    });
+
+    expect(createCollectionQueryMock).toHaveBeenCalledWith("user-1", {
+      name: "New Collection",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: newCollection,
+    });
+  });
+
+  it("returns generic error when create query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    createCollectionQueryMock.mockRejectedValueOnce(
+      new Error("db unavailable"),
+    );
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    const result = await createCollection({
+      name: "New Collection",
+      description: null,
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to create collection",
     });
   });
 });

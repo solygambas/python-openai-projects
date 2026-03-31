@@ -1,6 +1,6 @@
 "use client";
 
-import { FolderPlus, Search, Sparkles, PanelLeft, Menu } from "lucide-react";
+import { Search, Sparkles, PanelLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { CreateItemDialog } from "@/components/dashboard/create-item-dialog";
+import { CreateCollectionDialog } from "@/components/dashboard/create-collection-dialog";
 import { useSidebar } from "./sidebar-provider";
 
 export function DashboardTopBar() {
@@ -89,14 +90,7 @@ export function DashboardTopBar() {
           </div>
         </div>
         <div className="flex items-center gap-2 ml-auto sm:ml-0">
-          <Button
-            variant="ghost"
-            className="hidden sm:flex text-muted-foreground"
-            size="sm"
-          >
-            <FolderPlus className="mr-2 h-4 w-4" />
-            New Collection
-          </Button>
+          <CreateCollectionDialog />
           {sidebarData && (
             <CreateItemDialog itemTypes={sidebarData.itemTypes} />
           )}

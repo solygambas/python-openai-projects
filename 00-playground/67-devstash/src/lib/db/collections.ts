@@ -86,6 +86,36 @@ export async function getRecentCollections(
   });
 }
 
+export async function createCollection(
+  userId: string,
+  data: {
+    name: string;
+    description?: string | null;
+  },
+) {
+  const collection = await prisma.collection.create({
+    data: {
+      name: data.name,
+      description: data.description || null,
+      userId,
+    },
+    include: {
+      _count: {
+        select: {
+          items: true,
+        },
+      },
+    },
+  });
+
+  return {
+    ...collection,
+    itemCount: collection._count.items,
+    itemTypeIds: [],
+    borderColor: undefined,
+  };
+}
+
 export async function getCollectionStats(userId: string) {
   const [
     itemCount,
