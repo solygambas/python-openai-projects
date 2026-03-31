@@ -6,12 +6,16 @@ const {
   deleteItemQueryMock,
   createItemQueryMock,
   createCollectionQueryMock,
+  updateCollectionQueryMock,
+  deleteCollectionQueryMock,
 } = vi.hoisted(() => ({
   authMock: vi.fn(),
   updateItemQueryMock: vi.fn(),
   deleteItemQueryMock: vi.fn(),
   createItemQueryMock: vi.fn(),
   createCollectionQueryMock: vi.fn(),
+  updateCollectionQueryMock: vi.fn(),
+  deleteCollectionQueryMock: vi.fn(),
 }));
 
 vi.mock("@/auth", () => ({
@@ -26,10 +30,16 @@ vi.mock("@/lib/db/items", () => ({
 
 vi.mock("@/lib/db/collections", () => ({
   createCollection: createCollectionQueryMock,
+  updateCollection: updateCollectionQueryMock,
+  deleteCollection: deleteCollectionQueryMock,
 }));
 
 import { updateItem, deleteItem, createItem } from "@/actions/items";
-import { createCollection } from "@/actions/collections";
+import {
+  createCollection,
+  updateCollection,
+  deleteCollection,
+} from "@/actions/collections";
 
 describe("actions/updateItem", () => {
   beforeEach(() => {
@@ -502,6 +512,187 @@ describe("actions/createCollection", () => {
     expect(result).toEqual({
       success: false,
       error: "Failed to create collection",
+    });
+  });
+});
+
+describe("actions/updateCollection", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    updateCollectionQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
+
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await updateCollection({
+      collectionId: "col-1",
+      name: "Updated Name",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(updateCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when name is empty after trim", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await updateCollection({
+      collectionId: "col-1",
+      name: " ",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Name is required",
+    });
+    expect(updateCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when collectionId is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await updateCollection({
+      collectionId: "",
+      name: "Valid Name",
+      description: null,
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Collection ID is required",
+    });
+    expect(updateCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("calls query and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const updatedCollection = {
+      id: "col-1",
+      name: "Updated Name",
+      description: "Updated description",
+      isFavorite: false,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      _count: { items: 2 },
+    };
+
+    updateCollectionQueryMock.mockResolvedValueOnce(updatedCollection);
+
+    const result = await updateCollection({
+      collectionId: "col-1",
+      name: "Updated Name",
+      description: "Updated description",
+    });
+
+    expect(updateCollectionQueryMock).toHaveBeenCalledWith("user-1", "col-1", {
+      name: "Updated Name",
+      description: "Updated description",
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        id: "col-1",
+        name: "Updated Name",
+        description: "Updated description",
+        isFavorite: false,
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+        itemCount: 2,
+      },
+    });
+  });
+
+  it("returns generic error when update query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    updateCollectionQueryMock.mockRejectedValueOnce(
+      new Error("db unavailable"),
+    );
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    const result = await updateCollection({
+      collectionId: "col-1",
+      name: "Updated Name",
+      description: null,
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to update collection",
+    });
+  });
+});
+
+describe("actions/deleteCollection", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    deleteCollectionQueryMock.mockReset();
+    vi.restoreAllMocks();
+  });
+
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await deleteCollection({ collectionId: "col-1" });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(deleteCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when collectionId is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await deleteCollection({ collectionId: "" });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Collection ID is required",
+    });
+    expect(deleteCollectionQueryMock).not.toHaveBeenCalled();
+  });
+
+  it("calls delete query and returns success payload", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    deleteCollectionQueryMock.mockResolvedValueOnce({ id: "col-1" });
+
+    const result = await deleteCollection({ collectionId: "col-1" });
+
+    expect(deleteCollectionQueryMock).toHaveBeenCalledWith("user-1", "col-1");
+    expect(result).toEqual({
+      success: true,
+      data: { id: "col-1" },
+    });
+  });
+
+  it("returns generic error when delete query throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    deleteCollectionQueryMock.mockRejectedValueOnce(
+      new Error("db unavailable"),
+    );
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    const result = await deleteCollection({ collectionId: "col-1" });
+
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to delete collection",
     });
   });
 });

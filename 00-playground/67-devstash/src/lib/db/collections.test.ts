@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createMock, findManyMock, findFirstMock } = vi.hoisted(() => ({
-  createMock: vi.fn(),
-  findManyMock: vi.fn(),
-  findFirstMock: vi.fn(),
-}));
+const { createMock, findManyMock, findFirstMock, updateMock, deleteMock } =
+  vi.hoisted(() => ({
+    createMock: vi.fn(),
+    findManyMock: vi.fn(),
+    findFirstMock: vi.fn(),
+    updateMock: vi.fn(),
+    deleteMock: vi.fn(),
+  }));
 
 vi.mock("@/lib/prisma", () => ({
   default: {
@@ -12,6 +15,8 @@ vi.mock("@/lib/prisma", () => ({
       create: createMock,
       findMany: findManyMock,
       findFirst: findFirstMock,
+      update: updateMock,
+      delete: deleteMock,
     },
   },
 }));
@@ -20,6 +25,8 @@ import {
   createCollection,
   getAllCollectionsWithDetails,
   getCollectionById,
+  updateCollection,
+  deleteCollection,
 } from "@/lib/db/collections";
 
 describe("createCollection", () => {
@@ -300,5 +307,135 @@ describe("getCollectionById", () => {
     const result = await getCollectionById("user-1", "non-existent");
 
     expect(result).toBeNull();
+  });
+});
+
+describe("updateCollection", () => {
+  beforeEach(() => {
+    findFirstMock.mockReset();
+    updateMock.mockReset();
+  });
+
+  it("updates collection name and description", async () => {
+    const existingCollection = {
+      id: "col-1",
+      name: "Old Name",
+      description: "Old description",
+      isFavorite: false,
+      userId: "user-1",
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T10:00:00.000Z"),
+    };
+
+    const updatedCollection = {
+      ...existingCollection,
+      name: "New Name",
+      description: "New description",
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      _count: { items: 2 },
+    };
+
+    findFirstMock.mockResolvedValueOnce(existingCollection);
+    updateMock.mockResolvedValueOnce(updatedCollection);
+
+    const result = await updateCollection("user-1", "col-1", {
+      name: "New Name",
+      description: "New description",
+    });
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "col-1", userId: "user-1" },
+    });
+
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { id: "col-1" },
+      data: {
+        name: "New Name",
+        description: "New description",
+        updatedAt: expect.any(Date),
+      },
+      include: {
+        _count: {
+          select: {
+            items: true,
+          },
+        },
+      },
+    });
+
+    expect(result.name).toBe("New Name");
+    expect(result.description).toBe("New description");
+  });
+
+  it("throws error when collection not found", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(
+      updateCollection("user-1", "non-existent", {
+        name: "New Name",
+        description: "New description",
+      }),
+    ).rejects.toThrow("Collection not found");
+  });
+
+  it("throws error when collection belongs to different user", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(
+      updateCollection("user-2", "col-1", {
+        name: "New Name",
+        description: "New description",
+      }),
+    ).rejects.toThrow("Collection not found");
+  });
+});
+
+describe("deleteCollection", () => {
+  beforeEach(() => {
+    findFirstMock.mockReset();
+    deleteMock.mockReset();
+  });
+
+  it("deletes collection and returns id", async () => {
+    const existingCollection = {
+      id: "col-1",
+      name: "Test Collection",
+      description: "Test description",
+      isFavorite: false,
+      userId: "user-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    findFirstMock.mockResolvedValueOnce(existingCollection);
+    deleteMock.mockResolvedValueOnce(existingCollection);
+
+    const result = await deleteCollection("user-1", "col-1");
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "col-1", userId: "user-1" },
+    });
+
+    expect(deleteMock).toHaveBeenCalledWith({
+      where: { id: "col-1" },
+    });
+
+    expect(result).toEqual({ id: "col-1" });
+  });
+
+  it("throws error when collection not found", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(deleteCollection("user-1", "non-existent")).rejects.toThrow(
+      "Collection not found",
+    );
+  });
+
+  it("throws error when collection belongs to different user", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(deleteCollection("user-2", "col-1")).rejects.toThrow(
+      "Collection not found",
+    );
   });
 });

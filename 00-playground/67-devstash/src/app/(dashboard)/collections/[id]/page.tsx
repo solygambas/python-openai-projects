@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getUserById } from "@/lib/db/users";
 import { getCollectionById } from "@/lib/db/collections";
 import { getItemsByCollection } from "@/lib/db/items";
-import { getItemTypes } from "@/lib/db/item-types";
 import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
+import { CollectionHeaderActions } from "@/components/collections/collection-header-actions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -24,10 +24,9 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const user = await getUserById(userId);
   if (!user) redirect("/sign-in?error=UserNotFound");
 
-  const [collection, items, itemTypes] = await Promise.all([
+  const [collection, items] = await Promise.all([
     getCollectionById(user.id, collectionId),
     getItemsByCollection(user.id, collectionId),
-    getItemTypes(),
   ]);
 
   if (!collection) {
@@ -66,20 +65,26 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-bold tracking-tight">
             {collection.name}
           </h1>
-        </div>
-        <p className="text-muted-foreground">
-          {items.length} item{items.length !== 1 ? "s" : ""}
-        </p>
-        {collection.description && (
-          <p className="text-sm text-muted-foreground mt-2">
-            {collection.description}
+          <p className="text-muted-foreground">
+            {items.length} item{items.length !== 1 ? "s" : ""}
           </p>
-        )}
+          {collection.description && (
+            <p className="text-sm text-muted-foreground mt-2">
+              {collection.description}
+            </p>
+          )}
+        </div>
+        <CollectionHeaderActions
+          collectionId={collection.id}
+          collectionName={collection.name}
+          collectionDescription={collection.description}
+          isFavorite={collection.isFavorite}
+        />
       </div>
 
       {items.length === 0 ? (

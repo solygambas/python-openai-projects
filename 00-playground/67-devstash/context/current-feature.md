@@ -2,19 +2,29 @@
 
 ## Status
 
-Not Started
+Complete
 
 ## Title
 
-_None_
+Collection Actions (Edit, Delete, Favorite)
 
 ## Goals
 
-_None_
+- Add action buttons on `/collections/[id]` page for edit, delete, and favorite
+- Edit button opens modal to edit collection metadata (name, description)
+- Delete button shows confirmation dialog; removes collection but keeps items intact
+- Favorite button displays icon only (functionality implemented later)
+- Add 3-dots dropdown menu on collection cards at `/collections` and dashboard
+- Dropdown contains: Edit, Delete, Favorite options
+- Clicking card body (not dropdown) navigates to collection page
+- Server actions for update and delete with proper auth validation
 
 ## Notes
 
-_None_
+- Items should NOT be deleted when a collection is deleted - they just become unassociated
+- Use existing AlertDialog component for delete confirmation
+- Use existing Dialog component for edit modal
+- Follow existing patterns from item actions in `src/actions/items.ts`
 
 ## History
 

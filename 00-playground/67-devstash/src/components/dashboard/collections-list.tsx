@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -6,10 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   Star,
-  MoreHorizontal,
   Code,
   Sparkles,
   Terminal,
@@ -17,8 +18,10 @@ import {
   File,
   Image as ImageIcon,
   Link as LinkIcon,
-  LucideIcon,
 } from "lucide-react";
+
+import { CollectionActionsDropdown } from "@/components/collections/collection-actions-dropdown";
+import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
 
 import {
   type Collection,
@@ -45,20 +48,28 @@ export function CollectionsList({
   collections,
   itemTypes,
 }: CollectionsListProps) {
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {collections.map((collection) => {
-        const borderColor = collection.borderColor || "#6b7280";
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-        return (
-          <Link key={collection.id} href={`/collections/${collection.id}`}>
-            <Card className="bg-card/50 backdrop-blur-sm border-white/5 hover:border-primary/50 transition-colors group relative overflow-hidden cursor-pointer">
+  return (
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {collections.map((collection) => {
+          const borderColor = collection.borderColor || "#6b7280";
+
+          return (
+            <Card
+              key={collection.id}
+              className="bg-card/50 backdrop-blur-sm border-white/5 hover:border-primary/50 transition-colors group relative overflow-hidden"
+            >
               <div
                 className="absolute left-0 top-0 bottom-0 w-1"
                 style={{ backgroundColor: borderColor }}
               />
               <CardHeader className="flex flex-row items-start justify-between pb-2">
-                <div className="space-y-1">
+                <Link
+                  href={`/collections/${collection.id}`}
+                  className="space-y-1 flex-1"
+                >
                   <div className="flex items-center gap-2">
                     <CardTitle className="text-base font-semibold group-hover:text-primary transition-colors">
                       {collection.name}
@@ -71,37 +82,51 @@ export function CollectionsList({
                     {collection.itemCount} item
                     {collection.itemCount !== 1 ? "s" : ""}
                   </CardDescription>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                </Link>
+                <CollectionActionsDropdown
+                  collectionId={collection.id}
+                  collectionName={collection.name}
+                  onEdit={() => setEditingId(collection.id)}
+                />
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
-                  {collection.description}
-                </p>
-                <div className="flex gap-2 mt-4">
-                  {collection.itemTypeIds.map((typeId) => {
-                    const type = itemTypes.find((t) => t.id === typeId);
-                    const Icon = iconMap[type?.icon || "File"] || File;
-                    return (
-                      <Icon
-                        key={typeId}
-                        className="h-4 w-4"
-                        style={{ color: type?.color }}
-                      />
-                    );
-                  })}
-                </div>
-              </CardContent>
+              <Link href={`/collections/${collection.id}`}>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
+                    {collection.description}
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    {collection.itemTypeIds.map((typeId) => {
+                      const type = itemTypes.find((t) => t.id === typeId);
+                      const Icon = iconMap[type?.icon || "File"] || File;
+                      return (
+                        <Icon
+                          key={typeId}
+                          className="h-4 w-4"
+                          style={{ color: type?.color }}
+                        />
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Link>
             </Card>
-          </Link>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+
+      {/* Edit dialogs rendered at root level */}
+      {collections.map((collection) => (
+        <EditCollectionDialog
+          key={collection.id}
+          collectionId={collection.id}
+          collectionName={collection.name}
+          collectionDescription={collection.description}
+          isOpen={editingId === collection.id}
+          onOpenChange={(open) => {
+            if (!open) setEditingId(null);
+          }}
+        />
+      ))}
+    </>
   );
 }

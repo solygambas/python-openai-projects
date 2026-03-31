@@ -251,3 +251,53 @@ export async function getCollectionById(userId: string, collectionId: string) {
     },
   });
 }
+
+export async function updateCollection(
+  userId: string,
+  collectionId: string,
+  data: { name: string; description?: string | null },
+) {
+  // First verify the collection belongs to the user
+  const existing = await prisma.collection.findFirst({
+    where: { id: collectionId, userId },
+  });
+
+  if (!existing) {
+    throw new Error("Collection not found");
+  }
+
+  return prisma.collection.update({
+    where: { id: collectionId },
+    data: {
+      name: data.name,
+      description: data.description || null,
+      updatedAt: new Date(),
+    },
+    include: {
+      _count: {
+        select: {
+          items: true,
+        },
+      },
+    },
+  });
+}
+
+export async function deleteCollection(userId: string, collectionId: string) {
+  // First verify the collection belongs to the user
+  const existing = await prisma.collection.findFirst({
+    where: { id: collectionId, userId },
+  });
+
+  if (!existing) {
+    throw new Error("Collection not found");
+  }
+
+  // Delete the collection - items are NOT deleted, just unassociated
+  // The ItemCollection join table records will be cascade deleted
+  await prisma.collection.delete({
+    where: { id: collectionId },
+  });
+
+  return { id: collectionId };
+}
