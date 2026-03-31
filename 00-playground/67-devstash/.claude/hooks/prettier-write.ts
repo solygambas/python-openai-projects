@@ -1,5 +1,7 @@
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
+import * as path from "node:path";
+import { createHash } from "node:crypto";
 
 function shellQuote(value: string): string {
   return `"${value.replace(/"/g, '\\"')}"`;
@@ -18,6 +20,20 @@ function main() {
     if (!["Edit", "MultiEdit", "Write"].includes(toolName)) {
       process.exit(0);
     }
+
+    // Since this script runs PostToolUse, the edit succeeded!
+    // Remove it from the pending failed-edits state.
+    try {
+      const stateFile = path.join(process.cwd(), ".claude", "failed-edits.json");
+      if (fs.existsSync(stateFile)) {
+        const state = JSON.parse(fs.readFileSync(stateFile, "utf-8"));
+        const inputHash = createHash("sha256").update(JSON.stringify(toolInput)).digest("hex");
+        if (state[inputHash]) {
+          delete state[inputHash];
+          fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), "utf8");
+        }
+      }
+    } catch {}
 
     // Ensure we have a valid file path before we do formatting
     if (!filePath || typeof filePath !== "string") {

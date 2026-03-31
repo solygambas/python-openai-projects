@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { createHash } from "node:crypto";
 
 function main() {
   try {
@@ -10,28 +11,32 @@ function main() {
     const toolName = hookInput.tool_name || "";
     const toolInput = hookInput.tool_input || {};
 
-    // We only care about edits (which is what Claude Code labels "Update" in the UI)
     if (!["Edit", "MultiEdit"].includes(toolName)) {
       process.exit(0);
     }
 
-    const logPath = path.join(process.cwd(), ".claude", "editing-history.log");
-    const logEntry = [
-      `\n======================================================`,
-      `[${new Date().toISOString()}] Attempting Edit`,
-      `======================================================`,
-      `Tool: ${toolName}`,
-      `File: ${toolInput.file_path || "Unknown"}`,
-      `--- INTENDED OLD STRING ---`,
-      toolInput.old_string || "N/A",
-      `--- INTENDED NEW STRING ---`,
-      toolInput.new_string || "N/A",
-      `======================================================\n`,
-    ].join("\n");
+    const stateFile = path.join(process.cwd(), ".claude", "failed-edits.json");
+    let state: Record<string, any> = {};
+    
+    if (fs.existsSync(stateFile)) {
+      try {
+        state = JSON.parse(fs.readFileSync(stateFile, "utf-8"));
+      } catch {}
+    }
 
-    fs.appendFileSync(logPath, logEntry, "utf8");
+    const inputHash = createHash("sha256").update(JSON.stringify(toolInput)).digest("hex");
+    
+    state[inputHash] = {
+      timestamp: new Date().toISOString(),
+      toolName,
+      file: toolInput.file_path,
+      old_string: toolInput.old_string,
+      new_string: toolInput.new_string
+    };
 
-    // Output JSON to allow the agent to continue unhindered
+    fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), "utf8");
+
+    // Output JSON to allow the agent to continue
     console.log(JSON.stringify({ continue: true }));
     process.exit(0);
   } catch {
