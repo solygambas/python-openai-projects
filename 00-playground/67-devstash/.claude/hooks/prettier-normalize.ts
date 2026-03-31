@@ -26,7 +26,7 @@ function getExactMatchFromDisk(filePath: string, oldStr: string): string {
     if (matches.length === 1 && matches[0][0]) {
       return matches[0][0]; // Return the EXACT bytes from disk when unambiguous
     }
-  } catch (e) {
+  } catch {
     // Ignore read errors
   }
   return oldStr;
@@ -81,7 +81,7 @@ function main() {
 
     console.log(JSON.stringify(output));
     process.exit(0);
-  } catch (error) {
+  } catch {
     console.log(
       JSON.stringify({
         hookSpecificOutput: {
