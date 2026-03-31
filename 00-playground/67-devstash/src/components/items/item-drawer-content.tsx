@@ -1,6 +1,7 @@
 "use client";
 
 import { File, Link as LinkIcon } from "lucide-react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CodeEditor } from "@/components/ui/code-editor";
@@ -113,11 +114,15 @@ export function ItemDrawerContent({
     if (typeLower === "image") {
       return (
         <div className="rounded-lg border bg-secondary/40 p-4">
-          <img
-            src={`/api/download/${itemId}`}
-            alt={fileName || "Image"}
-            className="max-w-full max-h-[400px] rounded object-contain mx-auto"
-          />
+          <div className="relative max-h-[400px] mx-auto flex justify-center">
+            <Image
+              src={`/api/download/${itemId}`}
+              alt={fileName || "Image"}
+              width={800}
+              height={400}
+              className="max-w-full max-h-[400px] rounded object-contain"
+            />
+          </div>
           {fileName && fileSize && (
             <p className="text-xs text-muted-foreground text-center mt-2">
               {fileName} ({formatFileSize(fileSize)})

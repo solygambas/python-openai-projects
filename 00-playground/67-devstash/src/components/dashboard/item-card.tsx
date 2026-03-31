@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
@@ -18,14 +17,10 @@ export function ItemCard({ item, iconMap, onClick, onCopy }: ItemCardProps) {
   const itemType = item.itemType;
   const Icon = iconMap[itemType?.icon || "File"] || File;
   const borderColor = itemType?.color || "#6b7280";
-  const [showCopy, setShowCopy] = useState(false);
 
   return (
-    <button
-      type="button"
+    <div
       onClick={onClick}
-      onMouseEnter={() => setShowCopy(true)}
-      onMouseLeave={() => setShowCopy(false)}
       className="w-full text-left flex flex-col gap-3 p-4 pl-5 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer border border-border/50 hover:border-border relative overflow-hidden group"
     >
       {/* Left border colored by item type */}
@@ -48,9 +43,7 @@ export function ItemCard({ item, iconMap, onClick, onCopy }: ItemCardProps) {
                 e.stopPropagation();
                 onCopy();
               }}
-              className={`h-6 w-6 rounded flex items-center justify-center hover:bg-secondary transition-opacity shrink-0 ${
-                showCopy ? "opacity-100" : "opacity-0"
-              }`}
+              className="h-6 w-6 rounded flex items-center justify-center hover:bg-secondary transition-opacity shrink-0 opacity-0 group-hover:opacity-100"
               aria-label="Copy to clipboard"
             >
               <Copy className="h-3.5 w-3.5 text-muted-foreground" />
@@ -79,6 +72,6 @@ export function ItemCard({ item, iconMap, onClick, onCopy }: ItemCardProps) {
           ))}
         </div>
       )}
-    </button>
+    </div>
   );
 }

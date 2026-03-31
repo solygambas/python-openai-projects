@@ -1,12 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { uploadToR2, generateR2Key, validateFile } from "@/lib/r2";
+import {
+  checkRateLimit,
+  getRateLimitErrorMessage,
+  getRetryAfterSeconds,
+} from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limit: 10 uploads per minute per user
+    const rateLimitResult = await checkRateLimit({
+      namespace: "upload",
+      limit: 10,
+      window: "1 h",
+      identifier: session.user.id,
+      includeIp: false,
+    });
+
+    if (!rateLimitResult.success) {
+      const retryAfter = getRetryAfterSeconds(rateLimitResult.reset);
+      return NextResponse.json(
+        { error: getRateLimitErrorMessage(rateLimitResult.reset) },
+        {
+          status: 429,
+          headers: { "Retry-After": retryAfter.toString() },
+        },
+      );
     }
 
     const formData = await request.formData();

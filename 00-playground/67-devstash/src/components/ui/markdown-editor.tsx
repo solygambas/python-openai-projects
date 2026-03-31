@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, Eye, Pencil } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,6 +17,7 @@ interface MarkdownEditorProps {
   className?: string;
   minHeight?: number;
   maxHeight?: number;
+  debounceMs?: number;
 }
 
 export function MarkdownEditor({
@@ -26,10 +27,18 @@ export function MarkdownEditor({
   className,
   minHeight = 100,
   maxHeight = 400,
+  debounceMs = 150,
 }: MarkdownEditorProps) {
   const [copied, setCopied] = useState(false);
   // In readonly mode, always show preview. In edit mode, default to write.
   const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
+  // Local state for immediate UI updates (debounced to parent)
+  const [localValue, setLocalValue] = useState(value);
+
+  // Sync local value when external value changes
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   const handleCopy = async () => {
     if (!value) return;
@@ -37,6 +46,21 @@ export function MarkdownEditor({
     setCopied(true);
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Debounced onChange handler
+  useEffect(() => {
+    if (!onChange || localValue === value) return;
+
+    const timeoutId = setTimeout(() => {
+      onChange(localValue);
+    }, debounceMs);
+
+    return () => clearTimeout(timeoutId);
+  }, [localValue, onChange, debounceMs, value]);
+
+  const handleChange = (newValue: string) => {
+    setLocalValue(newValue);
   };
 
   // In readonly mode, only show preview tab
@@ -116,8 +140,8 @@ export function MarkdownEditor({
       >
         {effectiveTab === "write" ? (
           <Textarea
-            value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            value={localValue}
+            onChange={(e) => handleChange(e.target.value)}
             placeholder="Write your markdown here..."
             className="h-full min-h-[inherit] max-h-[inherit] bg-transparent border-0 rounded-none resize-none p-4 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
           />

@@ -9,12 +9,33 @@ import {
 import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
 import { z } from "zod";
 
+// Custom URL validation that blocks dangerous protocols
+const safeUrlSchema = z
+  .string()
+  .url("Invalid URL format")
+  .refine(
+    (url) => {
+      const lower = url.toLowerCase();
+      // Block dangerous protocols that could be used for XSS
+      const dangerousProtocols = [
+        "javascript:",
+        "data:",
+        "vbscript:",
+        "file:",
+        "about:",
+        "blob:",
+      ];
+      return !dangerousProtocols.some((protocol) => lower.startsWith(protocol));
+    },
+    { message: "URL uses a blocked protocol" },
+  );
+
 const UpdateItemSchema = z.object({
   itemId: z.string().min(1, "Item ID is required"),
   title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().nullish(),
   content: z.string().nullish(),
-  url: z.string().url("Invalid URL format").nullish().or(z.literal("")),
+  url: safeUrlSchema.nullish().or(z.literal("")),
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
 });
@@ -71,7 +92,7 @@ const CreateItemSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().nullish(),
   content: z.string().nullish(),
-  url: z.string().url("Invalid URL format").nullish().or(z.literal("")),
+  url: safeUrlSchema.nullish().or(z.literal("")),
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
   typeId: z.string().min(1, "Type is required"),
