@@ -20,31 +20,50 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== "github" || !user.email) {
-        return true;
-      }
-
-      const data: { name?: string; image?: string } = {};
-
-      if (typeof user.name === "string" && user.name.trim().length > 0) {
-        data.name = user.name;
-      }
-
-      if (typeof user.image === "string" && user.image.trim().length > 0) {
-        data.image = user.image;
-      }
-
-      if (Object.keys(data).length === 0) {
-        return true;
-      }
-
-      try {
-        await prisma.user.update({
+      // Handle GitHub sign-in
+      if (account?.provider === "github" && user.email) {
+        // Check if user exists with email/password only (no GitHub account linked)
+        const existingUser = await prisma.user.findUnique({
           where: { email: user.email },
-          data,
+          include: { accounts: true },
         });
-      } catch {
-        return true;
+
+        if (existingUser) {
+          // Check if they have a GitHub account already linked
+          const hasGitHubAccount = existingUser.accounts.some(
+            (acc) => acc.provider === "github",
+          );
+
+          // If user has password but no GitHub account, deny linking
+          // This prevents account takeover attacks
+          if (existingUser.password && !hasGitHubAccount) {
+            // Return a custom error code that will be passed to the client
+            throw new Error("GitHubAccountNotLinked");
+          }
+
+          // If user exists and has GitHub account linked, or only GitHub auth, allow
+          // Update user info if needed
+          const data: { name?: string; image?: string } = {};
+
+          if (typeof user.name === "string" && user.name.trim().length > 0) {
+            data.name = user.name;
+          }
+
+          if (typeof user.image === "string" && user.image.trim().length > 0) {
+            data.image = user.image;
+          }
+
+          if (Object.keys(data).length > 0) {
+            try {
+              await prisma.user.update({
+                where: { email: user.email },
+                data,
+              });
+            } catch {
+              // Ignore update errors
+            }
+          }
+        }
       }
 
       return true;

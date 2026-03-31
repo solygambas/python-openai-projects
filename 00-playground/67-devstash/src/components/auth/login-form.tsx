@@ -29,9 +29,14 @@ export function LoginForm() {
       ? "Invalid email or password"
       : errorParam === "UserNotFound"
         ? "User profile not found. If this is a new account, please try signing in again."
-        : errorParam
-          ? "An error occurred during sign in"
-          : null,
+        : errorParam === "AccountNotLinked" ||
+            errorParam === "OAuthAccountNotLinked"
+          ? "An account with this email already exists. Please sign in with your email and password."
+          : errorParam === "GitHubAccountNotLinked"
+            ? "This email is already registered. Please sign in with email/password, or use a different GitHub account."
+            : errorParam
+              ? "An error occurred during sign in"
+              : null,
   );
   const [success, setSuccess] = useState<string | null>(
     deletedParam === "true" ? "Account deleted successfully" : null,
