@@ -1,8 +1,35 @@
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
+import * as path from "node:path";
 
 function shellQuote(value: string): string {
   return `"${value.replace(/"/g, '\\"')}"`;
+}
+
+function logError(
+  toolName: string,
+  toolInput: Record<string, unknown>,
+  resultStr: string,
+) {
+  try {
+    const logPath = path.join(process.cwd(), ".claude", "editing-errors.log");
+    const logEntry = [
+      `\n======================================================`,
+      `[${new Date().toISOString()}] Tool Failure Detected`,
+      `======================================================`,
+      `Tool: ${toolName}`,
+      `File: ${toolInput?.file_path || "Unknown"}`,
+      `--- INTENDED INPUT ---`,
+      JSON.stringify(toolInput, null, 2),
+      `--- RESULT/ERROR ---`,
+      resultStr,
+      `======================================================\n`,
+    ].join("\n");
+
+    fs.appendFileSync(logPath, logEntry, "utf8");
+  } catch {
+    // silently fail logging if needed
+  }
 }
 
 function main() {
@@ -12,17 +39,38 @@ function main() {
 
     const hookInput = JSON.parse(raw);
     const toolName = hookInput.tool_name || "";
-    const filePath = hookInput?.tool_input?.file_path;
-
-    if (!filePath || typeof filePath !== "string") {
-      process.exit(0);
-    }
+    const toolInput = hookInput.tool_input || {};
+    const toolResult = hookInput.tool_result;
+    const filePath = toolInput.file_path;
 
     if (!["Edit", "MultiEdit", "Write"].includes(toolName)) {
       process.exit(0);
     }
 
-    // Step 1: run prettier synchronously so we read the formatted result
+    // Step 1: Detect and log if the tool execution failed
+    const resultStr =
+      typeof toolResult === "string"
+        ? toolResult
+        : JSON.stringify(toolResult || {});
+
+    const hasErrorFlag =
+      typeof toolResult === "object" &&
+      toolResult !== null &&
+      toolResult.isError === true;
+    const hasErrorText = resultStr.toLowerCase().includes("error");
+
+    if (hasErrorFlag || hasErrorText) {
+      logError(toolName, toolInput, resultStr);
+      // Skip running Prettier if the edit command fundamentally failed
+      process.exit(0);
+    }
+
+    // Ensure we have a valid file path before we do formatting
+    if (!filePath || typeof filePath !== "string") {
+      process.exit(0);
+    }
+
+    // Step 2: run prettier synchronously so we read the formatted result
     try {
       execSync(`npx prettier --write ${shellQuote(filePath)}`, {
         stdio: "ignore",
