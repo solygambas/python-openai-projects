@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import {
-  uploadToR2,
-  generateR2Key,
-  validateFile,
-  FILE_CONSTRAINTS,
-} from "@/lib/r2";
+import { uploadToR2, generateR2Key, validateFile } from "@/lib/r2";
 
 export async function POST(request: NextRequest) {
   try {
