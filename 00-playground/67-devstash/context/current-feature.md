@@ -272,3 +272,15 @@ TBD
 - [x] No copy button for images and files (not applicable)
 - [x] Fixed ESLint `react-hooks/static-components` error by using switch-based `FileIcon` component
 - _Note:_ Build and lint pass.
+- **Security Audit Fixes** (Completed)
+- [x] Added rate limiting to upload endpoint (10 uploads/hour per user)
+- [x] Added URL protocol validation blocking dangerous schemes (javascript:, data:, vbscript:, etc.)
+- [x] Replaced `<img>` with Next.js Image component for R2 images
+- [x] Added remote patterns in next.config.ts for Cloudflare R2 URLs
+- [x] Fixed nested button hydration errors in ItemCard and item variants
+- [x] Added debounced onChange to Markdown editor (150ms) for better performance
+- [x] Refactored items-with-drawer.tsx: extracted useItemDetail hook and types
+- [x] Created shared types in src/types/item-detail.ts
+- [x] Created useDebouncedCallback hook in src/hooks/use-debounce.ts
+- [x] Reduced items-with-drawer.tsx from 677 to 516 lines (24% reduction)
+- _Note:_ Build and all 43 tests pass.
