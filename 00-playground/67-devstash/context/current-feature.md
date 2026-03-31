@@ -2,29 +2,19 @@
 
 ## Status
 
-Complete
+Not Started
 
 ## Title
 
-Collection Actions (Edit, Delete, Favorite)
+_None_
 
 ## Goals
 
-- Add action buttons on `/collections/[id]` page for edit, delete, and favorite
-- Edit button opens modal to edit collection metadata (name, description)
-- Delete button shows confirmation dialog; removes collection but keeps items intact
-- Favorite button displays icon only (functionality implemented later)
-- Add 3-dots dropdown menu on collection cards at `/collections` and dashboard
-- Dropdown contains: Edit, Delete, Favorite options
-- Clicking card body (not dropdown) navigates to collection page
-- Server actions for update and delete with proper auth validation
+_None_
 
 ## Notes
 
-- Items should NOT be deleted when a collection is deleted - they just become unassociated
-- Use existing AlertDialog component for delete confirmation
-- Use existing Dialog component for edit modal
-- Follow existing patterns from item actions in `src/actions/items.ts`
+_None_
 
 ## History
 
@@ -320,3 +310,14 @@ Collection Actions (Edit, Delete, Favorite)
 - [x] Updated download API to use `inline` disposition for images
 - [x] Added unit tests for new database functions (11 tests)
 - _Note:_ Build and all 63 tests pass.
+- **Collection Actions** (Completed)
+- [x] Added action buttons on `/collections/[id]` page for edit, delete, and favorite
+- [x] Edit button opens modal to edit collection metadata (name, description)
+- [x] Delete button shows confirmation dialog; removes collection but keeps items intact
+- [x] Favorite button displays icon only (functionality to be implemented later)
+- [x] Added 3-dots dropdown menu on collection cards at `/collections` and dashboard
+- [x] Dropdown contains: Edit, Delete, Favorite options
+- [x] Clicking card body (not dropdown) navigates to collection page
+- [x] Server actions for update and delete with proper auth validation
+- [x] Added unit tests for update/delete server actions and database functions (15 new tests)
+- _Note:_ Build and all 78 tests pass.
