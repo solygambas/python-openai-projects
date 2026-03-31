@@ -3,13 +3,17 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { createHash } from "node:crypto";
 
-function shellQuote(value: string): string {
+function shellQuote(value: string) {
   return `"${value.replace(/"/g, '\\"')}"`;
 }
 
-function main() {
+async function main() {
+  let raw = "";
   try {
-    const raw = fs.readFileSync(0, "utf-8");
+    for await (const chunk of process.stdin) {
+      raw += chunk;
+    }
+    
     if (!raw.trim()) process.exit(0);
 
     const hookInput = JSON.parse(raw);
@@ -21,8 +25,6 @@ function main() {
       process.exit(0);
     }
 
-    // Since this script runs PostToolUse, the edit succeeded!
-    // Remove it from the pending failed-edits state.
     try {
       const stateFile = path.join(process.cwd(), ".claude", "failed-edits.json");
       if (fs.existsSync(stateFile)) {
@@ -33,14 +35,14 @@ function main() {
           fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), "utf8");
         }
       }
-    } catch {}
+    } catch {
+      // intentionally swallow errors
+    }
 
-    // Ensure we have a valid file path before we do formatting
     if (!filePath || typeof filePath !== "string") {
       process.exit(0);
     }
 
-    // run prettier synchronously so we read the formatted result
     try {
       execSync(`npx prettier --write ${shellQuote(filePath)}`, {
         stdio: "ignore",
@@ -48,10 +50,9 @@ function main() {
         shell: process.platform === "win32" ? "cmd.exe" : "/bin/bash",
       });
     } catch {
-      // prettier failed or not available — continue anyway
+      // prettier not available or had an issue
     }
 
-    // inject the post-prettier file content into Claude's context
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, "utf-8").replace(/\r\n/g, "\n");
       console.log(
@@ -59,12 +60,13 @@ function main() {
           continue: true,
           suppressOutput: false,
           systemMessage: `Current file state after formatting:\n\`\`\`\n${content}\n\`\`\``,
-        }),
+        })
       );
     }
 
     process.exit(0);
   } catch {
+    // intentionally swallow errors to prevent hook from blocking execution
     process.exit(0);
   }
 }
