@@ -8,7 +8,7 @@ async function main() {
     for await (const chunk of process.stdin) {
       raw += chunk;
     }
-    
+
     if (!raw.trim()) process.exit(0);
 
     const hookInput = JSON.parse(raw);
@@ -28,7 +28,7 @@ async function main() {
       new_string: string | undefined;
     }
     let state: Record<string, EditRecord> = {};
-    
+
     if (fs.existsSync(stateFile)) {
       try {
         state = JSON.parse(fs.readFileSync(stateFile, "utf-8"));
@@ -37,20 +37,24 @@ async function main() {
       }
     }
 
-    const inputHash = createHash("sha256").update(JSON.stringify(toolInput)).digest("hex");
-    
+    const inputHash = createHash("sha256")
+      .update(JSON.stringify(toolInput))
+      .digest("hex");
+
     state[inputHash] = {
       timestamp: new Date().toISOString(),
       toolName,
       file: toolInput.file_path,
       old_string: toolInput.old_string,
-      new_string: toolInput.new_string
+      new_string: toolInput.new_string,
     };
 
     fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), "utf8");
 
     // Output JSON to allow the agent to continue
-    console.log(JSON.stringify({ hookSpecificOutput: { permissionDecision: "allow" } }));
+    console.log(
+      JSON.stringify({ hookSpecificOutput: { permissionDecision: "allow" } }),
+    );
     process.exit(0);
   } catch {
     // intentionally swallow errors to prevent hook from blocking execution

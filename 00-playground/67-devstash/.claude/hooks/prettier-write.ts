@@ -13,7 +13,7 @@ async function main() {
     for await (const chunk of process.stdin) {
       raw += chunk;
     }
-    
+
     if (!raw.trim()) process.exit(0);
 
     const hookInput = JSON.parse(raw);
@@ -26,10 +26,16 @@ async function main() {
     }
 
     try {
-      const stateFile = path.join(process.cwd(), ".claude", "failed-edits.json");
+      const stateFile = path.join(
+        process.cwd(),
+        ".claude",
+        "failed-edits.json",
+      );
       if (fs.existsSync(stateFile)) {
         const state = JSON.parse(fs.readFileSync(stateFile, "utf-8"));
-        const inputHash = createHash("sha256").update(JSON.stringify(toolInput)).digest("hex");
+        const inputHash = createHash("sha256")
+          .update(JSON.stringify(toolInput))
+          .digest("hex");
         if (state[inputHash]) {
           delete state[inputHash];
           fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), "utf8");
@@ -60,7 +66,7 @@ async function main() {
           continue: true,
           suppressOutput: false,
           systemMessage: `Current file state after formatting:\n\`\`\`\n${content}\n\`\`\``,
-        })
+        }),
       );
     }
 
