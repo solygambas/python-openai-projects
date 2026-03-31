@@ -19,6 +19,18 @@ function getExactMatchFromDisk(filePath: string, oldStr: string): string {
     const fileContent = fs.readFileSync(filePath, "utf-8");
     if (fileContent.includes(oldStr)) return oldStr; // Already exact match
 
+    // For long strings, only try trimming whitespace per line
+    const lines = oldStr.split(/\r?\n/);
+    if (lines.length > 20) {
+      // Try normalizing trailing whitespace only
+      const normalized = lines.map((l) => l.trimEnd()).join("\n");
+      const normalizedCRLF = lines.map((l) => l.trimEnd()).join("\r\n");
+
+      if (fileContent.includes(normalized)) return normalized;
+      if (fileContent.includes(normalizedCRLF)) return normalizedCRLF;
+      return oldStr; // give up rather than risk wrong match
+    }
+
     const regex = buildFuzzyRegex(oldStr);
     const globalRegex = new RegExp(regex.source, "g");
     const matches = [...fileContent.matchAll(globalRegex)];

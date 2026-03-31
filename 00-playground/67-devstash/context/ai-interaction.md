@@ -70,3 +70,20 @@ Review AI-generated code periodically, especially for:
 - Performance (unnecessary re-renders, N+1 queries)
 - Logic errors (edge cases)
 - Patterns (matches existing codebase?)
+
+## File Editing
+
+Hooks automatically format files and inject updated content into context after every Edit/Write — you don't need to re-read between edits unless a tool call fails.
+
+### Edit failures ("String not found")
+
+1. Re-read the file — the hook may have failed silently
+2. Copy the exact string from the Read output, with 2–3 lines of surrounding context
+3. If Edit fails again — use Write to overwrite the full file (safe for files under 200 lines; risky for larger ones with concurrent changes)
+
+### Long files (200+ lines)
+
+- Never edit from memory — always confirm you have post-edit content in context
+- Prefer MultiEdit over multiple sequential Edits to reduce stale-context risk
+
+**Common causes of failures:** trailing whitespace, CRLF vs LF (mostly handled by hooks)

@@ -20,6 +20,10 @@
           {
             "type": "command",
             "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/prettier-write.ts"
+          },
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/post-read-after-edit.ts"
           }
         ]
       }
