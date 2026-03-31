@@ -136,3 +136,14 @@ export async function getCollectionStats(userId: string) {
     favoriteCollectionCount,
   };
 }
+
+export async function getAllCollections(userId: string) {
+  return prisma.collection.findMany({
+    where: { userId },
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+}

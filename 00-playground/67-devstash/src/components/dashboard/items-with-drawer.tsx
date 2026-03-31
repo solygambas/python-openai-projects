@@ -49,6 +49,7 @@ import { formatDate } from "@/lib/utils";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
 import { type ItemsWithDrawerVariant } from "@/types/item-detail";
 import { useItemDetail } from "@/hooks/use-item-detail";
+import { useCollections } from "@/hooks/use-collections";
 
 interface ItemsWithDrawerProps {
   items: DashboardItem[];
@@ -229,6 +230,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     setEditLanguage,
     editTags,
     setEditTags,
+    editCollectionIds,
+    setEditCollectionIds,
     openItem,
     startEditing,
     cancelEditing,
@@ -237,6 +240,8 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     copyItem,
     copySelectedItem,
   } = useItemDetail();
+
+  const { collections: allCollections } = useCollections();
 
   const itemCards = useMemo(() => {
     if (variant === "grid") {
@@ -479,6 +484,9 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   isEditing={isEditing}
                   editTags={editTags}
                   onTagsChange={setEditTags}
+                  allCollections={allCollections}
+                  editCollectionIds={editCollectionIds}
+                  onCollectionIdsChange={setEditCollectionIds}
                 />
               </div>
             ) : (

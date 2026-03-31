@@ -129,6 +129,7 @@ interface UpdateItemData {
   url: string | null;
   language: string | null;
   tags: string[];
+  collectionIds?: string[];
 }
 
 export async function updateItem(
@@ -163,6 +164,24 @@ export async function updateItem(
       where: { name: tagName },
       create: { name: tagName },
     }));
+
+    // Handle collection sync if collectionIds is provided
+    if (data.collectionIds !== undefined) {
+      // Delete existing collection associations
+      await tx.itemCollection.deleteMany({
+        where: { itemId },
+      });
+
+      // Create new collection associations
+      if (data.collectionIds.length > 0) {
+        await tx.itemCollection.createMany({
+          data: data.collectionIds.map((collectionId) => ({
+            itemId,
+            collectionId,
+          })),
+        });
+      }
+    }
 
     // Update the item with new data and tag connections
     const updatedItem = await tx.item.update({
@@ -238,6 +257,7 @@ interface CreateItemData {
   fileUrl?: string | null;
   fileName?: string | null;
   fileSize?: number | null;
+  collectionIds?: string[];
 }
 
 export async function createItem(userId: string, data: CreateItemData) {
@@ -269,6 +289,13 @@ export async function createItem(userId: string, data: CreateItemData) {
     create: { name: tagName },
   }));
 
+  // Create collection connections
+  const collectionConnections = (data.collectionIds || []).map(
+    (collectionId) => ({
+      collection: { connect: { id: collectionId } },
+    }),
+  );
+
   return prisma.item.create({
     data: {
       title: data.title,
@@ -286,10 +313,19 @@ export async function createItem(userId: string, data: CreateItemData) {
         tagConnections.length > 0
           ? { connectOrCreate: tagConnections }
           : undefined,
+      collections:
+        collectionConnections.length > 0
+          ? { create: collectionConnections }
+          : undefined,
     },
     include: {
       itemType: true,
       tags: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
     },
   });
 }

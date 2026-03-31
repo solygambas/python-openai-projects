@@ -2,19 +2,27 @@
 
 ## Status
 
-Not Started
+Complete
 
 ## Title
 
-TBD
+Item-to-Collection Assignment
 
 ## Goals
 
-- [ ] TBD
+- [x] Add collection multi-select input to Create Item dialog
+- [x] Add collection multi-select input to Edit Item drawer
+- [x] Create/update server actions to handle item-collection relationships
+- [x] Display selected collections in item drawer view mode
+- [x] Add unit tests for collection assignment functionality
 
 ## Notes
 
-TBD
+- User should be able to select one or more collections when creating/editing an item
+- Collection selector should be a multi-select dropdown/combobox
+- Should show all collections available to the user
+- Don't need to implement collection pages display yet
+- Need to sync collections on item update (disconnect old, connect new)
 
 ## History
 

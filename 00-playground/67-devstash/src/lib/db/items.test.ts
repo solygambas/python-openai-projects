@@ -7,6 +7,8 @@ const {
   transactionMock,
   createMock,
   findUniqueMock,
+  deleteManyMock,
+  createManyMock,
 } = vi.hoisted(() => ({
   findFirstMock: vi.fn(),
   updateMock: vi.fn(),
@@ -17,10 +19,16 @@ const {
         update: updateMock,
         delete: deleteMock,
       },
+      itemCollection: {
+        deleteMany: deleteManyMock,
+        createMany: createManyMock,
+      },
     }),
   ),
   createMock: vi.fn(),
   findUniqueMock: vi.fn(),
+  deleteManyMock: vi.fn(),
+  createManyMock: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -89,6 +97,8 @@ describe("updateItem", () => {
     findFirstMock.mockReset();
     updateMock.mockReset();
     transactionMock.mockClear();
+    deleteManyMock.mockReset();
+    createManyMock.mockReset();
   });
 
   const mockData = {
@@ -154,6 +164,96 @@ describe("updateItem", () => {
     );
 
     expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it("syncs collections when collectionIds is provided", async () => {
+    // 1. Ownership check
+    findFirstMock.mockResolvedValueOnce({ id: "item-1" });
+
+    // 2. Transaction calls
+    updateMock.mockResolvedValueOnce({ id: "item-1" }); // clear tags
+    updateMock.mockResolvedValueOnce({
+      id: "item-1",
+      title: "Updated",
+      collections: [{ collection: { id: "coll-1", name: "New Collection" } }],
+    }); // apply update
+
+    const dataWithCollections = {
+      ...mockData,
+      collectionIds: ["coll-1"],
+    };
+
+    const result = await updateItem("user-1", "item-1", dataWithCollections);
+
+    // Verify deleteMany was called to clear old associations
+    expect(deleteManyMock).toHaveBeenCalledWith({
+      where: { itemId: "item-1" },
+    });
+
+    // Verify createMany was called with new associations
+    expect(createManyMock).toHaveBeenCalledWith({
+      data: [{ itemId: "item-1", collectionId: "coll-1" }],
+    });
+
+    expect(result.collections).toBeDefined();
+  });
+
+  it("clears all collections when collectionIds is empty array", async () => {
+    findFirstMock.mockResolvedValueOnce({ id: "item-1" });
+    updateMock.mockResolvedValueOnce({ id: "item-1" });
+    updateMock.mockResolvedValueOnce({
+      id: "item-1",
+      title: "Updated",
+      collections: [],
+    });
+
+    const dataWithEmptyCollections = {
+      ...mockData,
+      collectionIds: [],
+    };
+
+    const result = await updateItem(
+      "user-1",
+      "item-1",
+      dataWithEmptyCollections,
+    );
+
+    expect(deleteManyMock).toHaveBeenCalledWith({
+      where: { itemId: "item-1" },
+    });
+
+    // createMany should NOT be called when collectionIds is empty
+    expect(createManyMock).not.toHaveBeenCalled();
+
+    expect(result.collections).toEqual([]);
+  });
+
+  it("does not modify collections when collectionIds is undefined", async () => {
+    findFirstMock.mockResolvedValueOnce({ id: "item-1" });
+    updateMock.mockResolvedValueOnce({ id: "item-1" });
+    updateMock.mockResolvedValueOnce({
+      id: "item-1",
+      title: "Updated",
+      collections: [{ collection: { id: "existing-coll", name: "Existing" } }],
+    });
+
+    // Data without collectionIds
+    const dataWithoutCollections = {
+      title: "Updated Title",
+      description: "Updated Description",
+      content: "Updated Content",
+      url: "https://updated.com",
+      language: "typescript",
+      tags: ["tag1"],
+    };
+
+    const result = await updateItem("user-1", "item-1", dataWithoutCollections);
+
+    // Should NOT call deleteMany or createMany
+    expect(deleteManyMock).not.toHaveBeenCalled();
+    expect(createManyMock).not.toHaveBeenCalled();
+
+    expect(result.collections).toBeDefined();
   });
 });
 
@@ -270,10 +370,16 @@ describe("createItem", () => {
             { where: { name: "test" }, create: { name: "test" } },
           ],
         },
+        collections: undefined,
       },
       include: {
         itemType: true,
         tags: true,
+        collections: {
+          include: {
+            collection: true,
+          },
+        },
       },
     });
 
@@ -340,10 +446,16 @@ describe("createItem", () => {
     expect(createMock).toHaveBeenCalledWith({
       data: expect.objectContaining({
         tags: undefined,
+        collections: undefined,
       }),
       include: {
         itemType: true,
         tags: true,
+        collections: {
+          include: {
+            collection: true,
+          },
+        },
       },
     });
 
@@ -361,5 +473,93 @@ describe("createItem", () => {
     ).rejects.toThrow("Invalid item type");
 
     expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it("creates item with collection associations", async () => {
+    findUniqueMock.mockResolvedValueOnce(mockType);
+
+    const newItem = {
+      id: "item-1",
+      title: "New Snippet",
+      contentType: "TEXT",
+      itemType: mockType,
+      tags: [],
+      collections: [
+        { collection: { id: "coll-1", name: "Collection 1" } },
+        { collection: { id: "coll-2", name: "Collection 2" } },
+      ],
+    };
+
+    createMock.mockResolvedValueOnce(newItem);
+
+    const result = await createItem("user-1", {
+      title: "New Snippet",
+      tags: [],
+      typeId: "type-1",
+      collectionIds: ["coll-1", "coll-2"],
+    });
+
+    expect(createMock).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        title: "New Snippet",
+        collections: {
+          create: [
+            { collection: { connect: { id: "coll-1" } } },
+            { collection: { connect: { id: "coll-2" } } },
+          ],
+        },
+      }),
+      include: {
+        itemType: true,
+        tags: true,
+        collections: {
+          include: {
+            collection: true,
+          },
+        },
+      },
+    });
+
+    expect(result.collections).toHaveLength(2);
+    expect(result.collections[0].collection.name).toBe("Collection 1");
+  });
+
+  it("creates item without collections when collectionIds is empty", async () => {
+    findUniqueMock.mockResolvedValueOnce(mockType);
+
+    const newItem = {
+      id: "item-2",
+      title: "No Collections",
+      contentType: "TEXT",
+      itemType: mockType,
+      tags: [],
+      collections: [],
+    };
+
+    createMock.mockResolvedValueOnce(newItem);
+
+    const result = await createItem("user-1", {
+      title: "No Collections",
+      tags: [],
+      typeId: "type-1",
+      collectionIds: [],
+    });
+
+    expect(createMock).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        collections: undefined,
+      }),
+      include: {
+        itemType: true,
+        tags: true,
+        collections: {
+          include: {
+            collection: true,
+          },
+        },
+      },
+    });
+
+    expect(result.collections).toEqual([]);
   });
 });

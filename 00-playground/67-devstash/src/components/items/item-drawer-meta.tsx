@@ -4,6 +4,7 @@ import { Tag, Folder, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { MultiSelect } from "@/components/ui/multi-select";
 
 interface TagItem {
   id: string;
@@ -17,6 +18,11 @@ interface CollectionItem {
   };
 }
 
+interface CollectionOption {
+  id: string;
+  name: string;
+}
+
 interface ItemDrawerMetaProps {
   tags: TagItem[];
   collections: CollectionItem[];
@@ -25,6 +31,10 @@ interface ItemDrawerMetaProps {
   isEditing: boolean;
   editTags: string;
   onTagsChange: (value: string) => void;
+  // Collection editing
+  allCollections?: CollectionOption[];
+  editCollectionIds?: string[];
+  onCollectionIdsChange?: (ids: string[]) => void;
 }
 
 function formatDetailsDate(date: string) {
@@ -87,9 +97,37 @@ export function ItemDrawerTags({
 
 export function ItemDrawerCollections({
   collections,
+  isEditing,
+  allCollections,
+  editCollectionIds,
+  onCollectionIdsChange,
 }: {
   collections: CollectionItem[];
+  isEditing?: boolean;
+  allCollections?: CollectionOption[];
+  editCollectionIds?: string[];
+  onCollectionIdsChange?: (ids: string[]) => void;
 }) {
+  if (isEditing && allCollections && onCollectionIdsChange) {
+    return (
+      <section className="space-y-2">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <Folder className="h-4 w-4" />
+          <p>Collections</p>
+        </div>
+        <div className="pl-6">
+          <MultiSelect
+            options={allCollections}
+            selected={editCollectionIds || []}
+            onChange={onCollectionIdsChange}
+            placeholder="Select collections..."
+            emptyMessage="No collections found."
+          />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-2">
       <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -150,6 +188,9 @@ export function ItemDrawerMeta({
   isEditing,
   editTags,
   onTagsChange,
+  allCollections,
+  editCollectionIds,
+  onCollectionIdsChange,
 }: ItemDrawerMetaProps) {
   return (
     <>
@@ -162,7 +203,13 @@ export function ItemDrawerMeta({
 
       <Separator />
 
-      <ItemDrawerCollections collections={collections} />
+      <ItemDrawerCollections
+        collections={collections}
+        isEditing={isEditing}
+        allCollections={allCollections}
+        editCollectionIds={editCollectionIds}
+        onCollectionIdsChange={onCollectionIdsChange}
+      />
 
       <Separator />
 

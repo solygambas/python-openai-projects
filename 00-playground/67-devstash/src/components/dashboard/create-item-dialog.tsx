@@ -17,8 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { ItemTypeSelector, ItemContentEditor } from "@/components/items";
 import { createItem } from "@/actions/items";
+import { useCollections } from "@/hooks/use-collections";
 
 interface ItemType {
   id: string;
@@ -61,6 +63,9 @@ export function CreateItemDialog({
   const [url, setUrl] = useState("");
   const [language, setLanguage] = useState("");
   const [tags, setTags] = useState("");
+  const [selectedCollectionIds, setSelectedCollectionIds] = useState<string[]>(
+    [],
+  );
 
   // File upload state
   const [uploadedFile, setUploadedFile] = useState<{
@@ -69,6 +74,9 @@ export function CreateItemDialog({
     fileSize: number;
   } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Fetch collections for the selector
+  const { collections: allCollections } = useCollections();
 
   const selectedType = itemTypes.find((t) => t.id === selectedTypeId);
   const typeName = selectedType?.name?.toLowerCase() || "";
@@ -90,6 +98,7 @@ export function CreateItemDialog({
     setTags("");
     setUploadedFile(null);
     setIsUploading(false);
+    setSelectedCollectionIds([]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -132,6 +141,7 @@ export function CreateItemDialog({
         fileUrl: showFileUpload && uploadedFile ? uploadedFile.fileUrl : null,
         fileName: showFileUpload && uploadedFile ? uploadedFile.fileName : null,
         fileSize: showFileUpload && uploadedFile ? uploadedFile.fileSize : null,
+        collectionIds: selectedCollectionIds,
       });
 
       if (result.success) {
@@ -276,6 +286,18 @@ export function CreateItemDialog({
               />
             </div>
           )}
+
+          {/* Collections */}
+          <div className="space-y-2">
+            <Label>Collections</Label>
+            <MultiSelect
+              options={allCollections}
+              selected={selectedCollectionIds}
+              onChange={setSelectedCollectionIds}
+              placeholder="Select collections..."
+              emptyMessage="No collections found."
+            />
+          </div>
 
           {/* Tags */}
           <div className="space-y-2">

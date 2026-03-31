@@ -38,6 +38,7 @@ const UpdateItemSchema = z.object({
   url: safeUrlSchema.nullish().or(z.literal("")),
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
+  collectionIds: z.array(z.string().min(1)).optional(),
 });
 
 const DeleteItemSchema = z.object({
@@ -100,6 +101,8 @@ const CreateItemSchema = z.object({
   fileUrl: z.string().url().nullish(),
   fileName: z.string().nullish(),
   fileSize: z.number().int().positive().nullish(),
+  // Collection associations
+  collectionIds: z.array(z.string().min(1)).optional(),
 });
 
 type CreateItemInput = z.infer<typeof CreateItemSchema>;
@@ -150,6 +153,7 @@ export async function createItem(
     fileUrl,
     fileName,
     fileSize,
+    collectionIds,
   } = validatedFields.data;
 
   try {
@@ -164,6 +168,7 @@ export async function createItem(
       fileUrl: fileUrl || null,
       fileName: fileName || null,
       fileSize: fileSize || null,
+      collectionIds,
     });
 
     return { success: true, data: newItem };
@@ -192,8 +197,16 @@ export async function updateItem(
     };
   }
 
-  const { itemId, title, description, content, url, language, tags } =
-    validatedFields.data;
+  const {
+    itemId,
+    title,
+    description,
+    content,
+    url,
+    language,
+    tags,
+    collectionIds,
+  } = validatedFields.data;
 
   try {
     const updatedItem = await updateItemQuery(userId, itemId, {
@@ -203,6 +216,7 @@ export async function updateItem(
       url: url || null,
       language: language || null,
       tags,
+      collectionIds,
     });
 
     return {

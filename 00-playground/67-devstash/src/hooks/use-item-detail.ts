@@ -28,6 +28,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
   const [editUrl, setEditUrl] = useState("");
   const [editLanguage, setEditLanguage] = useState("");
   const [editTags, setEditTags] = useState("");
+  const [editCollectionIds, setEditCollectionIds] = useState<string[]>([]);
 
   // Delete confirmation state
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -86,6 +87,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     setEditUrl(selectedItem.url || "");
     setEditLanguage(selectedItem.language || "");
     setEditTags(selectedItem.tags.map((t) => t.name).join(", "));
+    setEditCollectionIds(selectedItem.collections.map((c) => c.collection.id));
     setIsEditing(true);
   }, [selectedItem]);
 
@@ -112,6 +114,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         url: editUrl,
         language: editLanguage,
         tags: tagsArray,
+        collectionIds: editCollectionIds,
       });
 
       if (result.success && result.data) {
@@ -149,6 +152,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     editUrl,
     editLanguage,
     editTags,
+    editCollectionIds,
     router,
     options,
   ]);
@@ -232,6 +236,8 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     setEditLanguage,
     editTags,
     setEditTags,
+    editCollectionIds,
+    setEditCollectionIds,
     // Actions
     openItem,
     startEditing,
