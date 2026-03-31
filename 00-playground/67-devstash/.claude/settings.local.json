@@ -2,6 +2,17 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": ["neon"],
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --experimental-strip-types $CLAUDE_PROJECT_DIR/.claude/hooks/log-pre-edit.ts"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
