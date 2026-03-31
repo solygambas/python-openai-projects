@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import {
   File,
   FileText,
@@ -20,38 +19,41 @@ interface FileListCardProps {
   onDownload?: () => void;
 }
 
-// Map file extensions to icons
-const FILE_ICON_MAP: Record<string, typeof File> = {
+// Map file extensions to icon names
+const FILE_ICON_MAP: Record<
+  string,
+  "file" | "fileText" | "fileCode" | "fileSpreadsheet" | "fileArchive"
+> = {
   // Documents
-  pdf: FileText,
-  txt: FileText,
-  md: FileText,
-  doc: FileText,
-  docx: FileText,
+  pdf: "fileText",
+  txt: "fileText",
+  md: "fileText",
+  doc: "fileText",
+  docx: "fileText",
   // Code
-  json: FileCode,
-  js: FileCode,
-  ts: FileCode,
-  tsx: FileCode,
-  jsx: FileCode,
-  py: FileCode,
-  yaml: FileCode,
-  yml: FileCode,
-  xml: FileCode,
-  html: FileCode,
-  css: FileCode,
+  json: "fileCode",
+  js: "fileCode",
+  ts: "fileCode",
+  tsx: "fileCode",
+  jsx: "fileCode",
+  py: "fileCode",
+  yaml: "fileCode",
+  yml: "fileCode",
+  xml: "fileCode",
+  html: "fileCode",
+  css: "fileCode",
   // Data
-  csv: FileSpreadsheet,
+  csv: "fileSpreadsheet",
   // Archives
-  zip: FileArchive,
-  gz: FileArchive,
-  tar: FileArchive,
-  rar: FileArchive,
+  zip: "fileArchive",
+  gz: "fileArchive",
+  tar: "fileArchive",
+  rar: "fileArchive",
 };
 
-function getFileIcon(fileName: string) {
+function getFileIconName(fileName: string) {
   const extension = fileName.split(".").pop()?.toLowerCase() || "";
-  return FILE_ICON_MAP[extension] || File;
+  return FILE_ICON_MAP[extension] || "file";
 }
 
 function formatFileSize(bytes: number | null): string {
@@ -61,6 +63,21 @@ function formatFileSize(bytes: number | null): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
+function FileIcon({ iconName }: { iconName: string }) {
+  switch (iconName) {
+    case "fileText":
+      return <FileText className="h-5 w-5 text-muted-foreground" />;
+    case "fileCode":
+      return <FileCode className="h-5 w-5 text-muted-foreground" />;
+    case "fileSpreadsheet":
+      return <FileSpreadsheet className="h-5 w-5 text-muted-foreground" />;
+    case "fileArchive":
+      return <FileArchive className="h-5 w-5 text-muted-foreground" />;
+    default:
+      return <File className="h-5 w-5 text-muted-foreground" />;
+  }
+}
+
 export function FileListCard({
   fileName,
   fileSize,
@@ -68,7 +85,7 @@ export function FileListCard({
   onClick,
   onDownload,
 }: FileListCardProps) {
-  const Icon = useMemo(() => getFileIcon(fileName), [fileName]);
+  const iconName = getFileIconName(fileName);
 
   return (
     <div
@@ -77,7 +94,7 @@ export function FileListCard({
     >
       {/* File Icon */}
       <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-        <Icon className="h-5 w-5 text-muted-foreground" />
+        <FileIcon iconName={iconName} />
       </div>
 
       {/* File Name */}
@@ -104,7 +121,7 @@ export function FileListCard({
         className="h-8 w-8 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-secondary transition-opacity shrink-0"
         aria-label="Download file"
       >
-        <Download className="h-4 w-4" />
+        <Download className="h-4 w-4 text-muted-foreground" />
       </button>
     </div>
   );

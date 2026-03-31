@@ -2,19 +2,31 @@
 
 ## Status
 
-Not Started
+Complete
 
 ## Title
 
-TBD
+Quick Copy Icon on Cards
 
 ## Goals
 
-- [ ] TBD
+- [x] Add a copy icon button to `ItemCard` that appears on hover
+- [x] Add a copy icon button to pinned items section
+- [x] Add a copy icon button to recent items section
+- [x] Copy functionality copies item content (text types) or URL (link type)
+- [x] Show toast notification on successful copy
+- [x] Copy button should stop propagation to prevent opening drawer
+- [x] Consistent hover behavior across all card types
+- [x] No copy icon for images and files (not applicable)
 
 ## Notes
 
-TBD
+- Copy behavior matches the drawer's copy functionality: copy `content` for text types, `url` for link type
+- Uses the same toast message "Copied to clipboard" for consistency
+- The copy icon uses `lucide-react` `Copy` icon
+- Design: subtle appearance, visible on hover
+- Images and files don't have copyable text content, so no copy button for those types
+- Fixed ESLint `react-hooks/static-components` error by using a `FileIcon` component with switch statement instead of dynamically creating components during render
 
 ## History
 
@@ -24,241 +36,251 @@ TBD
 - [x] Completed Phase 1: Basic layout, dark mode, and ShadCN setup.
 - [x] Fixed dark mode by forcing `dark` class on `html` tag and disabling system override.
 - **Dashboard UI Phase 1** (Completed)
-  - [x] ShadCN UI initialization and components
-  - [x] ShadCN component installation
-  - [x] Dashboard route at /dashboard
-  - [x] Main dashboard layout and any global styles
-  - [x] Dark mode by default
-  - [x] Top bar with search and new item button (display only)
-  - [x] Placeholder for sidebar and main area. Just add an h2 with "Sidebar" and "Main" for now.
-  - _Note:_ This was phase 1 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-1-spec.md`.
+- [x] ShadCN UI initialization and components
+- [x] ShadCN component installation
+- [x] Dashboard route at /dashboard
+- [x] Main dashboard layout and any global styles
+- [x] Dark mode by default
+- [x] Top bar with search and new item button (display only)
+- [x] Placeholder for sidebar and main area. Just add an h2 with "Sidebar" and "Main" for now.
+- _Note:_ This was phase 1 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-1-spec.md`.
 - **Dashboard UI Phase 2** (Completed)
-  - [x] Collapsible sidebar
-  - [x] Items/types with links to /items/TYPE (eg. /items/snippets)
-  - [x] Favorite collections
-  - [x] Most recent collections
-  - [x] User avatar area at the bottom
-  - [x] Drawer icon to open/close sidebar
-  - [x] Always a drawer on mobile view
-  - _Note:_ This was phase 2 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-2-spec.md`.
+- [x] Collapsible sidebar
+- [x] Items/types with links to /items/TYPE (eg. /items/snippets)
+- [x] Favorite collections
+- [x] Most recent collections
+- [x] User avatar area at the bottom
+- [x] Drawer icon to open/close sidebar
+- [x] Always a drawer on mobile view
+- _Note:_ This was phase 2 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-2-spec.md`.
 - **Dashboard UI Phase 3** (Completed)
-  - [x] The main area to the right
-  - [x] Recent collections
-  - [x] Pinned Items
-  - [x] 10 Recent items
-  - [x] 4 stats cards at the top for number of items, collections, favorite items and favorite collections
-  - _Note:_ This was phase 3 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-3-spec.md`.
+- [x] The main area to the right
+- [x] Recent collections
+- [x] Pinned Items
+- [x] 10 Recent items
+- [x] 4 stats cards at the top for number of items, collections, favorite items and favorite collections
+- _Note:_ This was phase 3 of 3 for the dashboard UI layout. Ref: `@context/screenshots/dashboard-ui-main.png`, `@context/features/dashboard-phase-3-spec.md`.
 - **Neon PostgreSQL and Prisma Setup** (Completed)
-  - [x] Prisma 7 installation and configuration
-  - [x] Database schema implementation
-  - [x] Neon serverless adapter setup
-  - [x] Initial migration and seeding
-  - [x] Singleton Prisma client implementation
-  - [x] Verified database connectivity with a custom test script using native Node env loading
-  - [x] Cleaned up project by removing `dotenv` and `tsx` in favor of native Node 24+ features (`--experimental-strip-types`, `--env-file`)
+- [x] Prisma 7 installation and configuration
+- [x] Database schema implementation
+- [x] Neon serverless adapter setup
+- [x] Initial migration and seeding
+- [x] Singleton Prisma client implementation
+- [x] Verified database connectivity with a custom test script using native Node env loading
+- [x] Cleaned up project by removing `dotenv` and `tsx` in favor of native Node 24+ features (`--experimental-strip-types`, `--env-file`)
 - **Seed Sample Data** (Completed)
-  - [x] Installed `bcryptjs` and `@types/bcryptjs`
-  - [x] Updated `prisma/seed.ts` to hash password and seed comprehensive sample data
-  - [x] Implemented idempotency in seed script by clearing existing user data
-  - [x] Successfully ran `npm run db:seed`
+- [x] Installed `bcryptjs` and `@types/bcryptjs`
+- [x] Updated `prisma/seed.ts` to hash password and seed comprehensive sample data
+- [x] Implemented idempotency in seed script by clearing existing user data
+- [x] Successfully ran `npm run db:seed`
 - **Verification Script & Demo Data Integrity** (Completed)
-  - [x] Updated `scripts/test-db.ts` to fetch and display demo data
-  - [x] Enabled ESM support in `package.json` to fix module compatibility warnings
-  - [x] Optimized `tsconfig.json` for script execution and TypeScript handling
-  - [x] Verified full database and demo data integrity via `npm run db:test`
-  - [x] Verified build succeeds and merged to main
+- [x] Updated `scripts/test-db.ts` to fetch and display demo data
+- [x] Enabled ESM support in `package.json` to fix module compatibility warnings
+- [x] Optimized `tsconfig.json` for script execution and TypeScript handling
+- [x] Verified full database and demo data integrity via `npm run db:test`
+- [x] Verified build succeeds and merged to main
 - **Dashboard Collections** (Completed)
-  - [x] Created `src/lib/db/collections.ts`, `src/lib/db/items.ts`, `src/lib/db/item-types.ts`, and `src/lib/db/users.ts` with real data fetching functions
-  - [x] Updated `src/app/(dashboard)/dashboard/page.tsx` to be an async server component fetching real data
-  - [x] Implemented border color logic in `getRecentCollections` based on the most frequent content type
-  - [x] Updated `RecentCollections`, `PinnedItems`, and `RecentItems` components to use real data from Prisma
-  - [x] Verified build succeeds and database connectivity is working
+- [x] Created `src/lib/db/collections.ts`, `src/lib/db/items.ts`, `src/lib/db/item-types.ts`, and `src/lib/db/users.ts` with real data fetching functions
+- [x] Updated `src/app/(dashboard)/dashboard/page.tsx` to be an async server component fetching real data
+- [x] Implemented border color logic in `getRecentCollections` based on the most frequent content type
+- [x] Updated `RecentCollections`, `PinnedItems`, and `RecentItems` components to use real data from Prisma
+- [x] Verified build succeeds and database connectivity is working
 - **Dashboard Items** (Completed)
-  - [x] Created `src/lib/db/items.ts` with data fetching functions for pinned and recent items
-  - [x] Updated `DashboardPage` to fetch real item data from Prisma
-  - [x] Implemented type-based border indicators and icons in `PinnedItems` and `RecentItems`
-  - [x] Added empty state handling for `PinnedItems` to hide the section when no items are pinned
-  - [x] Verified stats display correctly using database counts
+- [x] Created `src/lib/db/items.ts` with data fetching functions for pinned and recent items
+- [x] Updated `DashboardPage` to fetch real item data from Prisma
+- [x] Implemented type-based border indicators and icons in `PinnedItems` and `RecentItems`
+- [x] Added empty state handling for `PinnedItems` to hide the section when no items are pinned
+- [x] Verified stats display correctly using database counts
 - **Stats & Sidebar Implementation** (Completed)
-  - [x] Added `getItemTypeCounts(userId)` in `src/lib/db/items.ts`
-  - [x] Updated `getRecentCollections` in `src/lib/db/collections.ts` to support favorite filtering
-  - [x] Updated `SidebarProvider` to include `sidebarData` in context
-  - [x] Updated `DashboardLayout` to fetch real sidebar data (user, types, counts, collections)
-  - [x] Updated `DashboardSidebar` to use real data and implemented colored circle indicators for recent collections
-  - [x] Added "View all collections" link in sidebar
-  - [x] Verified build succeeds and real data is displayed in sidebar and stats
+- [x] Added `getItemTypeCounts(userId)` in `src/lib/db/items.ts`
+- [x] Updated `getRecentCollections` in `src/lib/db/collections.ts` to support favorite filtering
+- [x] Updated `SidebarProvider` to include `sidebarData` in context
+- [x] Updated `DashboardLayout` to fetch real sidebar data (user, types, counts, collections)
+- [x] Updated `DashboardSidebar` to use real data and implemented colored circle indicators for recent collections
+- [x] Added "View all collections" link in sidebar
+- [x] Verified build succeeds and real data is displayed in sidebar and stats
 - **Add Pro Badge to Sidebar** (Completed)
-  - [x] Added `PRO` badge to "Files" and "Images" in sidebar
-  - [x] Used ShadCN UI `Badge` component
-  - [x] Defined `ItemType` and `Collection` interfaces to fix TypeScript lint errors
-  - [x] Updated `NavItem` for flexible child support
-  - [x] Verified implementation via browser screenshot and lint check
+- [x] Added `PRO` badge to "Files" and "Images" in sidebar
+- [x] Used ShadCN UI `Badge` component
+- [x] Defined `ItemType` and `Collection` interfaces to fix TypeScript lint errors
+- [x] Updated `NavItem` for flexible child support
+- [x] Verified implementation via browser screenshot and lint check
 - **Quick Wins & Optimizations** (Completed)
-  - [x] Added DB indexes to Item and Collection models for `isPinned`, `isFavorite`, and `updatedAt`
-  - [x] Refactored Dashboard to use `Suspense` and Skeleton loaders for improved performance
-  - [x] Created shared `formatDate` utility in `src/lib/utils.ts`
-  - [x] Added query limit validation to all DB fetching functions to prevent over-fetching
-  - [x] Improved type safety in `src/lib/mock-data.ts`
-  - [x] Successfully migrated database with new indexes
-  - [x] Standardized date formatting across Dashboard components
+- [x] Added DB indexes to Item and Collection models for `isPinned`, `isFavorite`, and `updatedAt`
+- [x] Refactored Dashboard to use `Suspense` and Skeleton loaders for improved performance
+- [x] Created shared `formatDate` utility in `src/lib/utils.ts`
+- [x] Added query limit validation to all DB fetching functions to prevent over-fetching
+- [x] Improved type safety in `src/lib/mock-data.ts`
+- [x] Successfully migrated database with new indexes
+- [x] Standardized date formatting across Dashboard components
 - **Auth Setup - NextAuth + GitHub Provider** (Completed)
-  - [x] Installed `next-auth@beta` and `@auth/prisma-adapter`
-  - [x] Implemented split auth config pattern for Edge compatibility
-  - [x] Added GitHub OAuth provider
-  - [x] Secured `/dashboard/*` routes using Next.js 16 `src/proxy.ts` (named export)
-  - [x] Implemented clean URL redirect strategy using an `auth-callback-url` cookie
-  - [x] Extended `Session` type to include `user.id`
-  - [x] Verified build and linting
+- [x] Installed `next-auth@beta` and `@auth/prisma-adapter`
+- [x] Implemented split auth config pattern for Edge compatibility
+- [x] Added GitHub OAuth provider
+- [x] Secured `/dashboard/*` routes using Next.js 16 `src/proxy.ts` (named export)
+- [x] Implemented clean URL redirect strategy using an `auth-callback-url` cookie
+- [x] Extended `Session` type to include `user.id`
+- [x] Verified build and linting
 - **Auth Phase 2 - Credentials Provider** (Completed)
-  - [x] Added field definitions to `Credentials` provider for default UI rendering
-  - [x] Implemented bcrypt validation in `authorize` callback
-  - [x] Created `POST /api/auth/register` with input validation and password hashing
-  - [x] Connected `DashboardLayout` to `auth()` to display real user data
-  - [x] Verified end-to-end registration and login flow
+- [x] Added field definitions to `Credentials` provider for default UI rendering
+- [x] Implemented bcrypt validation in `authorize` callback
+- [x] Created `POST /api/auth/register` with input validation and password hashing
+- [x] Connected `DashboardLayout` to `auth()` to display real user data
+- [x] Verified end-to-end registration and login flow
 - **Auth UI - Sign In, Register & Sign Out (Phase 3)** (Completed)
-  - [x] Custom Sign In Page (`/sign-in`) with email/password and GitHub OAuth
-  - [x] Custom Register Page (`/register`) with name/email/password inputs
-  - [x] Component: Reusable Avatar with initials/image logic
-  - [x] Sidebar Update: Bottom avatar with user info and dropdown
-  - [x] Sidebar Update: Sign out functionality
-  - [x] Sidebar Update: Profile link on avatar click
-  - [x] Integrated `sonner` for themed, system-aware toast notifications
-  - [x] Verified lint-free build
+- [x] Custom Sign In Page (`/sign-in`) with email/password and GitHub OAuth
+- [x] Custom Register Page (`/register`) with name/email/password inputs
+- [x] Component: Reusable Avatar with initials/image logic
+- [x] Sidebar Update: Bottom avatar with user info and dropdown
+- [x] Sidebar Update: Sign out functionality
+- [x] Sidebar Update: Profile link on avatar click
+- [x] Integrated `sonner` for themed, system-aware toast notifications
+- [x] Verified lint-free build
 - **Setup Email Verification on Register** (Completed)
-  - [x] Create and store a secure verification token in the database upon user registration.
-  - [x] Send an email with a verification link to the newly registered user using Resend.
-  - [x] Implement a `/api/auth/verify` endpoint to verify the token when the user clicks the link.
-  - [x] Update the user's `emailVerified` status upon successful verification.
-  - [x] Create `/verify-email` page to display the verification status (success, error, expired).
-  - [x] Block sign in for unverified users.
-  - [x] Add a "Resend verification email" functionality if token expires.
-  - [x] Handle edge cases: expired tokens, already verified, invalid tokens.
+- [x] Create and store a secure verification token in the database upon user registration.
+- [x] Send an email with a verification link to the newly registered user using Resend.
+- [x] Implement a `/api/auth/verify` endpoint to verify the token when the user clicks the link.
+- [x] Update the user's `emailVerified` status upon successful verification.
+- [x] Create `/verify-email` page to display the verification status (success, error, expired).
+- [x] Block sign in for unverified users.
+- [x] Add a "Resend verification email" functionality if token expires.
+- [x] Handle edge cases: expired tokens, already verified, invalid tokens.
 - **Add Email Verification Flag** (Completed)
-  - [x] Added `ENABLE_EMAIL_VERIFICATION` env variable check to register API route
-  - [x] Auto-verifies user (`emailVerified: new Date()`) and skips token/email when flag is disabled
-  - [x] Returns `requiresVerification` boolean in register response
-  - [x] Register form redirects to `/sign-in` (flag off) or `/verify-email` (flag on)
-  - [x] `auth.ts` authorize callback only blocks unverified users when flag is enabled
+- [x] Added `ENABLE_EMAIL_VERIFICATION` env variable check to register API route
+- [x] Auto-verifies user (`emailVerified: new Date()`) and skips token/email when flag is disabled
+- [x] Returns `requiresVerification` boolean in register response
+- [x] Register form redirects to `/sign-in` (flag off) or `/verify-email` (flag on)
+- [x] `auth.ts` authorize callback only blocks unverified users when flag is enabled
 - **Forgot Password** (Completed)
-  - [x] Implemented custom `/forgot-password` and `/reset-password` pages and forms.
-  - [x] Added "Forgot password?" link on the sign-in page.
-  - [x] Integrated with existing `POST /api/auth/forgot-password` and `POST /api/auth/reset-password` endpoints.
-  - [x] Added `Suspense` boundary to `/sign-in` page to support `useSearchParams()`.
-  - [x] Verified build succeeds.
+- [x] Implemented custom `/forgot-password` and `/reset-password` pages and forms.
+- [x] Added "Forgot password?" link on the sign-in page.
+- [x] Integrated with existing `POST /api/auth/forgot-password` and `POST /api/auth/reset-password` endpoints.
+- [x] Added `Suspense` boundary to `/sign-in` page to support `useSearchParams()`.
+- [x] Verified build succeeds.
 - **Profile Page** (Completed)
-  - [x] Created protected `/profile` route
-  - [x] Implemented `ProfilePage` with data fetching for user info and usage stats
-  - [x] Added `ProfileInfo`, `ProfileStats`, and `AccountActions` components
-  - [x] Implemented Change Password (for email users) and Delete Account functionality
-  - [x] **Refactored layout:** Created `(dashboard)` route group to share the sidebar and header layout between dashboard and profile pages.
-  - [x] Updated Sidebar: Added active state for the profile link.
-  - [x] Fixed all linting and TypeScript build errors
-  - [x] Verified build succeeds
+- [x] Created protected `/profile` route
+- [x] Implemented `ProfilePage` with data fetching for user info and usage stats
+- [x] Added `ProfileInfo`, `ProfileStats`, and `AccountActions` components
+- [x] Implemented Change Password (for email users) and Delete Account functionality
+- [x] **Refactored layout:** Created `(dashboard)` route group to share the sidebar and header layout between dashboard and profile pages.
+- [x] Updated Sidebar: Added active state for the profile link.
+- [x] Fixed all linting and TypeScript build errors
+- [x] Verified build succeeds
 - **Rate Limiting for Auth** (Completed)
-  - [x] Added shared Upstash-based limiter utility with fail-open behavior
-  - [x] Applied limits to credentials callback, register, forgot/reset password, and resend verification endpoints
-  - [x] Added `429` JSON responses with `Retry-After` header across protected routes
-  - [x] Updated sign-in UI error handling for rate-limit scenarios
-  - [x] Verified with lint, build, and Playwright MCP reproduction of 429 behavior
+- [x] Added shared Upstash-based limiter utility with fail-open behavior
+- [x] Applied limits to credentials callback, register, forgot/reset password, and resend verification endpoints
+- [x] Added `429` JSON responses with `Retry-After` header across protected routes
+- [x] Updated sign-in UI error handling for rate-limit scenarios
+- [x] Verified with lint, build, and Playwright MCP reproduction of 429 behavior
 - **Items List View** (Completed)
-  - [x] Added dynamic route at `src/app/(dashboard)/items/[type]/page.tsx` to list items by type
-  - [x] Implemented `getItemsByType(userId, typeName)` in `src/lib/db/items.ts`
-  - [x] Added `ItemCard` component at `src/components/dashboard/item-card.tsx` with left-border color per item type
-  - [x] Implemented responsive two-column grid (`md:grid-cols-2`) and reused existing item-type colors
+- [x] Added dynamic route at `src/app/(dashboard)/items/[type]/page.tsx` to list items by type
+- [x] Implemented `getItemsByType(userId, typeName)` in `src/lib/db/items.ts`
+- [x] Added `ItemCard` component at `src/components/dashboard/item-card.tsx` with left-border color per item type
+- [x] Implemented responsive two-column grid (`md:grid-cols-2`) and reused existing item-type colors
 - **Item Drawer** (Completed)
-  - [x] Implemented a right-side slide-in item detail drawer using the shadcn `Sheet` component
-  - [x] Opened drawer when clicking an `ItemCard` (no page navigation)
-  - [x] Fetched full item details on click via `/api/items/[id]` and showed a skeleton while loading
-  - [x] Provided a client wrapper component to manage drawer state (pages are server components)
-  - [x] Added an action bar: Favorite (star, yellow when active), Pin, Copy, Edit, Delete (right-aligned)
-  - [x] Works across dashboard and items list pages with snappy UX
+- [x] Implemented a right-side slide-in item detail drawer using the shadcn `Sheet` component
+- [x] Opened drawer when clicking an `ItemCard` (no page navigation)
+- [x] Fetched full item details on click via `/api/items/[id]` and showed a skeleton while loading
+- [x] Provided a client wrapper component to manage drawer state (pages are server components)
+- [x] Added an action bar: Favorite (star, yellow when active), Pin, Copy, Edit, Delete (right-aligned)
+- [x] Works across dashboard and items list pages with snappy UX
 - **Item Drawer — Edit Mode** (Completed)
-  - [x] Edit button toggles drawer into edit mode
-  - [x] Action bar replaced with Save/Cancel buttons in edit mode
-  - [x] Editable fields: title, description, tags (all types)
-  - [x] Type-specific fields: content (text types), language (snippet/command), url (link)
-  - [x] Zod validation in server action
-  - [x] `updateItem` server action in `src/actions/items.ts`
-  - [x] `updateItem` query function in `lib/db/items.ts`
-  - [x] Tag sync: disconnect old, connect-or-create new
-  - [x] Toast notifications on save success/error
-  - [x] Client-side: disable Save when title empty
-  - _Note:_ Verified build and DB sync.
+- [x] Edit button toggles drawer into edit mode
+- [x] Action bar replaced with Save/Cancel buttons in edit mode
+- [x] Editable fields: title, description, tags (all types)
+- [x] Type-specific fields: content (text types), language (snippet/command), url (link)
+- [x] Zod validation in server action
+- [x] `updateItem` server action in `src/actions/items.ts`
+- [x] `updateItem` query function in `lib/db/items.ts`
+- [x] Tag sync: disconnect old, connect-or-create new
+- [x] Toast notifications on save success/error
+- [x] Client-side: disable Save when title empty
+- _Note:_ Verified build and DB sync.
 - **Delete Item Functionality** (Completed)
-  - [x] Delete button in item drawer triggers confirmation dialog
-  - [x] Shadcn AlertDialog for confirmation
-  - [x] Server action `deleteItem` in `src/actions/items.ts`
-  - [x] `deleteItem` query function in `lib/db/items.ts`
-  - [x] Toast notification on success/error
-  - [x] After delete: close drawer and refresh the page
-  - [x] Handle related data (tags, collection associations)
-  - [x] Unit tests for deleteItem server action and database function
+- [x] Delete button in item drawer triggers confirmation dialog
+- [x] Shadcn AlertDialog for confirmation
+- [x] Server action `deleteItem` in `src/actions/items.ts`
+- [x] `deleteItem` query function in `lib/db/items.ts`
+- [x] Toast notification on success/error
+- [x] After delete: close drawer and refresh the page
+- [x] Handle related data (tags, collection associations)
+- [x] Unit tests for deleteItem server action and database function
 - **Item Create** (Completed)
-  - [x] Create "New Item" button in top bar opens modal dialog
-  - [x] Type selector (snippet, prompt, command, note, link)
-  - [x] Show/hide fields based on selected type
-  - [x] `createItem` server action with Zod validation
-  - [x] `createItem` query function in `lib/db/items.ts`
-  - [x] Toast on success, close modal and refresh page
-  - [x] Unit tests for `createItem` server action and database function
+- [x] Create "New Item" button in top bar opens modal dialog
+- [x] Type selector (snippet, prompt, command, note, link)
+- [x] Show/hide fields based on selected type
+- [x] `createItem` server action with Zod validation
+- [x] `createItem` query function in `lib/db/items.ts`
+- [x] Toast on success, close modal and refresh page
+- [x] Unit tests for `createItem` server action and database function
 - **Code Editor & Type-Specific Creation** (Completed)
-  - [x] Implemented `CodeEditor` component with Monaco Editor
-  - [x] Added automatic height adjustment (`getContentHeight`) and loading state
-  - [x] Integrated `CodeEditor` into `ItemsWithDrawer` and `CreateItemDialog` for snippets/commands
-  - [x] Added type-specific "New [Type]" buttons to type pages
-  - [x] Implemented `defaultTypeId` pre-selection in `CreateItemDialog`
-  - [x] Enabled line numbers and code folding
-  - [x] Verified with type checking and existing unit tests
+- [x] Implemented `CodeEditor` component with Monaco Editor
+- [x] Added automatic height adjustment (`getContentHeight`) and loading state
+- [x] Integrated `CodeEditor` into `ItemsWithDrawer` and `CreateItemDialog` for snippets/commands
+- [x] Added type-specific "New [Type]" buttons to type pages
+- [x] Implemented `defaultTypeId` pre-selection in `CreateItemDialog`
+- [x] Enabled line numbers and code folding
+- [x] Verified with type checking and existing unit tests
 - **Markdown Editor** (Completed)
-  - [x] Created `MarkdownEditor` component with Write/Preview tabs
-  - [x] Integrated `react-markdown` with `remark-gfm` for GitHub Flavored Markdown
-  - [x] Added dark theme CSS styles in `globals.css`
-  - [x] macOS-style window header with copy button
-  - [x] Integrated into `ItemsWithDrawer` for note/prompt types (view/edit modes)
-  - [x] Integrated into `CreateItemDialog` for note/prompt content field
-  - [x] Readonly mode shows Preview only, edit mode defaults to Write
-  - _Note:_ Build and lint pass.
+- [x] Created `MarkdownEditor` component with Write/Preview tabs
+- [x] Integrated `react-markdown` with `remark-gfm` for GitHub Flavored Markdown
+- [x] Added dark theme CSS styles in `globals.css`
+- [x] macOS-style window header with copy button
+- [x] Integrated into `ItemsWithDrawer` for note/prompt types (view/edit modes)
+- [x] Integrated into `CreateItemDialog` for note/prompt content field
+- [x] Readonly mode shows Preview only, edit mode defaults to Write
+- _Note:_ Build and lint pass.
 - **File Upload with Cloudflare R2** (Completed)
-  - [x] Created `src/lib/r2.ts` with R2 client configuration, upload/delete/get functions, and file validation
-  - [x] Created `src/app/api/upload/route.ts` - Upload API endpoint for R2
-  - [x] Created `src/app/api/download/[id]/route.ts` - Download proxy API endpoint
-  - [x] Created `src/components/ui/file-upload.tsx` - Drag-and-drop file upload component with progress indicator
-  - [x] Added `src/components/ui/progress.tsx` - Progress bar component (shadcn)
-  - [x] Updated `src/components/dashboard/create-item-dialog.tsx` to support file/image types with FileUpload component
-  - [x] Updated `src/components/dashboard/items-with-drawer.tsx` with download button and image preview/file info display
-  - [x] Updated `src/lib/db/items.ts` - Added fileUrl, fileName, fileSize to createItem function
-  - [x] Updated `src/actions/items.ts` - Added file fields to createItem, deleteFromR2 on delete
-  - [x] Updated `src/lib/db/items.ts` - deleteItem now returns fileUrl for R2 cleanup
-  - [x] Fixed TypeScript error in `src/app/api/download/[id]/route.ts` - Buffer to Uint8Array conversion
-  - [x] Fixed image display to use download proxy for R2 authentication
-  - [x] Updated unit tests for new file fields in createItem and deleteItem
-  - [x] Added comprehensive tests for file validation (size limits, extensions, MIME types)
-  - [x] Verified build and all tests pass
+- [x] Created `src/lib/r2.ts` with R2 client configuration, upload/delete/get functions, and file validation
+- [x] Created `src/app/api/upload/route.ts` - Upload API endpoint for R2
+- [x] Created `src/app/api/download/[id]/route.ts` - Download proxy API endpoint
+- [x] Created `src/components/ui/file-upload.tsx` - Drag-and-drop file upload component with progress indicator
+- [x] Added `src/components/ui/progress.tsx` - Progress bar component (shadcn)
+- [x] Updated `src/components/dashboard/create-item-dialog.tsx` to support file/image types with FileUpload component
+- [x] Updated `src/components/dashboard/items-with-drawer.tsx` with download button and image preview/file info display
+- [x] Updated `src/lib/db/items.ts` - Added fileUrl, fileName, fileSize to createItem function
+- [x] Updated `src/actions/items.ts` - Added file fields to createItem, deleteFromR2 on delete
+- [x] Updated `src/lib/db/items.ts` - deleteItem now returns fileUrl for R2 cleanup
+- [x] Fixed TypeScript error in `src/app/api/download/[id]/route.ts` - Buffer to Uint8Array conversion
+- [x] Fixed image display to use download proxy for R2 authentication
+- [x] Updated unit tests for new file fields in createItem and deleteItem
+- [x] Added comprehensive tests for file validation (size limits, extensions, MIME types)
+- [x] Verified build and all tests pass
 - **Refactor: Extract Components from Item Files** (Completed)
-  - [x] Created `src/components/items/` directory with 7 new components
-  - [x] `ItemDrawerHeader`: icon, title, type badge, language input
-  - [x] `ItemDrawerActionBar`: Favorite, Pin, Copy, Download, Edit, Delete buttons
-  - [x] `ItemDrawerEditBar`: Save/Cancel buttons for edit mode
-  - [x] `ItemDrawerContent`: content display logic for all item types
-  - [x] `ItemDrawerMeta`: Tags, Collections, Details sections
-  - [x] `ItemTypeSelector`: type selection buttons grid
-  - [x] `ItemContentEditor`: CodeEditor/MarkdownEditor/Textarea logic
-  - [x] Reduced `items-with-drawer.tsx` from ~900 to 567 lines (37% Reduction)
-  - [x] Reduced `create-item-dialog.tsx` from ~400 to 315 lines (21% reduction)
-  - [x] Build and all tests pass
+- [x] Created `src/components/items/` directory with 7 new components
+- [x] `ItemDrawerHeader`: icon, title, type badge, language input
+- [x] `ItemDrawerActionBar`: Favorite, Pin, Copy, Download, Edit, Delete buttons
+- [x] `ItemDrawerEditBar`: Save/Cancel buttons for edit mode
+- [x] `ItemDrawerContent`: content display logic for all item types
+- [x] `ItemDrawerMeta`: Tags, Collections, Details sections
+- [x] `ItemTypeSelector`: type selection buttons grid
+- [x] `ItemContentEditor`: CodeEditor/MarkdownEditor/Textarea logic
+- [x] Reduced `items-with-drawer.tsx` from ~900 to 567 lines (37% Reduction)
+- [x] Reduced `create-item-dialog.tsx` from ~400 to 315 lines (21% reduction)
+- [x] Build and all tests pass
 - **Image Gallery View** (Completed)
-  - [x] Created `ImageCard` component with 16:9 aspect ratio and hover zoom effect
-  - [x] Used download proxy for R2 authentication
-  - [x] Implemented 3-column responsive grid for images (`sm:grid-cols-2 lg:grid-cols-3`)
-  - [x] Applied consistent 3-column grid to all item types
-  - [x] Added `fileUrl` to `DashboardItem` type
-  - _Note:_ Build and lint pass.
+- [x] Created `ImageCard` component with 16:9 aspect ratio and hover zoom effect
+- [x] Used download proxy for R2 authentication
+- [x] Implemented 3-column responsive grid for images (`sm:grid-cols-2 lg:grid-cols-3`)
+- [x] Applied consistent 3-column grid to all item types
+- [x] Added `fileUrl` to `DashboardItem` type
+- _Note:_ Build and lint pass.
 - **File List View** (Completed)
-  - [x] Created `FileListCard` component with file-type-specific icons (PDF, code, text, spreadsheet, archive)
-  - [x] Auto-detect file items in `ItemsWithDrawer` and display as single-column list
-  - [x] Added `fileName` and `fileSize` to `DashboardItem` type
-  - [x] Row hover highlight with visible download button
-  - [x] Click row opens ItemDrawer
-  - [x] Download button stops propagation and triggers direct download
-  - [x] Responsive design (mobile shows size and date stacked)
-  - _Note:_ Build and lint pass.
+- [x] Created `FileListCard` component with file-type-specific icons (PDF, code, text, spreadsheet, archive)
+- [x] Auto-detect file items in `ItemsWithDrawer` and display as single-column list
+- [x] Added `fileName` and `fileSize` to `DashboardItem` type
+- [x] Row hover highlight with visible download button
+- [x] Click row opens ItemDrawer
+- [x] Download button stops propagation and triggers direct download
+- [x] Responsive design (mobile shows size and date stacked)
+- _Note:_ Build and lint pass.
+- **Quick Copy Icon on Cards** (Completed)
+- [x] Added copy icon button to `ItemCard` with hover visibility
+- [x] Added copy icon button to `ImageCard` with hover visibility
+- [x] Added copy icon button to `FileListCard` alongside download button
+- [x] Added copy icon to pinned items and recent items sections
+- [x] Implemented `handleCopyItem` function that fetches item data and copies content/url
+- [x] Toast notifications for copy success/error
+- [x] Copy button stops propagation to prevent opening drawer
+- [x] Fixed ESLint `react-hooks/static-components` error by using switch-based `FileIcon` component
+- _Note:_ Build and lint pass.

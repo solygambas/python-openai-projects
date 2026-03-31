@@ -12,6 +12,7 @@ import {
   Link as LinkIcon,
   Pin,
   Star,
+  Copy,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -263,7 +264,27 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     }
   };
 
-  const handleCopy = () => {
+  const handleCopyItem = useCallback(async (itemId: string) => {
+    try {
+      const response = await fetch(`/api/items/${itemId}`);
+      if (!response.ok) {
+        toast.error("Failed to copy");
+        return;
+      }
+      const data = (await response.json()) as ItemDetailResponse;
+      const copyValue = data.item.content ?? data.item.url ?? "";
+      if (copyValue) {
+        await navigator.clipboard.writeText(copyValue);
+        toast.success("Copied to clipboard");
+      } else {
+        toast.error("Nothing to copy");
+      }
+    } catch {
+      toast.error("Failed to copy");
+    }
+  }, []);
+
+  const handleCopySelected = () => {
     const copyValue = selectedItem?.content ?? selectedItem?.url ?? "";
     if (copyValue) {
       void navigator.clipboard.writeText(copyValue);
@@ -329,6 +350,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
               item={item}
               iconMap={iconMap}
               onClick={() => onOpenItem(item.id)}
+              onCopy={() => handleCopyItem(item.id)}
             />
           ))}
         </div>
@@ -368,7 +390,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                 key={item.id}
                 type="button"
                 onClick={() => onOpenItem(item.id)}
-                className="w-full text-left"
+                className="w-full text-left group/card"
               >
                 <Card className="bg-card/50 backdrop-blur-sm border-white/5 group hover:border-primary/50 transition-colors relative overflow-hidden">
                   <div
@@ -409,8 +431,21 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="text-xs text-muted-foreground whitespace-nowrap px-4">
-                      {formatDate(item.createdAt)}
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyItem(item.id);
+                        }}
+                        className="h-7 w-7 rounded flex items-center justify-center opacity-0 group-hover/card:opacity-100 hover:bg-secondary transition-opacity shrink-0"
+                        aria-label="Copy to clipboard"
+                      >
+                        <Copy className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDate(item.createdAt)}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -433,7 +468,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
               key={item.id}
               type="button"
               onClick={() => onOpenItem(item.id)}
-              className="w-full text-left flex items-center justify-between p-2 pl-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden"
+              className="w-full text-left flex items-center justify-between p-2 pl-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden group/card"
             >
               <div
                 className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full"
@@ -462,6 +497,17 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                     </Badge>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopyItem(item.id);
+                  }}
+                  className="h-6 w-6 rounded flex items-center justify-center opacity-0 group-hover/card:opacity-100 hover:bg-secondary transition-opacity shrink-0"
+                  aria-label="Copy to clipboard"
+                >
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
                 <span className="text-xs text-muted-foreground w-12 text-right">
                   {formatDate(item.createdAt)}
                 </span>
@@ -471,7 +517,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
         })}
       </div>
     );
-  }, [items, onOpenItem, variant]);
+  }, [items, onOpenItem, handleCopyItem, variant]);
 
   return (
     <>
@@ -525,7 +571,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   hasContent={!!(selectedItem.content || selectedItem.url)}
                   onFavorite={() => {}}
                   onPin={() => {}}
-                  onCopy={handleCopy}
+                  onCopy={handleCopySelected}
                   onDownload={() =>
                     window.open(`/api/download/${selectedItem.id}`, "_blank")
                   }
