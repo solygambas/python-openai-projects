@@ -51,15 +51,26 @@ function main() {
     const resultStr =
       typeof toolResult === "string"
         ? toolResult
-        : JSON.stringify(toolResult || {});
+        : JSON.stringify(toolResult ?? "");
 
-    const hasErrorFlag =
-      typeof toolResult === "object" &&
-      toolResult !== null &&
-      toolResult.isError === true;
-    const hasErrorText = resultStr.toLowerCase().includes("error");
+    const isEditError =
+      resultStr.includes("Error editing file") ||
+      resultStr.includes("String not found") ||
+      resultStr.includes("File has been unexpectedly modified");
 
-    if (hasErrorFlag || hasErrorText) {
+    if (isEditError) {
+      // Temporary — log the raw payload to debug exact structure
+      try {
+        fs.appendFileSync(
+          path.join(process.cwd(), ".claude", "hook-debug.log"),
+          JSON.stringify(
+            { toolName, toolResult, ts: new Date().toISOString() },
+            null,
+            2,
+          ) + "\n",
+        );
+      } catch {}
+
       logError(toolName, toolInput, resultStr);
       // Skip running Prettier if the edit command fundamentally failed
       process.exit(0);
@@ -81,7 +92,7 @@ function main() {
       // prettier failed or not available — continue anyway
     }
 
-    // Step 2: inject the post-prettier file content into Claude's context
+    // Step 3: inject the post-prettier file content into Claude's context
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, "utf-8").replace(/\r\n/g, "\n");
       console.log(
