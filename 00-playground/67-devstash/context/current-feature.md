@@ -300,3 +300,13 @@ _None_
 - [x] Display selected collections in item drawer view mode
 - [x] Add unit tests for collection assignment functionality
 - _Note:_ Build and all 55 tests pass.
+- **Collections Pages** (Completed)
+- [x] Created `/collections` page to list all user collections
+- [x] Created `/collections/[id]` page to show items in a collection
+- [x] Separated images and files into their own card displays (gallery/list views)
+- [x] Added database functions: `getItemsByCollection`, `getAllCollectionsWithDetails`, `getCollectionById`
+- [x] Fixed nested button hydration error in MultiSelect component
+- [x] Fixed images not showing in drawer (added `unoptimized` prop for R2 images)
+- [x] Updated download API to use `inline` disposition for images
+- [x] Added unit tests for new database functions (11 tests)
+- _Note:_ Build and all 63 tests pass.
