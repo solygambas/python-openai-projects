@@ -2,31 +2,19 @@
 
 ## Status
 
-In Progress
+Not Started
 
 ## Title
 
-Collection Create
+TBD
 
 ## Goals
 
-- [x] Wire "New Collection" button in top bar (next to New Item button)
-- [x] Create modal dialog for new collection with name and description fields
-- [x] Create `createCollection` server action in `src/actions/collections.ts` with Zod validation
-- [x] Create `createCollection` query function in `src/lib/db/collections.ts`
-- [x] Show toast notification on success/failure
-- [x] Refresh data after successful creation (sidebar, dashboard collections)
-- [x] Add unit tests for createCollection server action and database function
+- [ ] TBD
 
 ## Notes
 
-- Follow the same patterns used for item creation (`CreateItemDialog`, `createItem` action)
-- Collections are user-scoped (userId required)
-- Use existing `Dialog` component from shadcn
-- Use existing `sonner` toast for notifications
-- Server action should validate with Zod before database write
-- After creation, refresh sidebar collections and dashboard recent collections
-- Consider adding a default item type selector (optional enhancement)
+TBD
 
 ## History
 
