@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Copy, Check, Eye, Pencil } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -123,7 +124,12 @@ export function MarkdownEditor({
         ) : (
           <div className="markdown-preview p-4 text-sm leading-relaxed">
             {value ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSanitize]}
+              >
+                {value}
+              </ReactMarkdown>
             ) : (
               <p className="text-muted-foreground italic">No content</p>
             )}

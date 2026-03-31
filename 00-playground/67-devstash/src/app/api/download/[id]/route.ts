@@ -47,13 +47,20 @@ export async function GET(
       );
     }
 
+    // Sanitize filename to prevent header injection attacks
+    // Remove any characters that could break out of the quoted string
+    const sanitizedFileName = (item.fileName || "download")
+      .replace(/["\r\n]/g, "_") // Remove quotes and newlines that could break the header
+      .replace(/[^\x20-\x7E]/g, "") // Remove non-printable ASCII characters
+      .substring(0, 255); // Limit length
+
     // Return the file with proper headers
     // Convert Buffer to Uint8Array for NextResponse compatibility
     const uint8Array = new Uint8Array(fileData.body);
     return new NextResponse(uint8Array, {
       headers: {
         "Content-Type": fileData.contentType,
-        "Content-Disposition": `attachment; filename="${item.fileName || "download"}"`,
+        "Content-Disposition": `attachment; filename="${sanitizedFileName}"`,
         "Content-Length": uint8Array.byteLength.toString(),
       },
     });

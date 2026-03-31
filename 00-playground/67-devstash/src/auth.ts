@@ -79,7 +79,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     GitHub({
-      allowDangerousEmailAccountLinking: true,
+      // Disabled to prevent account takeover attacks.
+      // If an attacker registers the same email on GitHub before the legitimate user,
+      // they could potentially take over the account with allowDangerousEmailAccountLinking: true.
+      // Users will need to manually link accounts if they use both email/password and GitHub.
+      allowDangerousEmailAccountLinking: false,
     }),
     Credentials({
       credentials: {
