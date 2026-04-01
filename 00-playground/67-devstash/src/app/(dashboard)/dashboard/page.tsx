@@ -62,7 +62,10 @@ async function PinnedItemsSection({ userId }: { userId: string }) {
 }
 
 async function RecentItemsSection({ userId }: { userId: string }) {
-  const recentItems = await getRecentItems(userId, DASHBOARD_RECENT_ITEMS_LIMIT);
+  const recentItems = await getRecentItems(
+    userId,
+    DASHBOARD_RECENT_ITEMS_LIMIT,
+  );
   return <RecentItems items={recentItems} />;
 }
 

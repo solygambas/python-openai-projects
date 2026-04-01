@@ -1,20 +1,23 @@
-# Current Feature
+# Current Feature: Settings Page
 
 ## Status
 
-Complete
-
-## Title
-
-(none)
+In Progress
 
 ## Goals
 
-(none)
+- Create a protected /settings page accessible only to authenticated users
+- Add "Settings" link to the user icon dropdown menu at the bottom of the sidebar
+- Move "Delete Account" action from Profile page to Settings page
+- Move "Forgot Password" action from Profile page to Settings page
+- Ensure proper navigation and routing between Profile and Settings pages
 
 ## Notes
 
-(none)
+- URL: `/settings` (should be protected with authentication check)
+- Settings link should appear in the user avatar dropdown at the bottom of the sidebar
+- Account actions (delete account, forgot password) currently exist in Profile page and need to be relocated
+- Consider UI consistency with existing Account section design
 
 ## History
 

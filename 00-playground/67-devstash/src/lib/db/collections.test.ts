@@ -1,14 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createMock, findManyMock, findFirstMock, updateMock, deleteMock, countMock } =
-  vi.hoisted(() => ({
-    createMock: vi.fn(),
-    findManyMock: vi.fn(),
-    findFirstMock: vi.fn(),
-    updateMock: vi.fn(),
-    deleteMock: vi.fn(),
-    countMock: vi.fn(),
-  }));
+const {
+  createMock,
+  findManyMock,
+  findFirstMock,
+  updateMock,
+  deleteMock,
+  countMock,
+} = vi.hoisted(() => ({
+  createMock: vi.fn(),
+  findManyMock: vi.fn(),
+  findFirstMock: vi.fn(),
+  updateMock: vi.fn(),
+  deleteMock: vi.fn(),
+  countMock: vi.fn(),
+}));
 
 vi.mock("@/lib/prisma", () => ({
   default: {
@@ -483,7 +489,10 @@ describe("getAllCollectionsWithDetailsPaginated", () => {
     await getAllCollectionsWithDetailsPaginated("user-1", 2);
 
     expect(findManyMock).toHaveBeenCalledWith(
-      expect.objectContaining({ skip: COLLECTIONS_PER_PAGE, take: COLLECTIONS_PER_PAGE }),
+      expect.objectContaining({
+        skip: COLLECTIONS_PER_PAGE,
+        take: COLLECTIONS_PER_PAGE,
+      }),
     );
   });
 

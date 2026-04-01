@@ -8,9 +8,11 @@ export const proxy = auth((req) => {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
-  // Protect /dashboard and /profile routes
+  // Protect /dashboard, /profile, and /settings routes
   if (
-    (pathname.startsWith("/dashboard") || pathname.startsWith("/profile")) &&
+    (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/profile") ||
+      pathname.startsWith("/settings")) &&
     !isLoggedIn
   ) {
     const signInUrl = new URL("/sign-in", req.url);

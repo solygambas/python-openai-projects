@@ -16,6 +16,7 @@ import {
   ChevronRight,
   User,
   LogOut,
+  Settings,
   LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -376,6 +377,16 @@ export function DashboardSidebar({
               <Link href="/profile" className="flex items-center gap-2 w-full">
                 <User className="h-4 w-4" />
                 <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={cn(
+                pathname === "/settings" && "bg-primary/10 text-primary",
+              )}
+            >
+              <Link href="/settings" className="flex items-center gap-2 w-full">
+                <Settings className="h-4 w-4" />
+                <span>Settings</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

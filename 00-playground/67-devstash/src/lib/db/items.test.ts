@@ -776,7 +776,10 @@ describe("getItemsByCollectionPaginated", () => {
     await getItemsByCollectionPaginated("user-1", "col-1", 3);
 
     expect(findManyMock).toHaveBeenCalledWith(
-      expect.objectContaining({ skip: COLLECTIONS_PER_PAGE * 2, take: COLLECTIONS_PER_PAGE }),
+      expect.objectContaining({
+        skip: COLLECTIONS_PER_PAGE * 2,
+        take: COLLECTIONS_PER_PAGE,
+      }),
     );
   });
 
