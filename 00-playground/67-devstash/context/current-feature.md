@@ -1,27 +1,16 @@
-# Favorites Page
+# Current Feature
 
 ## Status
 
-Complete
+Not Started
 
 ## Goals
 
-- Add star icon button to TopBar linking to /favorites
-- Create /favorites route with protection
-- Fetch all user favorited items and collections
-- Compact list view (VS Code/terminal style, not cards)
-- Each row: type icon, title, type badge, date added
-- Separate sections for items and collections with counts
-- Click item opens ItemDrawer, click collection navigates to /collections/[id]
-- Empty state when no favorites
-- Sort by most recently favorited (updatedAt)
+<!-- Add your feature goals here -->
 
 ## Notes
 
-- Monospace or semi-monospace font
-- Minimal padding, high density
-- Subtle hover states
-- No cards or heavy borders, clean lines only
+<!-- Add any constraints or context here -->
 
 ## History
 
@@ -362,4 +351,15 @@ Complete
 - [x] Added auto-save on preference change with success toast notifications
 - [x] Added comprehensive test coverage: 9 new unit tests covering authorization, validation, and storage
 - [x] Installed ShadCN components: `select` and `switch` for preference controls
-- _Note:_ Build and all 103 tests pass.
+- _Note:_ Build and all 103 tests pass.- **Favorites Page** (Completed)
+- [x] Added star icon button to TopBar linking to /favorites
+- [x] Created /favorites route with async page component
+- [x] Implemented database helper functions: `getFavoritedItems()` and `getFavoritedCollections()`
+- [x] Integrated offset-based pagination support with `limit` and `skip` parameters
+- [x] Added unit tests for `getFavoritedItems()` and `getFavoritedCollections()` (8 new tests)
+- [x] Favorites page shows compact list view with type icons, titles, type badges, and dates
+- [x] Separate sections for items and collections with counts
+- [x] Click item opens ItemDrawer, click collection navigates to /collections/[id]
+- [x] Empty state displayed when no favorites exist
+- [x] Items and collections sorted by most recently favorited (updatedAt DESC)
+- _Note:_ Build and all 111 tests pass.
