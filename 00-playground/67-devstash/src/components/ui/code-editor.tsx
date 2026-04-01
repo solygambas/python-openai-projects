@@ -1,10 +1,66 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import { Copy, Check, Loader2 } from "lucide-react";
-import Editor, { type OnMount } from "@monaco-editor/react";
+import Editor, { type OnMount, type BeforeMount } from "@monaco-editor/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { EditorPreferencesContext } from "@/contexts/editor-preferences-context";
+import { DEFAULT_EDITOR_PREFERENCES } from "@/types/editor-preferences";
+
+const handleBeforeMount: BeforeMount = (monaco) => {
+  monaco.editor.defineTheme("monokai", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "75715e", fontStyle: "italic" },
+      { token: "keyword", foreground: "f92672" },
+      { token: "string", foreground: "e6db74" },
+      { token: "number", foreground: "ae81ff" },
+      { token: "type", foreground: "66d9ef", fontStyle: "italic" },
+      { token: "class", foreground: "a6e22e" },
+      { token: "function", foreground: "a6e22e" },
+      { token: "variable", foreground: "f8f8f2" },
+      { token: "operator", foreground: "f92672" },
+      { token: "delimiter", foreground: "f8f8f2" },
+    ],
+    colors: {
+      "editor.background": "#272822",
+      "editor.foreground": "#f8f8f2",
+      "editorLineNumber.foreground": "#75715e",
+      "editorCursor.foreground": "#f8f8f0",
+      "editor.selectionBackground": "#49483e",
+      "editor.inactiveSelectionBackground": "#3e3d32",
+      "editorIndentGuide.background1": "#3b3a32",
+    },
+  });
+
+  monaco.editor.defineTheme("github-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "8b949e", fontStyle: "italic" },
+      { token: "keyword", foreground: "ff7b72" },
+      { token: "string", foreground: "a5d6ff" },
+      { token: "number", foreground: "79c0ff" },
+      { token: "type", foreground: "ffa657" },
+      { token: "class", foreground: "d2a8ff" },
+      { token: "function", foreground: "d2a8ff" },
+      { token: "variable", foreground: "c9d1d9" },
+      { token: "operator", foreground: "ff7b72" },
+      { token: "delimiter", foreground: "c9d1d9" },
+    ],
+    colors: {
+      "editor.background": "#0d1117",
+      "editor.foreground": "#c9d1d9",
+      "editorLineNumber.foreground": "#6e7681",
+      "editorCursor.foreground": "#c9d1d9",
+      "editor.selectionBackground": "#264f78",
+      "editor.inactiveSelectionBackground": "#1f2937",
+      "editorIndentGuide.background1": "#21262d",
+    },
+  });
+};
 
 // Use a simplified interface for the editor instance
 interface MonacoEditor {
@@ -36,6 +92,9 @@ export function CodeEditor({
   const [isLoaded, setIsLoaded] = useState(false);
   const [editorHeight, setEditorHeight] = useState(minHeight);
   const editorRef = useRef<MonacoEditor | null>(null);
+
+  const prefsCtx = useContext(EditorPreferencesContext);
+  const prefs = prefsCtx?.preferences ?? DEFAULT_EDITOR_PREFERENCES;
 
   const handleCopy = async () => {
     if (!value) return;
@@ -125,12 +184,13 @@ export function CodeEditor({
           language={language}
           value={value}
           onChange={(v) => onChange?.(v ?? "")}
+          beforeMount={handleBeforeMount}
           onMount={handleEditorDidMount}
-          theme="vs-dark"
+          theme={prefs.theme}
           loading={<div />}
           options={{
             readOnly,
-            minimap: { enabled: false },
+            minimap: { enabled: prefs.minimap },
             scrollBeyondLastLine: false,
             lineNumbers: "on",
             glyphMargin: false,
@@ -146,9 +206,10 @@ export function CodeEditor({
               alwaysConsumeMouseWheel: false,
             },
             padding: { top: 12, bottom: 12 },
-            fontSize: 13,
+            fontSize: prefs.fontSize,
+            tabSize: prefs.tabSize,
             fontFamily: "JetBrains Mono, Menlo, Monaco, Courier New, monospace",
-            wordWrap: "on",
+            wordWrap: prefs.wordWrap ? "on" : "off",
             automaticLayout: true,
             fixedOverflowWidgets: true,
           }}

@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import { getUserById } from "@/lib/db/users";
 import { AccountActions } from "@/components/profile/account-actions";
+import { EditorPreferencesForm } from "@/components/profile/editor-preferences-form";
+import { EditorPreferencesProvider } from "@/contexts/editor-preferences-context";
+import { getEditorPreferences } from "@/actions/editor-preferences";
 import { redirect } from "next/navigation";
 
 export default async function SettingsPage() {
@@ -11,7 +14,10 @@ export default async function SettingsPage() {
   }
 
   const userId = session.user.id;
-  const user = await getUserById(userId);
+  const [user, editorPreferences] = await Promise.all([
+    getUserById(userId),
+    getEditorPreferences(),
+  ]);
 
   if (!user) {
     redirect("/sign-in");
@@ -29,6 +35,9 @@ export default async function SettingsPage() {
       </div>
 
       <div className="flex flex-col gap-8">
+        <EditorPreferencesProvider initialPreferences={editorPreferences}>
+          <EditorPreferencesForm />
+        </EditorPreferencesProvider>
         <AccountActions isEmailUser={isEmailUser} />
       </div>
     </div>

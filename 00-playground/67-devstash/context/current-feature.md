@@ -1,16 +1,30 @@
-# Current Feature
+# Current Feature: Editor Preferences Settings
 
 ## Status
 
-Complete
+In Progress
 
 ## Goals
 
-(none)
+- Add editor preferences section to settings page
+- Support font size, tab size, word wrap, minimap, and theme controls
+- Store preferences in database (`editorPreferences` JSON column on User model)
+- Create server action to update preferences
+- Apply settings to Monaco editor component
+- Auto-save on change with success toast notification
+- Create EditorPreferencesContext for client components
 
 ## Notes
 
-(none)
+- **Font size dropdown** - user selectable
+- **Tab size dropdown** - user selectable
+- **Word wrap toggle** - default ON
+- **Minimap toggle** - default OFF
+- **Theme dropdown** - options: vs-dark, monokai, github-dark (default: vs-dark)
+- Must create and run migration (never use db push)
+- Auto-save on every change (no save button)
+- Show success toast on each save
+- Requires EditorPreferencesContext for sharing settings across client components
 
 ## History
 
