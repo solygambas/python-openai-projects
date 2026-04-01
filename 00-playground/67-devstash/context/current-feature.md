@@ -1,23 +1,16 @@
-# Current Feature: Settings Page
+# Current Feature
 
 ## Status
 
-In Progress
+Complete
 
 ## Goals
 
-- Create a protected /settings page accessible only to authenticated users
-- Add "Settings" link to the user icon dropdown menu at the bottom of the sidebar
-- Move "Delete Account" action from Profile page to Settings page
-- Move "Forgot Password" action from Profile page to Settings page
-- Ensure proper navigation and routing between Profile and Settings pages
+(none)
 
 ## Notes
 
-- URL: `/settings` (should be protected with authentication check)
-- Settings link should appear in the user avatar dropdown at the bottom of the sidebar
-- Account actions (delete account, forgot password) currently exist in Profile page and need to be relocated
-- Consider UI consistency with existing Account section design
+(none)
 
 ## History
 
@@ -335,3 +328,14 @@ In Progress
 - [x] Add global ItemDrawerProvider for drawer state management
 - _Note:_ Build and all 78 tests pass.
 - **Pagination** (Completed) - Implemented pagination for items and collections across /items/[type], /collections/[id], and /collections pages with numbered links, prev/next controls, and efficient skip/take DB queries. Applied pagination constants (DASHBOARD_COLLECTIONS_LIMIT, DASHBOARD_RECENT_ITEMS_LIMIT) to all dashboard call sites. Wired logo navigation to home and 'View all collections' button to collections page. All 94 unit tests pass.
+- **Settings Page** (Completed)
+- [x] Created protected `/settings` route at `src/app/(dashboard)/settings/page.tsx`
+- [x] Moved `AccountActions` component (Delete Account, Change Password) from Profile to Settings page
+- [x] Updated Profile page (`src/app/(dashboard)/profile/page.tsx`) to remove Account actions
+- [x] Changed Profile description from "Manage your account settings" to "View your profile information and activity"
+- [x] Added "Settings" link to user icon dropdown in sidebar (between Profile and Sign out)
+- [x] Added `Settings` icon import (lucide-react) to sidebar dropdown
+- [x] Protected `/settings` route in `src/proxy.ts` middleware
+- [x] Settings page shows only Account actions (Delete Account, Change Password)
+- [x] All validation checks pass; no new lint or type errors
+- _Note:_ Build and all 94 tests pass.
