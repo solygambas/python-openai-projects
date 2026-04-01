@@ -1,30 +1,16 @@
 # Current Feature
 
-## Favorites Page — Client-Side Sorting
-
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- [x] Favorites page exists and displays favorited items and collections
-- Add client-side sorting UI (dropdown or buttons) to sort by:
-  - Date (most recently favorited first — default)
-  - Name (alphabetical A-Z)
-  - Item Type (snippets, prompts, commands, notes, links, images, files)
-- Sorting applied in-memory without API call
-- Persist last selected sort preference in localStorage
-- Applied to items section, collections section (no item type), and separately
+<!-- Add goals here -->
 
 ## Notes
 
-- Base feature already completed: `/favorites` route, database queries, ItemDrawer integration
-- Focus is on client-side sorting enhancements
-- Sort order options: Date (DESC), Name (ASC), Type (custom order)
-- localStorage key: `favorites-sort-preference` (JSON: `{items: "date|name|type", collections: "date|name"}`)
-- Ref: `@context/features/favorites-spec.md` (completed base feature)
-- Ref: `@context/features/pagination-spec.md` (offset-based pagination already in place)
+<!-- Add notes here -->
 
 ## History
 
@@ -389,3 +375,14 @@ In Progress
 - [x] Ensured favorite state persists across UI updates and page refreshes
 - [x] Updated favorites page and stats sidebar to reflect real-time availability
 - _Note:_ Build and all 131 tests pass.
+- **Favorites Page — Client-Side Sorting** (Completed)
+- [x] Created `use-favorites-sort` hook with sort functions for items (newest, oldest, name A-Z, name Z-A, type) and collections (newest, oldest, name A-Z, name Z-A)
+- [x] Implemented localStorage persistence of sort preferences with key validation to handle stale values
+- [x] Added Sort UI (Select dropdowns) above items and collections sections
+- [x] Integrated sort functions into FavoritesPage to apply sorting client-side without API calls
+- [x] Extracted shared types (FavoriteItem, FavoriteCollection) to use-favorites-sort.ts
+- [x] Implemented comprehensive unit tests (14 tests) covering all sort modes and edge cases
+- [x] Widened Select triggers to accommodate longer labels ("Name Z-A", etc.)
+- [x] Added validation in loadPreference to reject stale/invalid localStorage keys
+- [x] Build passes, no new lint or type errors
+- _Note:_ Build and all 125 tests pass.
