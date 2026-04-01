@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createMock, findManyMock, findFirstMock, updateMock, deleteMock } =
+const { createMock, findManyMock, findFirstMock, updateMock, deleteMock, countMock } =
   vi.hoisted(() => ({
     createMock: vi.fn(),
     findManyMock: vi.fn(),
     findFirstMock: vi.fn(),
     updateMock: vi.fn(),
     deleteMock: vi.fn(),
+    countMock: vi.fn(),
   }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -17,6 +18,7 @@ vi.mock("@/lib/prisma", () => ({
       findFirst: findFirstMock,
       update: updateMock,
       delete: deleteMock,
+      count: countMock,
     },
   },
 }));
@@ -24,10 +26,12 @@ vi.mock("@/lib/prisma", () => ({
 import {
   createCollection,
   getAllCollectionsWithDetails,
+  getAllCollectionsWithDetailsPaginated,
   getCollectionById,
   updateCollection,
   deleteCollection,
 } from "@/lib/db/collections";
+import { COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
 describe("createCollection", () => {
   beforeEach(() => {
@@ -436,6 +440,61 @@ describe("deleteCollection", () => {
 
     await expect(deleteCollection("user-2", "col-1")).rejects.toThrow(
       "Collection not found",
+    );
+  });
+});
+
+describe("getAllCollectionsWithDetailsPaginated", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+    countMock.mockReset();
+  });
+
+  it("returns paginated collections and total count", async () => {
+    const mockCollections = [
+      {
+        id: "col-1",
+        name: "Collection 1",
+        items: [],
+        _count: { items: 0 },
+      },
+    ];
+    findManyMock.mockResolvedValueOnce(mockCollections);
+    countMock.mockResolvedValueOnce(5);
+
+    const result = await getAllCollectionsWithDetailsPaginated("user-1", 1);
+
+    expect(result.total).toBe(5);
+    expect(result.collections).toHaveLength(1);
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { userId: "user-1" },
+        skip: 0,
+        take: COLLECTIONS_PER_PAGE,
+      }),
+    );
+    expect(countMock).toHaveBeenCalledWith({ where: { userId: "user-1" } });
+  });
+
+  it("applies correct skip for page 2", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(50);
+
+    await getAllCollectionsWithDetailsPaginated("user-1", 2);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: COLLECTIONS_PER_PAGE, take: COLLECTIONS_PER_PAGE }),
+    );
+  });
+
+  it("clamps page to minimum of 1", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(0);
+
+    await getAllCollectionsWithDetailsPaginated("user-1", 0);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 0 }),
     );
   });
 });

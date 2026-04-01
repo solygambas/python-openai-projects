@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, Sparkles, PanelLeft, Menu } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -68,12 +69,15 @@ export function DashboardTopBar() {
       </Button>
 
       {/* Logo */}
-      <div className="flex items-center gap-2 font-bold text-lg mr-4">
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2 font-bold text-lg mr-4 hover:opacity-80 transition-opacity"
+      >
         <div className="bg-primary/10 text-primary p-1 rounded-md">
           <Sparkles className="h-5 w-5" />
         </div>
         <span className="hidden lg:inline-block">DevStash</span>
-      </div>
+      </Link>
 
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <div className="ml-auto flex-1 sm:flex-initial">

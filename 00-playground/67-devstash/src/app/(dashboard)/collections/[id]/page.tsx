@@ -2,19 +2,27 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getUserById } from "@/lib/db/users";
 import { getCollectionById } from "@/lib/db/collections";
-import { getItemsByCollection } from "@/lib/db/items";
+import { getItemsByCollectionPaginated } from "@/lib/db/items";
 import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
 import { CollectionHeaderActions } from "@/components/collections/collection-header-actions";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
 interface CollectionPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
-export default async function CollectionPage({ params }: CollectionPageProps) {
+export default async function CollectionPage({
+  params,
+  searchParams,
+}: CollectionPageProps) {
   const { id: collectionId } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   const session = await auth();
   const userId = session?.user?.id;
@@ -24,10 +32,12 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const user = await getUserById(userId);
   if (!user) redirect("/sign-in?error=UserNotFound");
 
-  const [collection, items] = await Promise.all([
+  const [collection, { items, total }] = await Promise.all([
     getCollectionById(user.id, collectionId),
-    getItemsByCollection(user.id, collectionId),
+    getItemsByCollectionPaginated(user.id, collectionId, page),
   ]);
+
+  const totalPages = Math.ceil(total / COLLECTIONS_PER_PAGE);
 
   if (!collection) {
     return (
@@ -71,7 +81,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
             {collection.name}
           </h1>
           <p className="text-muted-foreground">
-            {items.length} item{items.length !== 1 ? "s" : ""}
+            {total} item{total !== 1 ? "s" : ""}
           </p>
           {collection.description && (
             <p className="text-sm text-muted-foreground mt-2">
@@ -122,6 +132,12 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
               <ItemsWithDrawer items={otherItems} variant="grid" />
             </div>
           )}
+
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            basePath={`/collections/${collectionId}`}
+          />
         </>
       )}
     </div>

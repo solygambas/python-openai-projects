@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -47,12 +48,14 @@ export function RecentCollections({
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold tracking-tight">Collections</h2>
-        <Button
-          variant="link"
-          className="text-muted-foreground hover:text-primary"
-        >
-          View all
-        </Button>
+        <Link href="/collections">
+          <Button
+            variant="link"
+            className="text-muted-foreground hover:text-primary"
+          >
+            View all
+          </Button>
+        </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {collections.map((collection) => {

@@ -8,6 +8,10 @@ import { getCollectionStats, getRecentCollections } from "@/lib/db/collections";
 import { getPinnedItems, getRecentItems } from "@/lib/db/items";
 import { getItemTypes } from "@/lib/db/item-types";
 import {
+  DASHBOARD_COLLECTIONS_LIMIT,
+  DASHBOARD_RECENT_ITEMS_LIMIT,
+} from "@/lib/utils";
+import {
   StatsCardsSkeleton,
   RecentCollectionsSkeleton,
   ItemsListSkeleton,
@@ -45,7 +49,7 @@ async function StatsSection({ userId }: { userId: string }) {
 async function RecentCollectionsSection({ userId }: { userId: string }) {
   const [itemTypes, recentCollections] = await Promise.all([
     getItemTypes(),
-    getRecentCollections(userId),
+    getRecentCollections(userId, DASHBOARD_COLLECTIONS_LIMIT),
   ]);
   return (
     <RecentCollections collections={recentCollections} itemTypes={itemTypes} />
@@ -58,7 +62,7 @@ async function PinnedItemsSection({ userId }: { userId: string }) {
 }
 
 async function RecentItemsSection({ userId }: { userId: string }) {
-  const recentItems = await getRecentItems(userId);
+  const recentItems = await getRecentItems(userId, DASHBOARD_RECENT_ITEMS_LIMIT);
   return <RecentItems items={recentItems} />;
 }
 

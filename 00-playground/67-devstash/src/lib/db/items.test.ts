@@ -10,6 +10,7 @@ const {
   deleteManyMock,
   createManyMock,
   findManyMock,
+  countMock,
 } = vi.hoisted(() => ({
   findFirstMock: vi.fn(),
   updateMock: vi.fn(),
@@ -31,6 +32,7 @@ const {
   deleteManyMock: vi.fn(),
   createManyMock: vi.fn(),
   findManyMock: vi.fn(),
+  countMock: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -41,6 +43,7 @@ vi.mock("@/lib/prisma", () => ({
       update: updateMock,
       delete: deleteMock,
       create: createMock,
+      count: countMock,
     },
     itemType: {
       findUnique: findUniqueMock,
@@ -55,7 +58,10 @@ import {
   deleteItem,
   createItem,
   getItemsByCollection,
+  getItemsByTypePaginated,
+  getItemsByCollectionPaginated,
 } from "@/lib/db/items";
+import { ITEMS_PER_PAGE, COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
 describe("getItemDetailById", () => {
   beforeEach(() => {
@@ -662,5 +668,124 @@ describe("getItemsByCollection", () => {
         take: 10,
       }),
     );
+  });
+});
+
+describe("getItemsByTypePaginated", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+    countMock.mockReset();
+  });
+
+  it("returns items and total for page 1", async () => {
+    const mockItems = [
+      {
+        id: "item-1",
+        title: "Snippet 1",
+        itemType: { name: "snippet" },
+        tags: [],
+      },
+    ];
+    findManyMock.mockResolvedValueOnce(mockItems);
+    countMock.mockResolvedValueOnce(1);
+
+    const result = await getItemsByTypePaginated("user-1", "snippet", 1);
+
+    expect(result).toEqual({ items: mockItems, total: 1 });
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { userId: "user-1", itemType: { name: "snippet" } },
+        skip: 0,
+        take: ITEMS_PER_PAGE,
+        orderBy: { createdAt: "desc" },
+      }),
+    );
+    expect(countMock).toHaveBeenCalledWith({
+      where: { userId: "user-1", itemType: { name: "snippet" } },
+    });
+  });
+
+  it("applies correct skip for page 2", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(30);
+
+    await getItemsByTypePaginated("user-1", "snippet", 2);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: ITEMS_PER_PAGE, take: ITEMS_PER_PAGE }),
+    );
+  });
+
+  it("clamps page to minimum of 1", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(0);
+
+    await getItemsByTypePaginated("user-1", "snippet", 0);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 0 }),
+    );
+  });
+});
+
+describe("getItemsByCollectionPaginated", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+    countMock.mockReset();
+  });
+
+  it("returns items and total for page 1", async () => {
+    const mockItems = [
+      {
+        id: "item-1",
+        title: "Item 1",
+        itemType: { name: "snippet" },
+        tags: [],
+        collections: [],
+      },
+    ];
+    findManyMock.mockResolvedValueOnce(mockItems);
+    countMock.mockResolvedValueOnce(1);
+
+    const result = await getItemsByCollectionPaginated("user-1", "col-1", 1);
+
+    expect(result).toEqual({ items: mockItems, total: 1 });
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          userId: "user-1",
+          collections: { some: { collectionId: "col-1" } },
+        },
+        skip: 0,
+        take: COLLECTIONS_PER_PAGE,
+        orderBy: { createdAt: "desc" },
+      }),
+    );
+    expect(countMock).toHaveBeenCalledWith({
+      where: {
+        userId: "user-1",
+        collections: { some: { collectionId: "col-1" } },
+      },
+    });
+  });
+
+  it("applies correct skip for page 3", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(100);
+
+    await getItemsByCollectionPaginated("user-1", "col-1", 3);
+
+    expect(findManyMock).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: COLLECTIONS_PER_PAGE * 2, take: COLLECTIONS_PER_PAGE }),
+    );
+  });
+
+  it("returns empty items and zero total when collection is empty", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+    countMock.mockResolvedValueOnce(0);
+
+    const result = await getItemsByCollectionPaginated("user-1", "empty-col");
+
+    expect(result).toEqual({ items: [], total: 0 });
   });
 });

@@ -8,6 +8,7 @@ import { getUserById } from "@/lib/db/users";
 import { getItemTypes } from "@/lib/db/item-types";
 import { getItemTypeCounts } from "@/lib/db/items";
 import { getRecentCollections } from "@/lib/db/collections";
+import { DASHBOARD_COLLECTIONS_LIMIT } from "@/lib/utils";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
@@ -49,8 +50,8 @@ export default async function DashboardLayout({
     await Promise.all([
       getItemTypes(),
       getItemTypeCounts(user.id),
-      getRecentCollections(user.id, 5, true),
-      getRecentCollections(user.id, 5, false),
+      getRecentCollections(user.id, DASHBOARD_COLLECTIONS_LIMIT, true),
+      getRecentCollections(user.id, DASHBOARD_COLLECTIONS_LIMIT, false),
     ]);
 
   return (

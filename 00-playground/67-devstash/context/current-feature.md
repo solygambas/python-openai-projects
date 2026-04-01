@@ -2,19 +2,35 @@
 
 ## Status
 
-Not Started
+In Progress
 
 ## Title
 
-(No active feature)
+Pagination
 
 ## Goals
 
-(No goals set)
+- Add pagination to /items/[type] and /collections/[id] pages
+- Implement pagination controls with numbered page links and prev/next navigation
+- Disable prev/next buttons when not available
+- Only fetch required items per page (no over-fetching)
 
 ## Notes
 
-(No notes)
+### Constants
+
+- ITEMS_PER_PAGE = 21
+- COLLECTIONS_PER_PAGE = 21
+- DASHBOARD_COLLECTIONS_LIMIT = 6
+- DASHBOARD_RECENT_ITEMS_LIMIT = 10
+
+### Implementation Details
+
+- Add pagination controls at bottom of listings
+- Pagination controls should show numbered page links
+- Prev/next links should be disabled (greyed out) when not available
+- Only fetch the amount of resources that a page requires
+- Apply to: /items/[type] and /collections/[id] pages
 
 ## History
 

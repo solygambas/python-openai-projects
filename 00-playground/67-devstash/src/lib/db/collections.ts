@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
 export async function getRecentCollections(
   userId: string,
@@ -160,6 +161,92 @@ export async function getAllCollections(userId: string) {
       name: true,
     },
   });
+}
+
+export async function getAllCollectionsWithDetailsPaginated(
+  userId: string,
+  page: number = 1,
+) {
+  const validPage = Math.max(1, page);
+  const skip = (validPage - 1) * COLLECTIONS_PER_PAGE;
+
+  const [collections, total] = await Promise.all([
+    prisma.collection.findMany({
+      where: { userId },
+      skip,
+      take: COLLECTIONS_PER_PAGE,
+      orderBy: { name: "asc" },
+      include: {
+        _count: {
+          select: {
+            items: true,
+          },
+        },
+        items: {
+          include: {
+            item: {
+              select: {
+                itemTypeId: true,
+                itemType: {
+                  select: {
+                    id: true,
+                    color: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.collection.count({ where: { userId } }),
+  ]);
+
+  const enrichedCollections = collections.map((collection) => {
+    // Extract unique item type IDs and their colors
+    const itemTypesMap = new Map<string, string>();
+    const typeFrequency = new Map<string, number>();
+
+    collection.items.forEach((itemCollection) => {
+      const typeId = itemCollection.item.itemTypeId;
+      const color = itemCollection.item.itemType.color;
+
+      itemTypesMap.set(typeId, color);
+      typeFrequency.set(typeId, (typeFrequency.get(typeId) || 0) + 1);
+    });
+
+    // Find the most frequent type to determine border color
+    let mostFrequentTypeId = "";
+    let maxFrequency = 0;
+
+    typeFrequency.forEach((count, typeId) => {
+      if (count > maxFrequency) {
+        maxFrequency = count;
+        mostFrequentTypeId = typeId;
+      }
+    });
+
+    const borderColor = mostFrequentTypeId
+      ? itemTypesMap.get(mostFrequentTypeId)
+      : undefined;
+
+    // Ensure the most frequent type is first in the list
+    const otherTypeIds = Array.from(itemTypesMap.keys()).filter(
+      (id) => id !== mostFrequentTypeId,
+    );
+    const orderedTypeIds = mostFrequentTypeId
+      ? [mostFrequentTypeId, ...otherTypeIds]
+      : otherTypeIds;
+
+    return {
+      ...collection,
+      itemCount: collection._count.items,
+      itemTypeIds: orderedTypeIds,
+      borderColor,
+    };
+  });
+
+  return { collections: enrichedCollections, total };
 }
 
 export async function getAllCollectionsWithDetails(userId: string) {

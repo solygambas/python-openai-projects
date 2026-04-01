@@ -1,19 +1,27 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getUserById } from "@/lib/db/users";
-import { getItemsByType } from "@/lib/db/items";
+import { getItemsByTypePaginated } from "@/lib/db/items";
 import { getItemTypes } from "@/lib/db/item-types";
 import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
 import { CreateItemDialog } from "@/components/dashboard/create-item-dialog";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { ITEMS_PER_PAGE } from "@/lib/utils";
 
 interface ItemsTypePageProps {
   params: Promise<{ type: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
-export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
+export default async function ItemsTypePage({
+  params,
+  searchParams,
+}: ItemsTypePageProps) {
   const { type } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   const session = await auth();
   const userId = session?.user?.id;
@@ -26,11 +34,12 @@ export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
   // URL uses plural slug (e.g. "snippets") — strip trailing "s" to match DB name (e.g. "snippet")
   const typeName = type.replace(/s$/, "");
 
-  const [items, itemTypes] = await Promise.all([
-    getItemsByType(user.id, typeName),
+  const [{ items, total }, itemTypes] = await Promise.all([
+    getItemsByTypePaginated(user.id, typeName, page),
     getItemTypes(),
   ]);
 
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
   const matchedType = itemTypes.find((t) => t.name === typeName);
   const displayName = type.charAt(0).toUpperCase() + type.slice(1);
 
@@ -40,7 +49,7 @@ export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-bold tracking-tight">{displayName}</h1>
           <p className="text-muted-foreground">
-            {items.length} {items.length === 1 ? typeName : type}
+            {total} {total === 1 ? typeName : type}
           </p>
         </div>
 
@@ -68,7 +77,14 @@ export default async function ItemsTypePage({ params }: ItemsTypePageProps) {
           )}
         </p>
       ) : (
-        <ItemsWithDrawer items={items} variant="grid" />
+        <>
+          <ItemsWithDrawer items={items} variant="grid" />
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            basePath={`/items/${type}`}
+          />
+        </>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { ITEMS_PER_PAGE, COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
 export async function getPinnedItems(userId: string, limit = 20) {
   const validatedLimit = Math.max(1, Math.min(limit, 50));
@@ -102,6 +103,58 @@ export async function getItemsByCollection(
       createdAt: "desc",
     },
   });
+}
+
+export async function getItemsByTypePaginated(
+  userId: string,
+  typeName: string,
+  page: number = 1,
+) {
+  const validPage = Math.max(1, page);
+  const skip = (validPage - 1) * ITEMS_PER_PAGE;
+  const where = {
+    userId,
+    itemType: { name: typeName },
+  };
+  const [items, total] = await Promise.all([
+    prisma.item.findMany({
+      where,
+      skip,
+      take: ITEMS_PER_PAGE,
+      include: { itemType: true, tags: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.item.count({ where }),
+  ]);
+  return { items, total };
+}
+
+export async function getItemsByCollectionPaginated(
+  userId: string,
+  collectionId: string,
+  page: number = 1,
+) {
+  const validPage = Math.max(1, page);
+  const skip = (validPage - 1) * COLLECTIONS_PER_PAGE;
+  const where = {
+    userId,
+    collections: { some: { collectionId } },
+  };
+  const [items, total] = await Promise.all([
+    prisma.item.findMany({
+      where,
+      skip,
+      take: COLLECTIONS_PER_PAGE,
+      include: {
+        itemType: true,
+        tags: true,
+        collections: { include: { collection: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.item.count({ where }),
+  ]);
+  return { items, total };
 }
 
 export async function getItemDetailById(userId: string, itemId: string) {
