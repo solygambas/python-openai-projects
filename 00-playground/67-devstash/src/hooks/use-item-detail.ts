@@ -2,7 +2,12 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateItem, deleteItem, toggleFavoriteItem } from "@/actions/items";
+import {
+  updateItem,
+  deleteItem,
+  toggleFavoriteItem,
+  toggleItemPin,
+} from "@/actions/items";
 import { toast } from "sonner";
 import type { ItemDetail, ItemDetailResponse } from "@/types/item-detail";
 
@@ -237,6 +242,28 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     }
   }, [selectedItem, router]);
 
+  const togglePin = useCallback(async () => {
+    if (!selectedItem) return;
+
+    try {
+      const result = await toggleItemPin({ itemId: selectedItem.id });
+
+      if (result.success && result.data) {
+        setSelectedItem({
+          ...selectedItem,
+          isPinned: result.data.isPinned,
+        });
+        toast.success(result.data.isPinned ? "Pinned item" : "Unpinned item");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle pin");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+      console.error(error);
+    }
+  }, [selectedItem, router]);
+
   return {
     // State
     open,
@@ -273,5 +300,6 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     copyItem,
     copySelectedItem,
     toggleFavorite,
+    togglePin,
   };
 }

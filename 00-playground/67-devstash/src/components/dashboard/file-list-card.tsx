@@ -7,6 +7,7 @@ import {
   FileSpreadsheet,
   FileArchive,
   Download,
+  Pin,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -15,6 +16,7 @@ interface FileListCardProps {
   fileName: string;
   fileSize: number | null;
   createdAt: Date;
+  isPinned?: boolean;
   onClick?: () => void;
   onDownload?: () => void;
 }
@@ -82,6 +84,7 @@ export function FileListCard({
   fileName,
   fileSize,
   createdAt,
+  isPinned = false,
   onClick,
   onDownload,
 }: FileListCardProps) {
@@ -96,6 +99,9 @@ export function FileListCard({
       <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
         <FileIcon iconName={iconName} />
       </div>
+
+      {/* Pin icon for pinned items */}
+      {isPinned && <Pin className="h-4 w-4 text-blue-500 rotate-45 shrink-0" />}
 
       {/* File Name */}
       <div className="flex-1 min-w-0">

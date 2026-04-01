@@ -6,6 +6,7 @@ import {
   deleteItem as deleteItemQuery,
   createItem as createItemQuery,
   toggleItemFavorite as toggleItemFavoriteQuery,
+  toggleItemPin as toggleItemPinQuery,
 } from "@/lib/db/items";
 import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
 import { z } from "zod";
@@ -50,9 +51,14 @@ const ToggleFavoriteItemSchema = z.object({
   itemId: z.string().min(1, "Item ID is required"),
 });
 
+const TogglePinItemSchema = z.object({
+  itemId: z.string().min(1, "Item ID is required"),
+});
+
 type UpdateItemInput = z.infer<typeof UpdateItemSchema>;
 type DeleteItemInput = z.infer<typeof DeleteItemSchema>;
 type ToggleFavoriteItemInput = z.infer<typeof ToggleFavoriteItemSchema>;
+type TogglePinItemInput = z.infer<typeof TogglePinItemSchema>;
 
 interface UpdateItemResult {
   success: boolean;
@@ -99,6 +105,15 @@ interface ToggleFavoriteItemResult {
   data?: {
     id: string;
     isFavorite: boolean;
+  };
+  error?: string;
+}
+
+interface TogglePinItemResult {
+  success: boolean;
+  data?: {
+    id: string;
+    isPinned: boolean;
   };
   error?: string;
 }
@@ -333,6 +348,46 @@ export async function toggleFavoriteItem(
     return {
       success: false,
       error: "Failed to toggle favorite",
+    };
+  }
+}
+
+export async function toggleItemPin(
+  input: TogglePinItemInput,
+): Promise<TogglePinItemResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  const validatedFields = TogglePinItemSchema.safeParse(input);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: validatedFields.error.issues[0].message,
+    };
+  }
+
+  const { itemId } = validatedFields.data;
+
+  try {
+    const updatedItem = await toggleItemPinQuery(userId, itemId);
+
+    return {
+      success: true,
+      data: {
+        id: updatedItem.id,
+        isPinned: updatedItem.isPinned,
+      },
+    };
+  } catch (error) {
+    console.error("TOGGLE_PIN_ITEM_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to toggle pin",
     };
   }
 }

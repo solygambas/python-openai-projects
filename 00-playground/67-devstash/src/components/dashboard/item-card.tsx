@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Star } from "lucide-react";
+import { Copy, Star, Pin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
@@ -43,6 +43,9 @@ export function ItemCard({
           <p className="text-sm font-medium leading-snug">{item.title}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {item.isPinned && (
+            <Pin className="h-3.5 w-3.5 text-blue-500 rotate-45" />
+          )}
           {onToggleFavorite && (
             <button
               type="button"

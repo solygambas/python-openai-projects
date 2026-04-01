@@ -102,7 +102,7 @@ function PinnedItemCard({
               <h3 className="font-medium group-hover:text-primary transition-colors">
                 {item.title}
               </h3>
-              <Pin className="h-3 w-3 text-muted-foreground rotate-45" />
+              <Pin className="h-3 w-3 text-blue-500 rotate-45" />
               {item.isFavorite && (
                 <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
               )}
@@ -180,6 +180,9 @@ function RecentItemCard({
       </div>
       <div className="flex items-center gap-4">
         <div className="hidden sm:flex gap-1">
+          {item.isPinned && (
+            <Pin className="h-3.5 w-3.5 text-blue-500 rotate-45" />
+          )}
           {item.tags.slice(0, 2).map((tag) => (
             <Badge
               key={tag.id}
@@ -244,6 +247,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     copyItem,
     copySelectedItem,
     toggleFavorite,
+    togglePin,
   } = useItemDetail();
 
   const { collections: allCollections } = useCollections();
@@ -284,6 +288,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                 key={item.id}
                 id={item.id}
                 title={item.title}
+                isPinned={item.isPinned}
                 onClick={() => openItem(item.id)}
               />
             ))}
@@ -306,6 +311,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                 fileName={item.fileName || item.title}
                 fileSize={item.fileSize ?? null}
                 createdAt={new Date(item.createdAt)}
+                isPinned={item.isPinned}
                 onClick={() => openItem(item.id)}
                 onDownload={() =>
                   window.open(`/api/download/${item.id}`, "_blank")
@@ -434,7 +440,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   hasFile={!!selectedItem.fileUrl}
                   hasContent={!!(selectedItem.content || selectedItem.url)}
                   onFavorite={toggleFavorite}
-                  onPin={() => {}}
+                  onPin={togglePin}
                   onCopy={copySelectedItem}
                   onDownload={() =>
                     window.open(`/api/download/${selectedItem.id}`, "_blank")

@@ -62,6 +62,7 @@ import {
   getItemsByCollectionPaginated,
   getFavoriteItems,
   toggleItemFavorite,
+  toggleItemPin,
 } from "@/lib/db/items";
 import { ITEMS_PER_PAGE, COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
@@ -632,9 +633,7 @@ describe("getItemsByCollection", () => {
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
     });
 
     expect(result).toHaveLength(2);
@@ -699,7 +698,7 @@ describe("getItemsByTypePaginated", () => {
         where: { userId: "user-1", itemType: { name: "snippet" } },
         skip: 0,
         take: ITEMS_PER_PAGE,
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
       }),
     );
     expect(countMock).toHaveBeenCalledWith({
@@ -760,7 +759,7 @@ describe("getItemsByCollectionPaginated", () => {
         },
         skip: 0,
         take: COLLECTIONS_PER_PAGE,
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
       }),
     );
     expect(countMock).toHaveBeenCalledWith({
@@ -973,6 +972,119 @@ describe("toggleItemFavorite", () => {
     findFirstMock.mockResolvedValueOnce(null);
 
     await expect(toggleItemFavorite("user-1", "item-1")).rejects.toThrow(
+      "Item not found or not owned by user",
+    );
+
+    expect(updateMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("toggleItemPin", () => {
+  beforeEach(() => {
+    findFirstMock.mockReset();
+    updateMock.mockReset();
+  });
+
+  it("toggles item pin status from false to true", async () => {
+    // Ownership check - item exists and isPinned is false
+    findFirstMock.mockResolvedValueOnce({
+      id: "item-1",
+      isPinned: false,
+    });
+
+    // Mock the update to return the updated item with isPinned: true
+    const updatedItem = {
+      id: "item-1",
+      title: "Test Item",
+      isFavorite: false,
+      isPinned: true,
+      contentType: "TEXT",
+      content: "test content",
+      url: null,
+      language: null,
+      description: null,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [],
+      collections: [],
+    };
+
+    updateMock.mockResolvedValueOnce(updatedItem);
+
+    const result = await toggleItemPin("user-1", "item-1");
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "item-1", userId: "user-1" },
+      select: { id: true, isPinned: true },
+    });
+
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { isPinned: true },
+      include: expect.any(Object),
+    });
+
+    expect(result.isPinned).toBe(true);
+  });
+
+  it("toggles item pin status from true to false", async () => {
+    // Ownership check - item exists and isPinned is true
+    findFirstMock.mockResolvedValueOnce({
+      id: "item-1",
+      isPinned: true,
+    });
+
+    // Mock the update to return the updated item with isPinned: false
+    const updatedItem = {
+      id: "item-1",
+      title: "Test Item",
+      isFavorite: false,
+      isPinned: false,
+      contentType: "TEXT",
+      content: "test content",
+      url: null,
+      language: null,
+      description: null,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [],
+      collections: [],
+    };
+
+    updateMock.mockResolvedValueOnce(updatedItem);
+
+    const result = await toggleItemPin("user-1", "item-1");
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "item-1", userId: "user-1" },
+      select: { id: true, isPinned: true },
+    });
+
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { isPinned: false },
+      include: expect.any(Object),
+    });
+
+    expect(result.isPinned).toBe(false);
+  });
+
+  it("throws error when item not found or not owned by user", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(toggleItemPin("user-1", "item-1")).rejects.toThrow(
       "Item not found or not owned by user",
     );
 

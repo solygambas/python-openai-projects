@@ -67,9 +67,7 @@ export async function getItemsByType(
       itemType: true,
       tags: true,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
   });
 }
 
@@ -99,9 +97,7 @@ export async function getItemsByCollection(
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
   });
 }
 
@@ -122,7 +118,7 @@ export async function getItemsByTypePaginated(
       skip,
       take: ITEMS_PER_PAGE,
       include: { itemType: true, tags: true },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
     }),
     prisma.item.count({ where }),
   ]);
@@ -150,7 +146,7 @@ export async function getItemsByCollectionPaginated(
         tags: true,
         collections: { include: { collection: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
     }),
     prisma.item.count({ where }),
   ]);
@@ -466,6 +462,35 @@ export async function toggleItemFavorite(userId: string, itemId: string) {
   const updatedItem = await prisma.item.update({
     where: { id: itemId },
     data: { isFavorite: !existingItem.isFavorite },
+    include: {
+      itemType: true,
+      tags: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
+    },
+  });
+
+  return updatedItem;
+}
+
+export async function toggleItemPin(userId: string, itemId: string) {
+  // First verify ownership
+  const existingItem = await prisma.item.findFirst({
+    where: { id: itemId, userId },
+    select: { id: true, isPinned: true },
+  });
+
+  if (!existingItem) {
+    throw new Error("Item not found or not owned by user");
+  }
+
+  // Toggle the pin status
+  const updatedItem = await prisma.item.update({
+    where: { id: itemId },
+    data: { isPinned: !existingItem.isPinned },
     include: {
       itemType: true,
       tags: true,

@@ -54,11 +54,12 @@ export function ItemDrawerActionBar({
           disabled={isLoading}
           aria-label="Pin"
           onClick={onPin}
+          className={isPinned ? "text-blue-500" : "text-foreground"}
         >
           <Pin
             className={
               isPinned
-                ? "text-foreground rotate-45"
+                ? "text-blue-500 rotate-45"
                 : "text-muted-foreground rotate-45"
             }
           />

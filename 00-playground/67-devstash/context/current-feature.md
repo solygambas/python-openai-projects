@@ -1,16 +1,26 @@
-# Current Feature
+# Current Feature: Pinned Items
 
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
-<!-- Add goals here -->
+- Create `toggleItemPin` server action
+- Make Pin button in ItemDrawer clickable (currently exists but has no onClick handler)
+- Implement optimistic UI updates for instant feedback
+- Show toast notification on success/error
+- Ensure pinned items sort to top of listings
+- Follow the existing Favorite Button implementation pattern
+- Support items only (not collections)
+- Pin icon on ItemCard remains a static indicator
 
 ## Notes
 
-<!-- Add notes here -->
+- Reference existing Favorite Button pattern for implementation
+- Items only, skip collections
+- Pin icon on ItemCard should remain as a static indicator (not interactive)
+- Spec: @context/features/pinned-spec.md
 
 ## History
 
@@ -386,3 +396,13 @@ Not Started
 - [x] Added validation in loadPreference to reject stale/invalid localStorage keys
 - [x] Build passes, no new lint or type errors
 - _Note:_ Build and all 125 tests pass.
+- **Pinned Items** (Completed)
+- [x] Created `toggleItemPin` server action in `src/actions/items.ts` with Zod validation
+- [x] Created `toggleItemPin` query function in `src/lib/db/items.ts`
+- [x] Made Pin button in ItemDrawer clickable by wiring `togglePin` handler
+- [x] Implemented optimistic UI updates for instant feedback via `useItemDetail` hook
+- [x] Added toast notifications on success/error ("Pinned item" / "Unpinned item")
+- [x] Updated `orderBy` in `getItemsByType`, `getItemsByCollection`, and paginated variants to sort pinned items to top (`isPinned: desc`, then `createdAt: desc`)
+- [x] Added unit tests for `toggleItemPin` server action (5 tests) and database function (3 tests)
+- [x] Updated existing tests to reflect new `orderBy` format
+- _Note:_ Build and all 133 tests pass.
