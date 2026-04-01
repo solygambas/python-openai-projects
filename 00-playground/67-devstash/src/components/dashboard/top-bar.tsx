@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sparkles, PanelLeft, Menu } from "lucide-react";
+import { Search, Sparkles, PanelLeft, Menu, Star } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,6 +95,16 @@ export function DashboardTopBar() {
           </button>
         </div>
         <div className="flex items-center gap-2 ml-auto sm:ml-0">
+          <Link href="/favorites">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-muted-foreground"
+            >
+              <Star className="h-5 w-5" />
+              <span className="sr-only">Favorites</span>
+            </Button>
+          </Link>
           <CreateCollectionDialog />
           {sidebarData && (
             <CreateItemDialog itemTypes={sidebarData.itemTypes} />

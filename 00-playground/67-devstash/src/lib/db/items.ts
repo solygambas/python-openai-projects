@@ -434,3 +434,19 @@ export async function createItem(userId: string, data: CreateItemData) {
     },
   });
 }
+
+export async function getFavoriteItems(userId: string) {
+  return prisma.item.findMany({
+    where: {
+      userId,
+      isFavorite: true,
+    },
+    include: {
+      itemType: true,
+      tags: true,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+}

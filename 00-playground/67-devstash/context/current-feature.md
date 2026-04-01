@@ -1,16 +1,27 @@
-# Current Feature
+# Favorites Page
 
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
-(none)
+- Add star icon button to TopBar linking to /favorites
+- Create /favorites route with protection
+- Fetch all user favorited items and collections
+- Compact list view (VS Code/terminal style, not cards)
+- Each row: type icon, title, type badge, date added
+- Separate sections for items and collections with counts
+- Click item opens ItemDrawer, click collection navigates to /collections/[id]
+- Empty state when no favorites
+- Sort by most recently favorited (updatedAt)
 
 ## Notes
 
-(none)
+- Monospace or semi-monospace font
+- Minimal padding, high density
+- Subtle hover states
+- No cards or heavy borders, clean lines only
 
 ## History
 
@@ -344,7 +355,7 @@ Not Started
 - [x] Created migration: `20260401061132_add_editor_preferences`
 - [x] Created `EditorPreferencesContext` for client-side preference state management
 - [x] Implemented `updateEditorPreferences` and `getEditorPreferences` server actions with Zod validation
-- [x] Created `EditorPreferencesForm` component in settings page with UI selectors (font size, tab size, theme)  and toggles (word wrap, minimap)
+- [x] Created `EditorPreferencesForm` component in settings page with UI selectors (font size, tab size, theme) and toggles (word wrap, minimap)
 - [x] Wired `CodeEditor` to read and apply context preferences dynamically
 - [x] Registered custom Monaco themes: `monokai` (#272822 background, pink keywords, yellow strings) and `github-dark` (#0d1117 background, red keywords, light-blue strings)
 - [x] Integrated `EditorPreferencesProvider` at dashboard layout level for app-wide availability

@@ -60,6 +60,7 @@ import {
   getItemsByCollection,
   getItemsByTypePaginated,
   getItemsByCollectionPaginated,
+  getFavoriteItems,
 } from "@/lib/db/items";
 import { ITEMS_PER_PAGE, COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
@@ -790,5 +791,77 @@ describe("getItemsByCollectionPaginated", () => {
     const result = await getItemsByCollectionPaginated("user-1", "empty-col");
 
     expect(result).toEqual({ items: [], total: 0 });
+  });
+});
+
+describe("getFavoriteItems", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+  });
+
+  it("returns favorite items for a user", async () => {
+    const mockItems = [
+      {
+        id: "item1",
+        title: "Test Item",
+        itemType: { name: "snippet", icon: "Code", color: "#3b82f6" },
+        tags: [],
+        updatedAt: new Date(),
+      },
+    ];
+
+    findManyMock.mockResolvedValueOnce(mockItems);
+
+    const result = await getFavoriteItems("user123");
+
+    expect(findManyMock).toHaveBeenCalledWith({
+      where: {
+        userId: "user123",
+        isFavorite: true,
+      },
+      include: {
+        itemType: true,
+        tags: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    expect(result).toEqual(mockItems);
+  });
+
+  it("returns empty array when user has no favorites", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+
+    const result = await getFavoriteItems("user123");
+
+    expect(result).toEqual([]);
+  });
+
+  it("sorts items by updatedAt descending", async () => {
+    const mockItems = [
+      {
+        id: "item2",
+        title: "New Item",
+        itemType: { name: "prompt", icon: "Sparkles", color: "#8b5cf6" },
+        tags: [],
+        updatedAt: new Date("2024-01-02"),
+      },
+      {
+        id: "item1",
+        title: "Old Item",
+        itemType: { name: "snippet", icon: "Code", color: "#3b82f6" },
+        tags: [],
+        updatedAt: new Date("2024-01-01"),
+      },
+    ];
+
+    findManyMock.mockResolvedValueOnce(mockItems);
+
+    const result = await getFavoriteItems("user123");
+
+    expect(result[0].id).toBe("item2");
+    expect(result[1].id).toBe("item1");
   });
 });

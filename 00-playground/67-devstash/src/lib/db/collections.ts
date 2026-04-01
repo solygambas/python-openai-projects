@@ -402,3 +402,22 @@ export async function deleteCollection(userId: string, collectionId: string) {
 
   return { id: collectionId };
 }
+
+export async function getFavoriteCollections(userId: string) {
+  return prisma.collection.findMany({
+    where: {
+      userId,
+      isFavorite: true,
+    },
+    include: {
+      _count: {
+        select: {
+          items: true,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+}

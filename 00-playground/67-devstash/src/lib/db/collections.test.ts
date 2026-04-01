@@ -36,6 +36,7 @@ import {
   getCollectionById,
   updateCollection,
   deleteCollection,
+  getFavoriteCollections,
 } from "@/lib/db/collections";
 import { COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
@@ -505,5 +506,87 @@ describe("getAllCollectionsWithDetailsPaginated", () => {
     expect(findManyMock).toHaveBeenCalledWith(
       expect.objectContaining({ skip: 0 }),
     );
+  });
+});
+
+describe("getFavoriteCollections", () => {
+  beforeEach(() => {
+    findManyMock.mockReset();
+  });
+
+  it("returns favorite collections for a user", async () => {
+    const mockCollections = [
+      {
+        id: "col1",
+        name: "Favorite Collection",
+        description: "A test collection",
+        isFavorite: true,
+        userId: "user123",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        _count: { items: 5 },
+      },
+    ];
+
+    findManyMock.mockResolvedValueOnce(mockCollections);
+
+    const result = await getFavoriteCollections("user123");
+
+    expect(findManyMock).toHaveBeenCalledWith({
+      where: {
+        userId: "user123",
+        isFavorite: true,
+      },
+      include: {
+        _count: {
+          select: {
+            items: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    expect(result).toEqual(mockCollections);
+  });
+
+  it("returns empty array when user has no favorite collections", async () => {
+    findManyMock.mockResolvedValueOnce([]);
+
+    const result = await getFavoriteCollections("user123");
+
+    expect(result).toEqual([]);
+  });
+
+  it("sorts collections by updatedAt descending", async () => {
+    const mockCollections = [
+      {
+        id: "col2",
+        name: "New Collection",
+        isFavorite: true,
+        userId: "user123",
+        createdAt: new Date(),
+        updatedAt: new Date("2024-01-02"),
+        _count: { items: 3 },
+      },
+      {
+        id: "col1",
+        name: "Old Collection",
+        isFavorite: true,
+        userId: "user123",
+        createdAt: new Date(),
+        updatedAt: new Date("2024-01-01"),
+        _count: { items: 2 },
+      },
+    ];
+
+    findManyMock.mockResolvedValueOnce(mockCollections);
+
+    const result = await getFavoriteCollections("user123");
+
+    expect(result[0].id).toBe("col2");
+    expect(result[1].id).toBe("col1");
   });
 });
