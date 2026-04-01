@@ -2,35 +2,19 @@
 
 ## Status
 
-In Progress
+Complete
 
 ## Title
 
-Pagination
+(none)
 
 ## Goals
 
-- Add pagination to /items/[type] and /collections/[id] pages
-- Implement pagination controls with numbered page links and prev/next navigation
-- Disable prev/next buttons when not available
-- Only fetch required items per page (no over-fetching)
+(none)
 
 ## Notes
 
-### Constants
-
-- ITEMS_PER_PAGE = 21
-- COLLECTIONS_PER_PAGE = 21
-- DASHBOARD_COLLECTIONS_LIMIT = 6
-- DASHBOARD_RECENT_ITEMS_LIMIT = 10
-
-### Implementation Details
-
-- Add pagination controls at bottom of listings
-- Pagination controls should show numbered page links
-- Prev/next links should be disabled (greyed out) when not available
-- Only fetch the amount of resources that a page requires
-- Apply to: /items/[type] and /collections/[id] pages
+(none)
 
 ## History
 
@@ -347,3 +331,4 @@ Pagination
 - [x] Pre-fetch searchable data on app load via /api/search endpoint
 - [x] Add global ItemDrawerProvider for drawer state management
 - _Note:_ Build and all 78 tests pass.
+- **Pagination** (Completed) - Implemented pagination for items and collections across /items/[type], /collections/[id], and /collections pages with numbered links, prev/next controls, and efficient skip/take DB queries. Applied pagination constants (DASHBOARD_COLLECTIONS_LIMIT, DASHBOARD_RECENT_ITEMS_LIMIT) to all dashboard call sites. Wired logo navigation to home and 'View all collections' button to collections page. All 94 unit tests pass.
