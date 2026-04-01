@@ -14,10 +14,28 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { formatDate } from "@/lib/utils";
 import { useItemDrawer } from "@/contexts/item-drawer-context";
 import { GlobalItemDrawer } from "@/components/search/global-item-drawer";
 import type { IconMap } from "@/types/dashboard";
+import {
+  useFavoritesSort,
+  sortItems,
+  sortCollections,
+} from "@/hooks/use-favorites-sort";
+import type {
+  FavoriteItem,
+  FavoriteCollection,
+  ItemSortKey,
+  CollectionSortKey,
+} from "@/hooks/use-favorites-sort";
 
 const iconMap: IconMap = {
   Code,
@@ -30,26 +48,6 @@ const iconMap: IconMap = {
   Folder,
 };
 
-interface FavoriteItem {
-  id: string;
-  title: string;
-  itemType: {
-    name: string;
-    icon: string;
-    color: string;
-  };
-  updatedAt: Date;
-}
-
-interface FavoriteCollection {
-  id: string;
-  name: string;
-  updatedAt: Date;
-  _count: {
-    items: number;
-  };
-}
-
 interface FavoritesPageProps {
   favoriteItems: FavoriteItem[];
   favoriteCollections: FavoriteCollection[];
@@ -60,6 +58,8 @@ export function FavoritesPage({
   favoriteCollections,
 }: FavoritesPageProps) {
   const { openItemDrawer } = useItemDrawer();
+  const { itemSort, collectionSort, setItemSort, setCollectionSort } =
+    useFavoritesSort();
 
   const handleItemClick = (itemId: string) => {
     openItemDrawer(itemId);
@@ -67,6 +67,12 @@ export function FavoritesPage({
 
   const hasFavorites =
     favoriteItems.length > 0 || favoriteCollections.length > 0;
+
+  const sortedItems = sortItems(favoriteItems, itemSort);
+  const sortedCollections = sortCollections(
+    favoriteCollections,
+    collectionSort,
+  );
 
   return (
     <div className="space-y-8">
@@ -90,16 +96,34 @@ export function FavoritesPage({
           {/* Items Section */}
           {favoriteItems.length > 0 && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <h2 className="text-lg font-semibold">
                   Items{" "}
                   <span className="text-muted-foreground">
                     ({favoriteItems.length})
                   </span>
                 </h2>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="hidden sm:inline">Sort by</span>
+                  <Select
+                    value={itemSort}
+                    onValueChange={(v) => setItemSort(v as ItemSortKey)}
+                  >
+                    <SelectTrigger className="w-[130px] h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="oldest">Oldest</SelectItem>
+                      <SelectItem value="name-asc">Name A-Z</SelectItem>
+                      <SelectItem value="name-desc">Name Z-A</SelectItem>
+                      <SelectItem value="type">Type</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div className="border rounded-md divide-y bg-background">
-                {favoriteItems.map((item) => {
+                {sortedItems.map((item) => {
                   const IconComponent =
                     iconMap[item.itemType.icon as keyof IconMap];
                   const color = item.itemType.color;
@@ -145,16 +169,35 @@ export function FavoritesPage({
           {/* Collections Section */}
           {favoriteCollections.length > 0 && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <h2 className="text-lg font-semibold">
                   Collections{" "}
                   <span className="text-muted-foreground">
                     ({favoriteCollections.length})
                   </span>
                 </h2>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="hidden sm:inline">Sort by</span>
+                  <Select
+                    value={collectionSort}
+                    onValueChange={(v) =>
+                      setCollectionSort(v as CollectionSortKey)
+                    }
+                  >
+                    <SelectTrigger className="w-[130px] h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="oldest">Oldest</SelectItem>
+                      <SelectItem value="name-asc">Name A-Z</SelectItem>
+                      <SelectItem value="name-desc">Name Z-A</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div className="border rounded-md divide-y bg-background">
-                {favoriteCollections.map((collection) => (
+                {sortedCollections.map((collection) => (
                   <Link
                     key={collection.id}
                     href={`/collections/${collection.id}`}

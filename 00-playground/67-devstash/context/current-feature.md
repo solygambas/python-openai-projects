@@ -1,16 +1,30 @@
 # Current Feature
 
+## Favorites Page — Client-Side Sorting
+
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Add goals here -->
+- [x] Favorites page exists and displays favorited items and collections
+- Add client-side sorting UI (dropdown or buttons) to sort by:
+  - Date (most recently favorited first — default)
+  - Name (alphabetical A-Z)
+  - Item Type (snippets, prompts, commands, notes, links, images, files)
+- Sorting applied in-memory without API call
+- Persist last selected sort preference in localStorage
+- Applied to items section, collections section (no item type), and separately
 
 ## Notes
 
-<!-- Add notes here -->
+- Base feature already completed: `/favorites` route, database queries, ItemDrawer integration
+- Focus is on client-side sorting enhancements
+- Sort order options: Date (DESC), Name (ASC), Type (custom order)
+- localStorage key: `favorites-sort-preference` (JSON: `{items: "date|name|type", collections: "date|name"}`)
+- Ref: `@context/features/favorites-spec.md` (completed base feature)
+- Ref: `@context/features/pagination-spec.md` (offset-based pagination already in place)
 
 ## History
 
