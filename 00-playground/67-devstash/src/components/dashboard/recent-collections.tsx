@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -9,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Star,
-  MoreHorizontal,
   Code,
   Sparkles,
   Terminal,
@@ -19,11 +21,17 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 
+import { CollectionActionsDropdown } from "@/components/collections/collection-actions-dropdown";
+import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
+
 import {
   type Collection,
   type ItemType,
   type IconMap,
 } from "@/types/dashboard";
+import { toggleFavoriteCollection } from "@/actions/collections";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const iconMap: IconMap = {
   Code,
@@ -44,6 +52,31 @@ export function RecentCollections({
   collections,
   itemTypes,
 }: RecentCollectionsProps) {
+  const router = useRouter();
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const handleToggleFavorite = async (
+    collectionId: string,
+    e: React.MouseEvent,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const result = await toggleFavoriteCollection({ collectionId });
+      if (result.success) {
+        toast.success(
+          result.data?.isFavorite
+            ? "Added to favorites"
+            : "Removed from favorites",
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle favorite");
+      }
+    } catch {
+      toast.error("An unexpected error occurred");
+    }
+  };
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
@@ -76,21 +109,30 @@ export function RecentCollections({
                     <CardTitle className="text-base font-semibold group-hover:text-primary transition-colors">
                       {collection.name}
                     </CardTitle>
-                    {collection.isFavorite && (
-                      <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                    )}
+                    <button
+                      type="button"
+                      onClick={(e) => handleToggleFavorite(collection.id, e)}
+                      className="hover:scale-110 transition-transform"
+                      aria-label="Toggle favorite"
+                    >
+                      <Star
+                        className={`h-3 w-3 ${
+                          collection.isFavorite
+                            ? "fill-yellow-500 text-yellow-500"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </button>
                   </div>
                   <CardDescription className="text-xs">
                     {collection.itemCount} items
                   </CardDescription>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                <CollectionActionsDropdown
+                  collectionId={collection.id}
+                  collectionName={collection.name}
+                  onEdit={() => setEditingId(collection.id)}
+                />
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
@@ -114,6 +156,20 @@ export function RecentCollections({
           );
         })}
       </div>
+
+      {/* Edit dialogs rendered at root level */}
+      {collections.map((collection) => (
+        <EditCollectionDialog
+          key={collection.id}
+          collectionId={collection.id}
+          collectionName={collection.name}
+          collectionDescription={collection.description}
+          isOpen={editingId === collection.id}
+          onOpenChange={(open) => {
+            if (!open) setEditingId(null);
+          }}
+        />
+      ))}
     </section>
   );
 }

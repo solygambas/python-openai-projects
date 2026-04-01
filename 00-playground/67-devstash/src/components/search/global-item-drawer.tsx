@@ -66,6 +66,7 @@ export function GlobalItemDrawer() {
     saveItem,
     confirmDelete,
     copySelectedItem,
+    toggleFavorite,
   } = useItemDetail();
 
   const { collections: allCollections } = useCollections();
@@ -135,7 +136,7 @@ export function GlobalItemDrawer() {
                 isPinned={selectedItem.isPinned}
                 hasFile={!!selectedItem.fileUrl}
                 hasContent={!!(selectedItem.content || selectedItem.url)}
-                onFavorite={() => {}}
+                onFavorite={toggleFavorite}
                 onPin={() => {}}
                 onCopy={copySelectedItem}
                 onDownload={() =>

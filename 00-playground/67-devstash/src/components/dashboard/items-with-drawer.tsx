@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   Code,
   Sparkles,
@@ -50,6 +50,9 @@ import { type DashboardItem, type IconMap } from "@/types/dashboard";
 import { type ItemsWithDrawerVariant } from "@/types/item-detail";
 import { useItemDetail } from "@/hooks/use-item-detail";
 import { useCollections } from "@/hooks/use-collections";
+import { toggleFavoriteItem } from "@/actions/items";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ItemsWithDrawerProps {
   items: DashboardItem[];
@@ -207,6 +210,7 @@ function RecentItemCard({
 }
 
 export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
+  const router = useRouter();
   const {
     open,
     setOpen,
@@ -239,9 +243,31 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     confirmDelete,
     copyItem,
     copySelectedItem,
+    toggleFavorite,
   } = useItemDetail();
 
   const { collections: allCollections } = useCollections();
+
+  const toggleItemFavorite = useCallback(
+    async (itemId: string) => {
+      try {
+        const result = await toggleFavoriteItem({ itemId });
+        if (result.success) {
+          toast.success(
+            result.data?.isFavorite
+              ? "Added to favorites"
+              : "Removed from favorites",
+          );
+          router.refresh();
+        } else {
+          toast.error(result.error || "Failed to toggle favorite");
+        }
+      } catch {
+        toast.error("An unexpected error occurred");
+      }
+    },
+    [router],
+  );
 
   const itemCards = useMemo(() => {
     if (variant === "grid") {
@@ -300,6 +326,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
               iconMap={iconMap}
               onClick={() => openItem(item.id)}
               onCopy={() => copyItem(item.id)}
+              onToggleFavorite={() => toggleItemFavorite(item.id)}
             />
           ))}
         </div>
@@ -406,7 +433,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   isPinned={selectedItem.isPinned}
                   hasFile={!!selectedItem.fileUrl}
                   hasContent={!!(selectedItem.content || selectedItem.url)}
-                  onFavorite={() => {}}
+                  onFavorite={toggleFavorite}
                   onPin={() => {}}
                   onCopy={copySelectedItem}
                   onDownload={() =>

@@ -1,16 +1,31 @@
-# Current Feature
+# Current Feature: Add Favorite Button - Drawer, Collection Page, and Cards
 
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
-<!-- Add your feature goals here -->
+- [x] Add a favorite toggle button to the item drawer for marking items as favorite/unfavorite
+- [x] Add a favorite toggle button to individual collection cards across the dashboard
+- [x] Add a favorite toggle button to the collection page for bulk collection management
+- [x] Add a favorite toggle button to item cards (pinned items and recent items sections)
+- [x] Ensure favorite state persists to the database
+- [x] Update UI to reflect favorite status with visual indicator (heart icon or similar)
+- [x] Update stats sidebar to show correct favorite item and collection counts
 
 ## Notes
 
-<!-- Add any constraints or context here -->
+- Favorites already exist in the database schema (`isFavorite` field on Items and Collections tables)
+- DB functions to fetch favorite collections already exist in `src/lib/db/collections.ts`
+- Need to create or update server actions in `src/actions/items.ts` and `src/actions/collections.ts` to toggle favorites
+- Components to update:
+  - Item drawer component (likely in `src/components/items/`)
+  - Collection cards (in `src/components/dashboard/` or `src/components/collections/`)
+  - Recent collections section
+  - Pinned items and recent items sections
+- Consider adding toast notifications for user feedback on favorite state changes
+- Ref: `@context/features/favorites-spec.md` for detailed spec
 
 ## History
 

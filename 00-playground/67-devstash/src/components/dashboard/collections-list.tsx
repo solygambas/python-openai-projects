@@ -22,6 +22,9 @@ import {
 
 import { CollectionActionsDropdown } from "@/components/collections/collection-actions-dropdown";
 import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
+import { toggleFavoriteCollection } from "@/actions/collections";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   type Collection,
@@ -48,7 +51,31 @@ export function CollectionsList({
   collections,
   itemTypes,
 }: CollectionsListProps) {
+  const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const handleToggleFavorite = async (
+    collectionId: string,
+    e: React.MouseEvent,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const result = await toggleFavoriteCollection({ collectionId });
+      if (result.success) {
+        toast.success(
+          result.data?.isFavorite
+            ? "Added to favorites"
+            : "Removed from favorites",
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle favorite");
+      }
+    } catch {
+      toast.error("An unexpected error occurred");
+    }
+  };
 
   return (
     <>
@@ -74,9 +101,20 @@ export function CollectionsList({
                     <CardTitle className="text-base font-semibold group-hover:text-primary transition-colors">
                       {collection.name}
                     </CardTitle>
-                    {collection.isFavorite && (
-                      <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                    )}
+                    <button
+                      type="button"
+                      onClick={(e) => handleToggleFavorite(collection.id, e)}
+                      className="hover:scale-110 transition-transform"
+                      aria-label="Toggle favorite"
+                    >
+                      <Star
+                        className={`h-3 w-3 ${
+                          collection.isFavorite
+                            ? "fill-yellow-500 text-yellow-500"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </button>
                   </div>
                   <CardDescription className="text-xs">
                     {collection.itemCount} item

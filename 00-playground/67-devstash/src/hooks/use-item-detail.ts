@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateItem, deleteItem } from "@/actions/items";
+import { updateItem, deleteItem, toggleFavoriteItem } from "@/actions/items";
 import { toast } from "sonner";
 import type { ItemDetail, ItemDetailResponse } from "@/types/item-detail";
 
@@ -211,6 +211,32 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     }
   }, [selectedItem]);
 
+  const toggleFavorite = useCallback(async () => {
+    if (!selectedItem) return;
+
+    try {
+      const result = await toggleFavoriteItem({ itemId: selectedItem.id });
+
+      if (result.success && result.data) {
+        setSelectedItem({
+          ...selectedItem,
+          isFavorite: result.data.isFavorite,
+        });
+        toast.success(
+          result.data.isFavorite
+            ? "Added to favorites"
+            : "Removed from favorites",
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle favorite");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+      console.error(error);
+    }
+  }, [selectedItem, router]);
+
   return {
     // State
     open,
@@ -246,5 +272,6 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     confirmDelete,
     copyItem,
     copySelectedItem,
+    toggleFavorite,
   };
 }

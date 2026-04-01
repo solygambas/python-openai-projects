@@ -5,6 +5,7 @@ import {
   updateItem as updateItemQuery,
   deleteItem as deleteItemQuery,
   createItem as createItemQuery,
+  toggleItemFavorite as toggleItemFavoriteQuery,
 } from "@/lib/db/items";
 import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
 import { z } from "zod";
@@ -45,8 +46,13 @@ const DeleteItemSchema = z.object({
   itemId: z.string().min(1, "Item ID is required"),
 });
 
+const ToggleFavoriteItemSchema = z.object({
+  itemId: z.string().min(1, "Item ID is required"),
+});
+
 type UpdateItemInput = z.infer<typeof UpdateItemSchema>;
 type DeleteItemInput = z.infer<typeof DeleteItemSchema>;
+type ToggleFavoriteItemInput = z.infer<typeof ToggleFavoriteItemSchema>;
 
 interface UpdateItemResult {
   success: boolean;
@@ -85,6 +91,15 @@ interface UpdateItemResult {
 interface DeleteItemResult {
   success: boolean;
   data?: { id: string };
+  error?: string;
+}
+
+interface ToggleFavoriteItemResult {
+  success: boolean;
+  data?: {
+    id: string;
+    isFavorite: boolean;
+  };
   error?: string;
 }
 
@@ -278,6 +293,46 @@ export async function deleteItem(
     return {
       success: false,
       error: "Failed to delete item",
+    };
+  }
+}
+
+export async function toggleFavoriteItem(
+  input: ToggleFavoriteItemInput,
+): Promise<ToggleFavoriteItemResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  const validatedFields = ToggleFavoriteItemSchema.safeParse(input);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: validatedFields.error.issues[0].message,
+    };
+  }
+
+  const { itemId } = validatedFields.data;
+
+  try {
+    const updatedItem = await toggleItemFavoriteQuery(userId, itemId);
+
+    return {
+      success: true,
+      data: {
+        id: updatedItem.id,
+        isFavorite: updatedItem.isFavorite,
+      },
+    };
+  } catch (error) {
+    console.error("TOGGLE_FAVORITE_ITEM_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to toggle favorite",
     };
   }
 }

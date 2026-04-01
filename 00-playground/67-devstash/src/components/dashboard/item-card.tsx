@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy } from "lucide-react";
+import { Copy, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { File } from "lucide-react";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
@@ -11,9 +11,16 @@ interface ItemCardProps {
   iconMap: IconMap;
   onClick?: () => void;
   onCopy?: () => void;
+  onToggleFavorite?: () => void;
 }
 
-export function ItemCard({ item, iconMap, onClick, onCopy }: ItemCardProps) {
+export function ItemCard({
+  item,
+  iconMap,
+  onClick,
+  onCopy,
+  onToggleFavorite,
+}: ItemCardProps) {
   const itemType = item.itemType;
   const Icon = iconMap[itemType?.icon || "File"] || File;
   const borderColor = itemType?.color || "#6b7280";
@@ -36,6 +43,25 @@ export function ItemCard({ item, iconMap, onClick, onCopy }: ItemCardProps) {
           <p className="text-sm font-medium leading-snug">{item.title}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {onToggleFavorite && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite();
+              }}
+              className="h-6 w-6 rounded flex items-center justify-center hover:bg-secondary transition-opacity shrink-0 opacity-0 group-hover:opacity-100"
+              aria-label="Toggle favorite"
+            >
+              <Star
+                className={`h-3.5 w-3.5 ${
+                  item.isFavorite
+                    ? "fill-yellow-500 text-yellow-500"
+                    : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          )}
           {onCopy && (
             <button
               type="button"

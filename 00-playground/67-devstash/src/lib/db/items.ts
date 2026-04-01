@@ -450,3 +450,32 @@ export async function getFavoriteItems(userId: string) {
     },
   });
 }
+
+export async function toggleItemFavorite(userId: string, itemId: string) {
+  // First verify ownership
+  const existingItem = await prisma.item.findFirst({
+    where: { id: itemId, userId },
+    select: { id: true, isFavorite: true },
+  });
+
+  if (!existingItem) {
+    throw new Error("Item not found or not owned by user");
+  }
+
+  // Toggle the favorite status
+  const updatedItem = await prisma.item.update({
+    where: { id: itemId },
+    data: { isFavorite: !existingItem.isFavorite },
+    include: {
+      itemType: true,
+      tags: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
+    },
+  });
+
+  return updatedItem;
+}

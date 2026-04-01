@@ -16,6 +16,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { useItemDrawer } from "@/contexts/item-drawer-context";
+import { GlobalItemDrawer } from "@/components/search/global-item-drawer";
 import type { IconMap } from "@/types/dashboard";
 
 const iconMap: IconMap = {
@@ -180,6 +181,8 @@ export function FavoritesPage({
           )}
         </>
       )}
+
+      <GlobalItemDrawer />
     </div>
   );
 }

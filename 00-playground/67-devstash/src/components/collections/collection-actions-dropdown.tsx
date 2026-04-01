@@ -19,7 +19,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteCollection } from "@/actions/collections";
+import {
+  deleteCollection,
+  toggleFavoriteCollection,
+} from "@/actions/collections";
 import { toast } from "sonner";
 
 interface CollectionActionsDropdownProps {
@@ -36,6 +39,7 @@ export function CollectionActionsDropdown({
   const router = useRouter();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -53,6 +57,28 @@ export function CollectionActionsDropdown({
     } finally {
       setIsDeleting(false);
       setShowDeleteDialog(false);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const result = await toggleFavoriteCollection({ collectionId });
+      if (result.success) {
+        toast.success(
+          result.data?.isFavorite
+            ? "Added to favorites"
+            : "Removed from favorites",
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle favorite");
+      }
+    } catch (error) {
+      console.error("TOGGLE_FAVORITE_ERROR", error);
+      toast.error("Failed to toggle favorite");
+    } finally {
+      setIsTogglingFavorite(false);
     }
   };
 
@@ -81,12 +107,12 @@ export function CollectionActionsDropdown({
           <DropdownMenuItem
             onClick={(e) => {
               e.stopPropagation();
-              // TODO: Implement favorite toggle
-              toast.info("Favorite functionality coming soon");
+              handleToggleFavorite();
             }}
+            disabled={isTogglingFavorite}
           >
             <Star className="mr-2 h-4 w-4" />
-            Favorite
+            {isTogglingFavorite ? "Toggling..." : "Favorite"}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"

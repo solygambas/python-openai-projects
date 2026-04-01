@@ -61,6 +61,7 @@ import {
   getItemsByTypePaginated,
   getItemsByCollectionPaginated,
   getFavoriteItems,
+  toggleItemFavorite,
 } from "@/lib/db/items";
 import { ITEMS_PER_PAGE, COLLECTIONS_PER_PAGE } from "@/lib/utils";
 
@@ -863,5 +864,118 @@ describe("getFavoriteItems", () => {
 
     expect(result[0].id).toBe("item2");
     expect(result[1].id).toBe("item1");
+  });
+});
+
+describe("toggleItemFavorite", () => {
+  beforeEach(() => {
+    findFirstMock.mockReset();
+    updateMock.mockReset();
+  });
+
+  it("toggles item favorite status from false to true", async () => {
+    // Ownership check - item exists and isFavorite is false
+    findFirstMock.mockResolvedValueOnce({
+      id: "item-1",
+      isFavorite: false,
+    });
+
+    // Mock the update to return the updated item with isFavorite: true
+    const updatedItem = {
+      id: "item-1",
+      title: "Test Item",
+      isFavorite: true,
+      contentType: "TEXT",
+      content: "test content",
+      url: null,
+      language: null,
+      description: null,
+      isPinned: false,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [],
+      collections: [],
+    };
+
+    updateMock.mockResolvedValueOnce(updatedItem);
+
+    const result = await toggleItemFavorite("user-1", "item-1");
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "item-1", userId: "user-1" },
+      select: { id: true, isFavorite: true },
+    });
+
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { isFavorite: true },
+      include: expect.any(Object),
+    });
+
+    expect(result.isFavorite).toBe(true);
+  });
+
+  it("toggles item favorite status from true to false", async () => {
+    // Ownership check - item exists and isFavorite is true
+    findFirstMock.mockResolvedValueOnce({
+      id: "item-1",
+      isFavorite: true,
+    });
+
+    // Mock the update to return the updated item with isFavorite: false
+    const updatedItem = {
+      id: "item-1",
+      title: "Test Item",
+      isFavorite: false,
+      contentType: "TEXT",
+      content: "test content",
+      url: null,
+      language: null,
+      description: null,
+      isPinned: false,
+      createdAt: new Date("2026-03-20T10:00:00.000Z"),
+      updatedAt: new Date("2026-03-20T12:00:00.000Z"),
+      itemType: {
+        id: "type-1",
+        name: "Snippet",
+        icon: "Code",
+        color: "#3b82f6",
+      },
+      tags: [],
+      collections: [],
+    };
+
+    updateMock.mockResolvedValueOnce(updatedItem);
+
+    const result = await toggleItemFavorite("user-1", "item-1");
+
+    expect(findFirstMock).toHaveBeenCalledWith({
+      where: { id: "item-1", userId: "user-1" },
+      select: { id: true, isFavorite: true },
+    });
+
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { id: "item-1" },
+      data: { isFavorite: false },
+      include: expect.any(Object),
+    });
+
+    expect(result.isFavorite).toBe(false);
+  });
+
+  it("throws error when item not found or not owned by user", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+
+    await expect(toggleItemFavorite("user-1", "item-1")).rejects.toThrow(
+      "Item not found or not owned by user",
+    );
+
+    expect(updateMock).not.toHaveBeenCalled();
   });
 });

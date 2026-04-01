@@ -5,6 +5,7 @@ import {
   createCollection as createCollectionQuery,
   updateCollection as updateCollectionQuery,
   deleteCollection as deleteCollectionQuery,
+  toggleCollectionFavorite as toggleCollectionFavoriteQuery,
 } from "@/lib/db/collections";
 import { z } from "zod";
 
@@ -31,9 +32,16 @@ const DeleteCollectionSchema = z.object({
   collectionId: z.string().min(1, "Collection ID is required"),
 });
 
+const ToggleFavoriteCollectionSchema = z.object({
+  collectionId: z.string().min(1, "Collection ID is required"),
+});
+
 type CreateCollectionInput = z.infer<typeof CreateCollectionSchema>;
 type UpdateCollectionInput = z.infer<typeof UpdateCollectionSchema>;
 type DeleteCollectionInput = z.infer<typeof DeleteCollectionSchema>;
+type ToggleFavoriteCollectionInput = z.infer<
+  typeof ToggleFavoriteCollectionSchema
+>;
 
 interface CreateCollectionResult {
   success: boolean;
@@ -66,6 +74,15 @@ interface UpdateCollectionResult {
 interface DeleteCollectionResult {
   success: boolean;
   data?: { id: string };
+  error?: string;
+}
+
+interface ToggleFavoriteCollectionResult {
+  success: boolean;
+  data?: {
+    id: string;
+    isFavorite: boolean;
+  };
   error?: string;
 }
 
@@ -179,5 +196,48 @@ export async function deleteCollection(
   } catch (error) {
     console.error("DELETE_COLLECTION_ERROR", error);
     return { success: false, error: "Failed to delete collection" };
+  }
+}
+
+export async function toggleFavoriteCollection(
+  input: ToggleFavoriteCollectionInput,
+): Promise<ToggleFavoriteCollectionResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  const validatedFields = ToggleFavoriteCollectionSchema.safeParse(input);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      error: validatedFields.error.issues[0].message,
+    };
+  }
+
+  const { collectionId } = validatedFields.data;
+
+  try {
+    const updatedCollection = await toggleCollectionFavoriteQuery(
+      userId,
+      collectionId,
+    );
+
+    return {
+      success: true,
+      data: {
+        id: updatedCollection.id,
+        isFavorite: updatedCollection.isFavorite,
+      },
+    };
+  } catch (error) {
+    console.error("TOGGLE_FAVORITE_COLLECTION_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to toggle favorite",
+    };
   }
 }

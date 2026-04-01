@@ -15,7 +15,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
-import { deleteCollection } from "@/actions/collections";
+import {
+  deleteCollection,
+  toggleFavoriteCollection,
+} from "@/actions/collections";
 import { toast } from "sonner";
 
 interface CollectionHeaderActionsProps {
@@ -35,6 +38,31 @@ export function CollectionHeaderActions({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [localIsFavorite, setLocalIsFavorite] = useState(isFavorite);
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const result = await toggleFavoriteCollection({ collectionId });
+      if (result.success) {
+        setLocalIsFavorite(result.data?.isFavorite ?? !localIsFavorite);
+        toast.success(
+          result.data?.isFavorite
+            ? "Added to favorites"
+            : "Removed from favorites",
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to toggle favorite");
+      }
+    } catch (error) {
+      console.error("TOGGLE_FAVORITE_ERROR", error);
+      toast.error("Failed to toggle favorite");
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -60,15 +88,15 @@ export function CollectionHeaderActions({
       <Button
         variant="outline"
         size="sm"
-        onClick={() => {
-          // TODO: Implement favorite toggle
-          toast.info("Favorite functionality coming soon");
-        }}
+        onClick={handleToggleFavorite}
+        disabled={isTogglingFavorite}
       >
         <Star
-          className={`mr-2 h-4 w-4 ${isFavorite ? "fill-yellow-500 text-yellow-500" : ""}`}
+          className={`mr-2 h-4 w-4 ${
+            localIsFavorite ? "fill-yellow-500 text-yellow-500" : ""
+          }`}
         />
-        {isFavorite ? "Favorited" : "Favorite"}
+        {localIsFavorite ? "Favorited" : "Favorite"}
       </Button>
 
       <Button

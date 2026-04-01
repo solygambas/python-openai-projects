@@ -421,3 +421,36 @@ export async function getFavoriteCollections(userId: string) {
     },
   });
 }
+
+export async function toggleCollectionFavorite(
+  userId: string,
+  collectionId: string,
+) {
+  // First verify ownership
+  const existingCollection = await prisma.collection.findFirst({
+    where: { id: collectionId, userId },
+    select: { id: true, isFavorite: true },
+  });
+
+  if (!existingCollection) {
+    throw new Error("Collection not found or not owned by user");
+  }
+
+  // Toggle the favorite status
+  const updatedCollection = await prisma.collection.update({
+    where: { id: collectionId },
+    data: { isFavorite: !existingCollection.isFavorite },
+    include: {
+      _count: {
+        select: {
+          items: true,
+        },
+      },
+    },
+  });
+
+  return {
+    ...updatedCollection,
+    itemCount: updatedCollection._count.items,
+  };
+}
