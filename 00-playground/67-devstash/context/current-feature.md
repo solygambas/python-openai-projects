@@ -1,30 +1,16 @@
-# Current Feature: Editor Preferences Settings
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Add editor preferences section to settings page
-- Support font size, tab size, word wrap, minimap, and theme controls
-- Store preferences in database (`editorPreferences` JSON column on User model)
-- Create server action to update preferences
-- Apply settings to Monaco editor component
-- Auto-save on change with success toast notification
-- Create EditorPreferencesContext for client components
+(none)
 
 ## Notes
 
-- **Font size dropdown** - user selectable
-- **Tab size dropdown** - user selectable
-- **Word wrap toggle** - default ON
-- **Minimap toggle** - default OFF
-- **Theme dropdown** - options: vs-dark, monokai, github-dark (default: vs-dark)
-- Must create and run migration (never use db push)
-- Auto-save on every change (no save button)
-- Show success toast on each save
-- Requires EditorPreferencesContext for sharing settings across client components
+(none)
 
 ## History
 
@@ -353,3 +339,16 @@ In Progress
 - [x] Settings page shows only Account actions (Delete Account, Change Password)
 - [x] All validation checks pass; no new lint or type errors
 - _Note:_ Build and all 94 tests pass.
+- **Editor Preferences Settings** (Completed)
+- [x] Added `editorPreferences` Json column to User model in Prisma schema
+- [x] Created migration: `20260401061132_add_editor_preferences`
+- [x] Created `EditorPreferencesContext` for client-side preference state management
+- [x] Implemented `updateEditorPreferences` and `getEditorPreferences` server actions with Zod validation
+- [x] Created `EditorPreferencesForm` component in settings page with UI selectors (font size, tab size, theme)  and toggles (word wrap, minimap)
+- [x] Wired `CodeEditor` to read and apply context preferences dynamically
+- [x] Registered custom Monaco themes: `monokai` (#272822 background, pink keywords, yellow strings) and `github-dark` (#0d1117 background, red keywords, light-blue strings)
+- [x] Integrated `EditorPreferencesProvider` at dashboard layout level for app-wide availability
+- [x] Added auto-save on preference change with success toast notifications
+- [x] Added comprehensive test coverage: 9 new unit tests covering authorization, validation, and storage
+- [x] Installed ShadCN components: `select` and `switch` for preference controls
+- _Note:_ Build and all 103 tests pass.
