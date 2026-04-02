@@ -78,16 +78,22 @@ export function CreateCollectionDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={
-          trigger || (
-            <Button variant="ghost" className="text-muted-foreground" size="sm">
-              <FolderPlus className="mr-2 h-4 w-4" />
-              New Collection
-            </Button>
-          )
-        }
-      />
+      {!isControlled && (
+        <DialogTrigger
+          render={
+            trigger || (
+              <Button
+                variant="ghost"
+                className="text-muted-foreground"
+                size="sm"
+              >
+                <FolderPlus className="mr-2 h-4 w-4" />
+                New Collection
+              </Button>
+            )
+          }
+        />
+      )}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create New Collection</DialogTitle>

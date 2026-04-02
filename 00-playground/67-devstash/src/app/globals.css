@@ -128,6 +128,30 @@
   }
 }
 
+/* Homepage blue accent theme */
+.homepage-accent {
+  --primary: oklch(0.55 0.2 250);
+  --primary-foreground: oklch(0.985 0 0);
+}
+
+.homepage-accent .btn-primary,
+.homepage-accent .bg-primary {
+  background-color: oklch(0.55 0.2 250);
+}
+
+.homepage-accent .text-primary {
+  color: oklch(0.55 0.2 250);
+}
+
+.homepage-accent .border-primary {
+  border-color: oklch(0.55 0.2 250);
+}
+
+.homepage-accent .bg-gradient-to-r.from-foreground {
+  --tw-gradient-from: oklch(0.985 0 0);
+  --tw-gradient-to: oklch(0.55 0.2 250);
+}
+
 /* Markdown Preview Styles */
 .markdown-preview {
   color: oklch(0.985 0 0);

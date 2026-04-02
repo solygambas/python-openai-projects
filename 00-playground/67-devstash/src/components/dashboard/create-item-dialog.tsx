@@ -177,16 +177,18 @@ export function CreateItemDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={
-          trigger || (
-            <Button size="sm" className="bg-primary hover:bg-primary/90">
-              <Plus className="mr-2 h-4 w-4" />
-              New Item
-            </Button>
-          )
-        }
-      />
+      {!isControlled && (
+        <DialogTrigger
+          render={
+            trigger || (
+              <Button size="sm" className="bg-primary hover:bg-primary/90">
+                <Plus className="mr-2 h-4 w-4" />
+                New Item
+              </Button>
+            )
+          }
+        />
+      )}
       <DialogContent className="sm:max-w-lg" key={defaultTypeId}>
         <DialogHeader>
           <DialogTitle>Create New Item</DialogTitle>

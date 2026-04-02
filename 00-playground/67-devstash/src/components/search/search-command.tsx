@@ -83,8 +83,8 @@ export function SearchCommand({ items, collections }: SearchCommandProps) {
   // Listen for custom event from SearchProvider
   useEffect(() => {
     const handleOpenSearch = () => setOpen(true);
-    document.addEventListener("open-search", handleOpenSearch);
-    return () => document.removeEventListener("open-search", handleOpenSearch);
+    window.addEventListener("open-search", handleOpenSearch);
+    return () => window.removeEventListener("open-search", handleOpenSearch);
   }, []);
 
   const handleSelect = useCallback(
