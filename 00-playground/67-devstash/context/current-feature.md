@@ -1,66 +1,16 @@
-# Current Feature: DevStash Homepage Mockup
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- Create marketing homepage showcasing the "chaos to order" concept with interactive hero section
-- Implement animated floating icons in chaos container (Notion, GitHub, Slack, VS Code, browser tabs, terminal, etc.) that drift, bounce, and repel from mouse
-- Display dashboard preview mockup with colored borders for item types using accent color palette
-- Build responsive navigation bar with logo, feature/pricing links, and Sign In/Get Started buttons
-- Create features grid with 6 item type cards (Snippets, Prompts, Commands, Files, Collections, Instant Search)
-- Implement AI section with Pro badge, AI capabilities checklist, and code editor mockup demo
-- Build pricing section comparing Free ($0, 50 items, 3 collections) vs Pro ($8/mo, unlimited, AI features) with yearly toggle ($72)
-- Add scroll animations (fade-in on scroll, navbar opacity on scroll)
-- Implement responsive mobile design (vertical stacking, single column grids, 90° arrow rotation)
-- Generate static prototype in `prototypes/homepage/` with HTML, CSS, and JavaScript
+<!-- Add goals here -->
 
 ## Notes
 
-- **Output:** `prototypes/homepage/` directory with `index.html`, `styles.css`, `script.js`
-- **Color Palette:** Snippet (#3b82f6 blue), Prompt (#f59e0b amber), Command (#06b6d4 cyan), Note (#22c55e green), File (#64748b slate), Image (#ec4899 pink), URL (#6366f1 indigo)
-- **Hero Section:** Three-part layout: Chaos container (left) → Pulse arrow (center) → Dashboard preview (right)
-- **Chaos Animation:** JavaScript with requestAnimationFrame - icons float randomly, bounce off walls, subtle rotation/scale pulsing, repel from mouse cursor on hover
-- **Scroll Behavior:** Elements fade in when scrolling into view; navbar becomes more opaque on scroll
-- **Responsive:** Mobile collapses to single column; arrow rotates 90° to point down; grids become single column
-- **Marketing Focus:** Emphasize knowledge management workflow transformation, Pro features (AI tagging), and pricing value proposition
-
-## Design Review Fixes (In Progress)
-
-### Priority 1 — Hero Structure & Labels
-
-- [x] Move headline above chaos/order visual per spec
-- [x] Add "Your knowledge today..." label to chaos container
-- [x] Add "...with DevStash" label to dashboard preview
-- [x] Match container heights (align-items: stretch or fixed height)
-- [x] Restructure hero: headline → subhead → visual trio → CTAs
-
-### Priority 2 — Typography
-
-- [x] Replace Inter with distinctive display font (Syne/Outfit/DM Sans) for headings
-- [x] Keep JetBrains Mono for code
-- [x] Increase .card-type from 0.5rem (8px) to minimum 0.6875rem (11px)
-- [x] Increase .sidebar-item and .card-title from 0.625rem (10px) to minimum 0.6875rem (11px)
-
-### Priority 3 — Accessibility (WCAG Compliance)
-
-- [x] Bump --text-muted from #666666 (3.9:1) to #888888 (passes AA)
-- [x] Add prefers-reduced-motion media query for all animations
-- [x] Add focus-visible outlines for all interactive elements (buttons, toggle, links)
-- [x] In JS: check prefers-reduced-motion before starting animation loop
-
-### Additional Fixes
-
-- [x] Collections icon: replace undeclared purple with neutral/system color
-- [x] Instant Search icon: use different color (not Note's green)
-- [x] Define --color-pro token for AI badge purple (#8b5cf6)
-- [x] Define radius tokens: --radius-sm, --radius-md, --radius-lg, --radius-pill
-- [x] Normalize border-radius usage across components
-- [x] Arrow animation: remove translate, keep only opacity pulse
-- [x] Toggle button: add hover state (background change)
-- [x] Footer links gap: reduce from 4rem to 2.5rem
+<!-- Add notes here -->
 
 ## History
 
@@ -446,3 +396,16 @@ In Progress
 - [x] Added unit tests for `toggleItemPin` server action (5 tests) and database function (3 tests)
 - [x] Updated existing tests to reflect new `orderBy` format
 - _Note:_ Build and all 133 tests pass.
+- **DevStash Homepage Mockup** (Completed)
+- [x] Created marketing homepage with "chaos to order" concept
+- [x] Implemented animated floating icons in chaos container with drift, bounce, and mouse repel effects
+- [x] Displayed dashboard preview mockup with colored borders for item types
+- [x] Built responsive navigation bar with logo, feature/pricing links, and Sign In/Get Started buttons
+- [x] Created features grid with 6 item type cards
+- [x] Implemented AI section with Pro badge and capabilities checklist
+- [x] Built pricing section with Free vs Pro comparison and yearly toggle
+- [x] Added scroll animations and prefers-reduced-motion accessibility support
+- [x] Implemented responsive mobile design with 90° arrow rotation and vertical stacking
+- [x] Generated static prototype in `prototypes/homepage/` with HTML, CSS, and JavaScript
+- [x] Applied design review fixes: hero structure, typography, accessibility (WCAG AA compliance)
+- _Output:_ Static prototype at `prototypes/homepage/` showcasing product positioning and key features
