@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevStash - From Chaos to Order</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a href="#" class="logo">
+          <span class="logo-icon">&#128230;</span>
+          <span class="logo-text">DevStash</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#ai">AI Features</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        <div class="nav-actions">
+          <a href="#" class="btn btn-ghost">Sign In</a>
+          <a href="#" class="btn btn-primary">Get Started</a>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features">Features</a>
+      <a href="#ai">AI Features</a>
+      <a href="#pricing">Pricing</a>
+      <div class="mobile-menu-actions">
+        <a href="#" class="btn btn-ghost">Sign In</a>
+        <a href="#" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <!-- Hero Text - Above the Visual -->
+      <div class="hero-text">
+        <h1 class="hero-title fade-in">From Chaos to Order</h1>
+        <p class="hero-subtitle fade-in">
+          One place for all your snippets, prompts, commands, notes, and links.
+        </p>
+      </div>
+
+      <div class="hero-container">
+        <!-- Chaos Container -->
+        <div class="hero-box">
+          <div class="chaos-container" id="chaosContainer">
+            <div class="chaos-icon" data-icon="notion">📝</div>
+            <div class="chaos-icon" data-icon="github">🐙</div>
+            <div class="chaos-icon" data-icon="slack">💬</div>
+            <div class="chaos-icon" data-icon="vscode">💻</div>
+            <div class="chaos-icon" data-icon="tabs">🗂️</div>
+            <div class="chaos-icon" data-icon="terminal">⌨️</div>
+            <div class="chaos-icon" data-icon="notes">📋</div>
+            <div class="chaos-icon" data-icon="gists">🔗</div>
+          </div>
+          <div class="chaos-label">Your knowledge today...</div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="hero-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">→</div>
+        </div>
+
+        <!-- Dashboard Preview -->
+        <div class="hero-box">
+          <div class="dashboard-preview">
+            <div class="dashboard-header">
+              <div class="dashboard-title">DevStash</div>
+              <div class="dashboard-search">🔍 Search...</div>
+            </div>
+            <div class="dashboard-body">
+              <div class="dashboard-sidebar">
+                <div class="sidebar-item">
+                  <span class="item-dot snippet"></span>
+                  <span>Snippets</span>
+                  <span class="count">12</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot prompt"></span>
+                  <span>Prompts</span>
+                  <span class="count">8</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot command"></span>
+                  <span>Commands</span>
+                  <span class="count">15</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot note"></span>
+                  <span>Notes</span>
+                  <span class="count">6</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot file"></span>
+                  <span>Files</span>
+                  <span class="count">4</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot image"></span>
+                  <span>Images</span>
+                  <span class="count">9</span>
+                </div>
+                <div class="sidebar-item">
+                  <span class="item-dot url"></span>
+                  <span>Links</span>
+                  <span class="count">20</span>
+                </div>
+              </div>
+              <div class="dashboard-main">
+                <div class="preview-card snippet">
+                  <div class="card-title">useAuth Hook</div>
+                  <div class="card-type">Snippet</div>
+                </div>
+                <div class="preview-card prompt">
+                  <div class="card-title">Code Review Prompt</div>
+                  <div class="card-type">Prompt</div>
+                </div>
+                <div class="preview-card command">
+                  <div class="card-title">git reset --hard</div>
+                  <div class="card-type">Command</div>
+                </div>
+                <div class="preview-card note">
+                  <div class="card-title">Architecture Notes</div>
+                  <div class="card-type">Note</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-label">...with DevStash</div>
+        </div>
+      </div>
+
+      <div class="hero-cta fade-in">
+        <a href="#" class="btn btn-primary btn-lg">Get Started Free</a>
+        <a href="#" class="btn btn-outline btn-lg">Learn More</a>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <div class="section-container">
+        <h2 class="section-title fade-in">Everything in One Place</h2>
+        <div class="features-grid">
+          <div class="feature-card fade-in">
+            <div class="feature-icon snippet">📝</div>
+            <h3>Snippets</h3>
+            <p>
+              Store and organize code snippets with syntax highlighting for 50+
+              languages.
+            </p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon prompt">✨</div>
+            <h3>Prompts</h3>
+            <p>
+              Save your best AI prompts and iterate on them with version
+              history.
+            </p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon command">⌨️</div>
+            <h3>Commands</h3>
+            <p>Keep terminal commands at your fingertips with instant copy.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon file">📁</div>
+            <h3>Files</h3>
+            <p>Upload context files, configs, and templates. Pro feature.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon collection">📁</div>
+            <h3>Collections</h3>
+            <p>Organize items into collections for projects or topics.</p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon search">🔍</div>
+            <h3>Instant Search</h3>
+            <p>Find anything instantly with fuzzy search across all content.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Features Section -->
+    <section class="ai-section" id="ai">
+      <div class="section-container">
+        <div class="ai-header">
+          <div class="ai-badge">PRO</div>
+          <h2 class="section-title fade-in">AI-Powered Features</h2>
+          <p class="section-subtitle fade-in">
+            Let AI help you organize and understand your code.
+          </p>
+        </div>
+        <div class="ai-content">
+          <div class="ai-features-list fade-in">
+            <div class="ai-feature">
+              <span class="ai-check">✓</span>
+              <span>Auto-tag items with relevant tags</span>
+            </div>
+            <div class="ai-feature">
+              <span class="ai-check">✓</span>
+              <span>Generate summaries for long content</span>
+            </div>
+            <div class="ai-feature">
+              <span class="ai-check">✓</span>
+              <span>Explain code snippets in plain English</span>
+            </div>
+            <div class="ai-feature">
+              <span class="ai-check">✓</span>
+              <span>Optimize and improve your prompts</span>
+            </div>
+          </div>
+          <div class="ai-demo fade-in">
+            <div class="code-editor">
+              <div class="editor-header">
+                <div class="editor-dots">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <div class="editor-title">useAuth.ts</div>
+                <button class="copy-btn">Copy</button>
+              </div>
+              <div class="editor-content">
+                <pre><code><span class="keyword">import</span> { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">export function</span> <span class="function">useAuth</span>() {
+  <span class="keyword">const</span> [user, setUser] = <span class="function">useState</span>(<span class="keyword">null</span>);
+  <span class="keyword">const</span> [loading, setLoading] = <span class="function">useState</span>(<span class="keyword">true</span>);
+
+  <span class="function">useEffect</span>(() => {
+    <span class="comment">// Check session on mount</span>
+    <span class="function">checkSession</span>().<span class="function">then</span>((u) => {
+      <span class="function">setUser</span>(u);
+      <span class="function">setLoading</span>(<span class="keyword">false</span>);
+    });
+  }, []);
+
+  <span class="keyword">return</span> { user, loading };
+}</code></pre>
+              </div>
+              <div class="ai-explanation">
+                <div class="ai-label">AI Explanation</div>
+                <p>
+                  This is a custom React hook for authentication. It manages
+                  user state and loading status, checking the session on
+                  component mount. Returns an object with user data and loading
+                  state.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+      <div class="section-container">
+        <h2 class="section-title fade-in">Simple Pricing</h2>
+        <p class="section-subtitle fade-in">
+          Start free, upgrade when you need more.
+        </p>
+
+        <div class="pricing-toggle fade-in">
+          <span class="toggle-label" data-period="monthly">Monthly</span>
+          <button class="toggle-btn" id="pricingToggle">
+            <span class="toggle-slider"></span>
+          </button>
+          <span class="toggle-label" data-period="yearly">
+            Yearly
+            <span class="save-badge">Save 25%</span>
+          </span>
+        </div>
+
+        <div class="pricing-cards">
+          <div class="pricing-card free fade-in">
+            <div class="pricing-header">
+              <h3>Free</h3>
+              <div class="price">
+                <span class="amount">$0</span>
+                <span class="period">/month</span>
+              </div>
+            </div>
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> 50 items total</li>
+              <li><span class="check">✓</span> 3 collections</li>
+              <li>
+                <span class="check">✓</span> Snippets, Prompts, Commands, Notes,
+                Links
+              </li>
+              <li><span class="check">✓</span> Basic search</li>
+              <li class="disabled">
+                <span class="x">✕</span> File & Image uploads
+              </li>
+              <li class="disabled"><span class="x">✕</span> AI features</li>
+              <li class="disabled"><span class="x">✕</span> Data export</li>
+            </ul>
+            <a href="#" class="btn btn-outline btn-block">Get Started</a>
+          </div>
+
+          <div class="pricing-card pro fade-in">
+            <div class="popular-badge">Most Popular</div>
+            <div class="pricing-header">
+              <h3>Pro</h3>
+              <div class="price">
+                <span class="amount" id="proPrice">$8</span>
+                <span class="period">/month</span>
+              </div>
+              <p class="price-note" id="priceNote">Billed monthly</p>
+            </div>
+            <ul class="pricing-features">
+              <li><span class="check">✓</span> Unlimited items</li>
+              <li><span class="check">✓</span> Unlimited collections</li>
+              <li>
+                <span class="check">✓</span> All item types including Files &
+                Images
+              </li>
+              <li><span class="check">✓</span> Advanced search</li>
+              <li><span class="check">✓</span> File & Image uploads</li>
+              <li><span class="check">✓</span> AI auto-tagging</li>
+              <li><span class="check">✓</span> AI code explanation</li>
+              <li><span class="check">✓</span> AI prompt optimizer</li>
+              <li><span class="check">✓</span> Data export (JSON/ZIP)</li>
+              <li><span class="check">✓</span> Priority support</li>
+            </ul>
+            <a href="#" class="btn btn-primary btn-block">Start Pro Trial</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">📦</span>
+            <span class="logo-text">DevStash</span>
+          </div>
+          <p>A unified hub for developer knowledge.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#ai">AI Features</a>
+          </div>
+          <div class="footer-column">
+            <h4>Company</h4>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+          </div>
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 DevStash. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
