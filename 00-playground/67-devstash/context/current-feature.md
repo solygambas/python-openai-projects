@@ -1,92 +1,16 @@
-# Current Feature: Homepage
+# Current Feature
 
 ## Status
 
-Complete
+Not Started
 
 ## Goals
 
-### Core Structure
-
-- [x] Create HomePage root component (`src/app/page.tsx`) - renders all sections in order
-- [x] Implement separate layout from dashboard (no sidebar)
-- [x] Public route at `/` (no auth required)
-
-### Server Components
-
-- [x] HeroSection - title, subtitle, CTA buttons, static dashboard preview, static chaos icons
-- [x] FeaturesSection - grid of 6 feature cards with icons, titles, descriptions
-- [x] AISection - PRO badge, AI features list, static code editor mockup
-- [x] PricingSection - free/pro cards with feature lists, server-rendered default state
-- [x] Footer - brand, links, copyright
-- [x] TopBar - fixed position, blur backdrop, nav links, Sign In/Get Started buttons, mobile menu toggle
-
-### Client Components
-
-- [x] ChaosAnimation - floating icons with mouse repulsion, respects prefers-reduced-motion
-- [x] PricingToggle - monthly/yearly toggle, persists to localStorage
-- [x] MobileMenu - hamburger menu, slide-out navigation
-- [ ] ScrollAnimations - fade-in on scroll, navbar background change on scroll (deferred)
-- [x] CopyButton - copy code from AI demo section with toast feedback
-
-### Styling & Responsiveness
-
-- [x] Use Tailwind CSS with dark theme colors
-- [x] Add Syne font for headings (load via next/font or CSS)
-- [x] Import item type colors from `src/lib/constants/item-types.ts`
-- [x] Use ShadCN Button component for all buttons
-- [x] Desktop: Full layout with animations
-- [x] Tablet: Stacked hero, 2-column feature grid
-- [x] Mobile: Single column, hamburger menu, simplified preview
-
-### Accessibility & UX
-
-- [x] Visible focus states on all buttons and links
-- [x] Skip-to-content link for keyboard navigation
-- [x] Semantic HTML sections with proper headings
-- [x] Respect prefers-reduced-motion setting
-- [x] Anchor links: Features (#features), AI (#ai), Pricing (#pricing)
+<!-- Add goals here -->
 
 ## Notes
 
-### Homepage Feature Spec
-
-- **Route:** `/` - public, no auth required
-- **Purpose:** Marketing homepage showcasing product value proposition, features, and pricing
-
-### Key References
-
-- Prototype files: `prototypes/homepage/index.html`, `styles.css`, `script.js`
-- Item type colors: `src/lib/constants/item-types.ts`
-- Color tokens: snippet #3b82f6, prompt #f59e0b, command #06b6d4, note #22c55e, file #64748b, image #ec4899, url #6366f1, pro #8b5cf6
-
-### Implementation Constraints
-
-- Use `'use client'` only where interactivity is required
-- Keep animation code DRY - extract shared utilities
-- Dashboard preview is static mockup (not real component)
-- Pricing toggle updates price client-side only, persists preference
-- ChaosAnimation adds floating/repulsion effect to static icons
-- Consider framer-motion for animations vs raw JS
-- Inter font already loaded, need to add Syne font for headings
-
-### Files Created (12 files)
-
-```
-src/app/page.tsx
-src/components/home/top-bar.tsx
-src/components/home/hero-section.tsx
-src/components/home/chaos-animation.tsx
-src/components/home/features-section.tsx
-src/components/home/ai-section.tsx
-src/components/home/pricing-section.tsx
-src/components/home/pricing-toggle.tsx
-src/components/home/footer.tsx
-src/components/home/mobile-menu.tsx
-src/components/home/dashboard-preview.tsx
-src/components/home/copy-button.tsx
-src/lib/constants/item-types.ts
-```
+<!-- Add notes here -->
 
 ## History
 
