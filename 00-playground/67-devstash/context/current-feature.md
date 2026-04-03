@@ -469,3 +469,13 @@ Not Started
 - [x] Added reusable `ProBadge` UI and integrated `SubscriptionSection` into settings for upgrade and billing management
 - [x] Added and updated tests covering webhook handling and usage-limit gating behavior
 - [x] Validation passed (`npm run validate`)
+- **Pro-Only Type Restrictions** (Completed)
+- [x] Added Pro-only type restrictions - Free users are now blocked from accessing /items/files and /items/images and see an upgrade page
+- **Improved Error Messages** (Completed)
+- [x] Improved user-friendly error messages - Updated server actions and upload API to return actual error messages from limit checks instead of generic messages
+- **UpgradeCta Component** (Completed)
+- [x] Created UpgradeCta component - Reusable pricing buttons with two variants:
+  - stacked (default): Single column layout, used on upgrade page
+  - side-by-side: Two columns on md and up, single column on mobile, used in settings
+- **SubscriptionSection Update** (Completed)
+- [x] Updated SubscriptionSection - Now uses the new UpgradeCta component with side-by-side variant
