@@ -98,26 +98,14 @@ async function main() {
     {
       name: "AI Workflows",
       description: "AI prompts and workflow automations",
-      isFavorite: false,
+      isFavorite: true,
       defaultType: "prompt",
-    },
-    {
-      name: "DevOps",
-      description: "Infrastructure and deployment resources",
-      isFavorite: false,
-      defaultType: "snippet",
     },
     {
       name: "Terminal Commands",
       description: "Useful shell commands for everyday development",
       isFavorite: true,
       defaultType: "command",
-    },
-    {
-      name: "Design Resources",
-      description: "UI/UX resources and references",
-      isFavorite: false,
-      defaultType: "link",
     },
   ];
 
@@ -196,38 +184,6 @@ async function main() {
       collection: "AI Workflows",
     },
 
-    // DevOps
-    {
-      title: "Multi-stage Dockerfile for Node.js",
-      content:
-        'FROM node:20-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install\nCOPY . .\nRUN npm run build\n\nFROM node:20-alpine\nWORKDIR /app\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/node_modules ./node_modules\nCMD ["node", "dist/main.js"]',
-      contentType: ContentType.TEXT,
-      language: "dockerfile",
-      itemType: "snippet",
-      collection: "DevOps",
-    },
-    {
-      title: "Deploy to Staging",
-      content: "./scripts/deploy.sh --env staging --version latest",
-      contentType: ContentType.TEXT,
-      itemType: "command",
-      collection: "DevOps",
-    },
-    {
-      title: "GitHub Actions Documentation",
-      url: "https://docs.github.com/en/actions",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "DevOps",
-    },
-    {
-      title: "Terraform Best Practices",
-      url: "https://developer.hashicorp.com/terraform/cloud-docs/recommended-practices",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "DevOps",
-    },
-
     // Terminal Commands
     {
       title: "Cleanup Git Branches",
@@ -257,36 +213,6 @@ async function main() {
       itemType: "command",
       collection: "Terminal Commands",
     },
-
-    // Design Resources
-    {
-      title: "Tailwind CSS Documentation",
-      url: "https://tailwindcss.com/docs",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "Design Resources",
-    },
-    {
-      title: "Lucide Icons",
-      url: "https://lucide.dev/icons",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "Design Resources",
-    },
-    {
-      title: "Refactoring UI",
-      url: "https://www.refactoringui.com/",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "Design Resources",
-    },
-    {
-      title: "Shadcn UI",
-      url: "https://ui.shadcn.com/",
-      contentType: ContentType.URL,
-      itemType: "link",
-      collection: "Design Resources",
-    },
   ];
 
   for (const item of items) {
@@ -294,7 +220,6 @@ async function main() {
       data: {
         title: item.title,
         content: item.content,
-        url: item.url,
         contentType: item.contentType,
         language: item.language,
         isPinned: item.isPinned || false,
