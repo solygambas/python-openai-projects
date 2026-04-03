@@ -1,28 +1,16 @@
-# Current Feature: Homepage Navigation & Logo Color Consistency
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- [x] Add the homepage top nav to sign in and sign up pages
-- [x] Ensure sparkle logo has consistent color across all pages:
-  - [x] Created reusable `DevStashLogo` component with fixed blue color (`#3b82f6`)
-  - [x] Updated homepage TopBar to use `DevStashLogo`
-  - [x] Updated homepage Footer to use `DevStashLogo`
-  - [x] Updated dashboard TopBar to use `DevStashLogo`
-- [x] Create auth layout with homepage TopBar (nav links hidden)
-- [x] Fix favorites page padding (p-4 md:p-8)
-- [x] Fix hydration error in favorites page sort Select
+<!-- Add goals here -->
 
 ## Notes
 
-- Homepage TopBar now accepts `showNav` prop to conditionally hide nav links on auth pages
-- MobileMenu also accepts `showNav` prop for same purpose
-- Auth layout uses `<TopBar showNav={false} />` to show only logo and auth buttons
-- DevStashLogo component is in `src/components/home/devstash-logo.tsx`
-- Fixed hydration mismatch by using `mounted` flag in useFavoritesSort hook
+<!-- Add context and constraints here -->
 
 ## History
 
@@ -442,3 +430,17 @@ In Progress
 - [x] Fixed CreateItemDialog and CreateCollectionDialog to not render trigger when controlled
 - [x] Fixed search command to listen on window instead of document
 - _Note:_ Build passes. 13 new files created.
+- **Homepage Navigation & Logo Color Consistency** (Completed)
+- [x] Added the homepage top nav to sign in and sign up pages
+- [x] Created reusable `DevStashLogo` component with fixed blue color (`#3b82f6`)
+- [x] Updated homepage TopBar to use `DevStashLogo`
+- [x] Updated homepage Footer to use `DevStashLogo`
+- [x] Updated dashboard TopBar to use `DevStashLogo`
+- [x] Created auth layout with homepage TopBar (nav links hidden)
+- [x] Fixed favorites page padding (p-4 md:p-8)
+- [x] Fixed hydration error in favorites page sort Select using `mounted` flag in useFavoritesSort hook
+- [x] HomePage TopBar accepts `showNav` prop to conditionally hide nav links on auth pages
+- [x] MobileMenu also accepts `showNav` prop for same purpose
+- [x] Auth layout uses `<TopBar showNav={false} />` to show only logo and auth buttons
+- [x] DevStashLogo component at `src/components/home/devstash-logo.tsx`
+- _Note:_ Build and lint pass. 2 new files created, 9 files modified.
