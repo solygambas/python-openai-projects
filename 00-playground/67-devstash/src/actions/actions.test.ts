@@ -13,6 +13,9 @@ const {
   toggleItemFavoriteQueryMock,
   toggleCollectionFavoriteQueryMock,
   toggleItemPinQueryMock,
+  checkItemLimitMock,
+  checkCollectionLimitMock,
+  canUploadFilesMock,
 } = vi.hoisted(() => ({
   authMock: vi.fn(),
   updateItemQueryMock: vi.fn(),
@@ -26,6 +29,9 @@ const {
   toggleItemFavoriteQueryMock: vi.fn(),
   toggleCollectionFavoriteQueryMock: vi.fn(),
   toggleItemPinQueryMock: vi.fn(),
+  checkItemLimitMock: vi.fn(),
+  checkCollectionLimitMock: vi.fn(),
+  canUploadFilesMock: vi.fn(),
 }));
 
 vi.mock("@/auth", () => ({
@@ -54,6 +60,12 @@ vi.mock("@/lib/db/collections", () => ({
   updateCollection: updateCollectionQueryMock,
   deleteCollection: deleteCollectionQueryMock,
   toggleCollectionFavorite: toggleCollectionFavoriteQueryMock,
+}));
+
+vi.mock("@/lib/usage-limits", () => ({
+  checkItemLimit: checkItemLimitMock,
+  checkCollectionLimit: checkCollectionLimitMock,
+  canUploadFiles: canUploadFilesMock,
 }));
 
 import {
@@ -284,7 +296,12 @@ describe("actions/createItem", () => {
   beforeEach(() => {
     authMock.mockReset();
     createItemQueryMock.mockReset();
+    checkItemLimitMock.mockReset();
+    canUploadFilesMock.mockReset();
     vi.restoreAllMocks();
+    // Default: allow actions
+    checkItemLimitMock.mockResolvedValue(true);
+    canUploadFilesMock.mockResolvedValue(true);
   });
 
   it("returns unauthorized when no session user id exists", async () => {
@@ -447,7 +464,10 @@ describe("actions/createCollection", () => {
   beforeEach(() => {
     authMock.mockReset();
     createCollectionQueryMock.mockReset();
+    checkCollectionLimitMock.mockReset();
     vi.restoreAllMocks();
+    // Default: allow actions
+    checkCollectionLimitMock.mockResolvedValue(true);
   });
 
   it("returns unauthorized when no session user id exists", async () => {

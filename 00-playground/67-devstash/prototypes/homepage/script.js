@@ -40,7 +40,7 @@ class ChaosAnimation {
     const iconElements = this.container.querySelectorAll(".chaos-icon");
     this.containerRect = this.container.getBoundingClientRect();
 
-    iconElements.forEach((el, index) => {
+    iconElements.forEach((el) => {
       const icon = {
         el,
         x: Math.random() * (this.containerRect.width - 40),

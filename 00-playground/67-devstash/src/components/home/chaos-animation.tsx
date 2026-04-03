@@ -66,6 +66,7 @@ export function ChaosAnimation() {
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Mount state pattern requires synchronous setState
     setMounted(true);
     setReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -133,7 +134,7 @@ export function ChaosAnimation() {
           newVy *= 0.99;
 
           // Subtle scale pulsing
-          let newScale = icon.scale + icon.scaleDir * 0.002;
+          const newScale = icon.scale + icon.scaleDir * 0.002;
           let newScaleDir = icon.scaleDir;
           if (newScale > 1.1) newScaleDir = -1;
           if (newScale < 0.9) newScaleDir = 1;

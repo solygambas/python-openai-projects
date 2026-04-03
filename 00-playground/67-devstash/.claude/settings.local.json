@@ -1,14 +1,9 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(git checkout:*)",
-      "Bash(npm run:*)"
-    ]
+    "allow": ["Bash(git checkout:*)", "Bash(npm run:*)"]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "neon"
-  ],
+  "enabledMcpjsonServers": ["neon"],
   "hooks": {
     "PreToolUse": [
       {

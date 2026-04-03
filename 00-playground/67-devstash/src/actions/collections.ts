@@ -7,6 +7,7 @@ import {
   deleteCollection as deleteCollectionQuery,
   toggleCollectionFavorite as toggleCollectionFavoriteQuery,
 } from "@/lib/db/collections";
+import { checkCollectionLimit } from "@/lib/usage-limits";
 import { z } from "zod";
 
 const CreateCollectionSchema = z.object({
@@ -108,6 +109,9 @@ export async function createCollection(
   const { name, description } = validatedFields.data;
 
   try {
+    // Check collection limit for free tier users
+    await checkCollectionLimit(userId);
+
     const newCollection = await createCollectionQuery(userId, {
       name,
       description: description || null,

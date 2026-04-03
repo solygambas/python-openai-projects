@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 import {
   Code,
   Sparkles,
@@ -273,7 +273,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
     [router],
   );
 
-  const itemCards = useMemo(() => {
+  const itemCards = (() => {
     if (variant === "grid") {
       // Check if all items are images
       const allImages = items.every(
@@ -387,7 +387,7 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
         ))}
       </div>
     );
-  }, [items, variant, openItem, copyItem]);
+  })();
 
   return (
     <>

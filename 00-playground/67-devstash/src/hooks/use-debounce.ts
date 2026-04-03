@@ -28,14 +28,14 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => void>(
   }, []);
 
   return useCallback(
-    function debouncedCallback(this: unknown, ...args: Parameters<T>) {
+    (...args: Parameters<T>) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
         callbackRef.current(...args);
       }, delay);
-    } as T,
+    },
     [delay],
-  );
+  ) as T;
 }

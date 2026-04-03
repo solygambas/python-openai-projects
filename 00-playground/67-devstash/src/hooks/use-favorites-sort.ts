@@ -150,6 +150,7 @@ export function useFavoritesSort() {
   useEffect(() => {
     const stored = loadPreference();
     if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydration pattern requires synchronous setState
       setPreference(stored);
     }
     setMounted(true);

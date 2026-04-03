@@ -39,8 +39,10 @@ describe("usage-limits", () => {
 
   describe("checkItemLimit", () => {
     it("should return true for Pro users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: true });
-      vi.mocked(prisma.item.count).mockResolvedValue(100);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: true,
+      });
+      (prisma.item.count as ReturnType<typeof vi.fn>).mockResolvedValue(100);
 
       const result = await checkItemLimit(mockUserId);
       expect(result).toBe(true);
@@ -48,16 +50,20 @@ describe("usage-limits", () => {
     });
 
     it("should return true for free users under limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.item.count).mockResolvedValue(25);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.item.count as ReturnType<typeof vi.fn>).mockResolvedValue(25);
 
       const result = await checkItemLimit(mockUserId);
       expect(result).toBe(true);
     });
 
     it("should throw error for free users at limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.item.count).mockResolvedValue(50);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.item.count as ReturnType<typeof vi.fn>).mockResolvedValue(50);
 
       await expect(checkItemLimit(mockUserId)).rejects.toThrow(
         `Free tier limit reached: ${FREE_TIER_LIMITS.maxItems} items`,
@@ -65,8 +71,10 @@ describe("usage-limits", () => {
     });
 
     it("should throw error for free users over limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.item.count).mockResolvedValue(55);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.item.count as ReturnType<typeof vi.fn>).mockResolvedValue(55);
 
       await expect(checkItemLimit(mockUserId)).rejects.toThrow(
         `Free tier limit reached: ${FREE_TIER_LIMITS.maxItems} items`,
@@ -74,7 +82,9 @@ describe("usage-limits", () => {
     });
 
     it("should throw error if user not found", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(checkItemLimit(mockUserId)).rejects.toThrow(
         "User not found",
@@ -84,8 +94,12 @@ describe("usage-limits", () => {
 
   describe("checkCollectionLimit", () => {
     it("should return true for Pro users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: true });
-      vi.mocked(prisma.collection.count).mockResolvedValue(10);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: true,
+      });
+      (prisma.collection.count as ReturnType<typeof vi.fn>).mockResolvedValue(
+        10,
+      );
 
       const result = await checkCollectionLimit(mockUserId);
       expect(result).toBe(true);
@@ -93,16 +107,24 @@ describe("usage-limits", () => {
     });
 
     it("should return true for free users under limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.collection.count).mockResolvedValue(2);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.collection.count as ReturnType<typeof vi.fn>).mockResolvedValue(
+        2,
+      );
 
       const result = await checkCollectionLimit(mockUserId);
       expect(result).toBe(true);
     });
 
     it("should throw error for free users at limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.collection.count).mockResolvedValue(3);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.collection.count as ReturnType<typeof vi.fn>).mockResolvedValue(
+        3,
+      );
 
       await expect(checkCollectionLimit(mockUserId)).rejects.toThrow(
         `Free tier limit reached: ${FREE_TIER_LIMITS.maxCollections} collections`,
@@ -110,8 +132,12 @@ describe("usage-limits", () => {
     });
 
     it("should throw error for free users over limit", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
-      vi.mocked(prisma.collection.count).mockResolvedValue(5);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
+      (prisma.collection.count as ReturnType<typeof vi.fn>).mockResolvedValue(
+        5,
+      );
 
       await expect(checkCollectionLimit(mockUserId)).rejects.toThrow(
         `Free tier limit reached: ${FREE_TIER_LIMITS.maxCollections} collections`,
@@ -119,7 +145,9 @@ describe("usage-limits", () => {
     });
 
     it("should throw error if user not found", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(checkCollectionLimit(mockUserId)).rejects.toThrow(
         "User not found",
@@ -129,14 +157,18 @@ describe("usage-limits", () => {
 
   describe("canUploadFiles", () => {
     it("should return true for Pro users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: true });
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: true,
+      });
 
       const result = await canUploadFiles(mockUserId);
       expect(result).toBe(true);
     });
 
     it("should throw error for free users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
 
       await expect(canUploadFiles(mockUserId)).rejects.toThrow(
         "File uploads are a Pro feature",
@@ -144,7 +176,9 @@ describe("usage-limits", () => {
     });
 
     it("should throw error if user not found", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(canUploadFiles(mockUserId)).rejects.toThrow(
         "User not found",
@@ -154,14 +188,18 @@ describe("usage-limits", () => {
 
   describe("canUseAI", () => {
     it("should return true for Pro users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: true });
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: true,
+      });
 
       const result = await canUseAI(mockUserId);
       expect(result).toBe(true);
     });
 
     it("should throw error for free users", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue({ isPro: false });
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue({
+        isPro: false,
+      });
 
       await expect(canUseAI(mockUserId)).rejects.toThrow(
         "AI features are a Pro feature",
@@ -169,7 +207,9 @@ describe("usage-limits", () => {
     });
 
     it("should throw error if user not found", async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+      (prisma.user.findUnique as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(canUseAI(mockUserId)).rejects.toThrow("User not found");
     });

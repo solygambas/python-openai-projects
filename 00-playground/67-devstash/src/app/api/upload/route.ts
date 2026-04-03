@@ -6,6 +6,7 @@ import {
   getRateLimitErrorMessage,
   getRetryAfterSeconds,
 } from "@/lib/rate-limit";
+import { canUploadFiles } from "@/lib/usage-limits";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +14,9 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Check if user has Pro subscription for file uploads
+    await canUploadFiles(session.user.id);
 
     // Rate limit: 10 uploads per minute per user
     const rateLimitResult = await checkRateLimit({
