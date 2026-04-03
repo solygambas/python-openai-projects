@@ -42,6 +42,7 @@ export function MultiSelect({
   disabled,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
+  const popoverId = React.useId();
 
   const selectedOptions = options.filter((opt) => selected.includes(opt.id));
 
@@ -64,6 +65,7 @@ export function MultiSelect({
         render={
           <div
             role="combobox"
+            aria-controls={popoverId}
             aria-expanded={open}
             aria-disabled={disabled}
             tabIndex={0}
@@ -115,7 +117,11 @@ export function MultiSelect({
           </div>
         }
       />
-      <PopoverContent className="w-[--trigger-width] p-0" align="start">
+      <PopoverContent
+        id={popoverId}
+        className="w-[--trigger-width] p-0"
+        align="start"
+      >
         <Command>
           <CommandInput placeholder="Search..." />
           <CommandList>

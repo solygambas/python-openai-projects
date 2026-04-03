@@ -97,7 +97,8 @@ export function AISection() {
                     <span className="text-[#c586c0]">import</span>{" "}
                     {"{ useState, useEffect }"}{" "}
                     <span className="text-[#c586c0]">from</span>{" "}
-                    <span className="text-[#ce9178]">'react'</span>;{"\n\n"}
+                    <span className="text-[#ce9178]">&#39;react&#39;</span>;
+                    {"\n\n"}
                     <span className="text-[#c586c0]">export function</span>{" "}
                     <span className="text-[#dcdcaa]">useAuth</span>() {"{"}
                     {"\n"}
@@ -115,7 +116,7 @@ export function AISection() {
                     {"\n"}
                     {"    "}
                     <span className="text-[#6a9955]">
-                      // Check session on mount
+                      {"// Check session on mount"}
                     </span>
                     {"\n"}
                     {"    "}

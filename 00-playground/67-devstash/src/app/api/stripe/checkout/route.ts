@@ -10,14 +10,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { priceId } = (await request.json()) as { priceId?: string };
+    const body = await request.json();
+    const { plan, priceId } = body as {
+      plan?: "monthly" | "yearly";
+      priceId?: string;
+    };
 
-    // Validate price ID
-    if (
-      !priceId ||
-      (priceId !== STRIPE_PRICES.monthly && priceId !== STRIPE_PRICES.yearly)
-    ) {
-      return NextResponse.json({ error: "Invalid price ID" }, { status: 400 });
+    // Support both plan and priceId for flexibility
+    let finalPriceId: string;
+
+    if (plan) {
+      finalPriceId =
+        plan === "yearly" ? STRIPE_PRICES.yearly : STRIPE_PRICES.monthly;
+    } else if (priceId) {
+      // Validate price ID if provided directly
+      if (
+        priceId !== STRIPE_PRICES.monthly &&
+        priceId !== STRIPE_PRICES.yearly
+      ) {
+        return NextResponse.json(
+          { error: "Invalid price ID" },
+          { status: 400 },
+        );
+      }
+      finalPriceId = priceId;
+    } else {
+      // Default to yearly plan
+      finalPriceId = STRIPE_PRICES.yearly;
     }
 
     // Get user from database
@@ -63,7 +82,7 @@ export async function POST(request: Request) {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: priceId,
+          price: finalPriceId,
           quantity: 1,
         },
       ],

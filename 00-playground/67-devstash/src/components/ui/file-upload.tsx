@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import Image from "next/image";
 import { X, File, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -104,21 +105,17 @@ export function FileUpload({
     }
   };
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
 
-      if (disabled) return;
+    if (disabled) return;
 
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        const file = files[0];
-        handleFileSelect(file);
-      }
-    },
-    [disabled],
-  );
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  };
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
@@ -214,9 +211,12 @@ export function FileUpload({
       {selectedFile && !isUploading && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
           {previewUrl ? (
-            <img
+            <Image
               src={previewUrl}
               alt="Preview"
+              width={48}
+              height={48}
+              unoptimized
               className="w-12 h-12 object-cover rounded"
             />
           ) : (

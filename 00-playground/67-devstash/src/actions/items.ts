@@ -9,6 +9,7 @@ import {
   toggleItemPin as toggleItemPinQuery,
 } from "@/lib/db/items";
 import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
+import { checkItemLimit, canUploadFiles } from "@/lib/usage-limits";
 import { z } from "zod";
 
 // Custom URL validation that blocks dangerous protocols
@@ -187,6 +188,13 @@ export async function createItem(
   } = validatedFields.data;
 
   try {
+    // Check item limit for free tier users
+    await checkItemLimit(userId);
+
+    // Check file upload permissions if this is a file/image type
+    if (fileUrl) {
+      await canUploadFiles(userId);
+    }
     const newItem = await createItemQuery(userId, {
       title,
       description: description || null,

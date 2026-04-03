@@ -1,10 +1,8 @@
 import prisma from "./prisma";
+import { FREE_TIER_LIMITS } from "./constants/limits";
 
-// Free tier limits
-export const FREE_TIER_LIMITS = {
-  maxItems: 50,
-  maxCollections: 3,
-} as const;
+// Re-export for convenience
+export { FREE_TIER_LIMITS };
 
 /**
  * Check if user can create a new item
