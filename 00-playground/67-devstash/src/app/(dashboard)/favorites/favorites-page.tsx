@@ -58,7 +58,7 @@ export function FavoritesPage({
   favoriteCollections,
 }: FavoritesPageProps) {
   const { openItemDrawer } = useItemDrawer();
-  const { itemSort, collectionSort, setItemSort, setCollectionSort } =
+  const { itemSort, collectionSort, setItemSort, setCollectionSort, mounted } =
     useFavoritesSort();
 
   const handleItemClick = (itemId: string) => {
@@ -75,7 +75,7 @@ export function FavoritesPage({
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 md:p-8">
       <div className="flex items-center gap-3">
         <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
         <h1 className="text-2xl font-bold">Favorites</h1>
@@ -103,24 +103,26 @@ export function FavoritesPage({
                     ({favoriteItems.length})
                   </span>
                 </h2>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="hidden sm:inline">Sort by</span>
-                  <Select
-                    value={itemSort}
-                    onValueChange={(v) => setItemSort(v as ItemSortKey)}
-                  >
-                    <SelectTrigger className="w-[130px] h-8 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="newest">Newest</SelectItem>
-                      <SelectItem value="oldest">Oldest</SelectItem>
-                      <SelectItem value="name-asc">Name A-Z</SelectItem>
-                      <SelectItem value="name-desc">Name Z-A</SelectItem>
-                      <SelectItem value="type">Type</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {mounted && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="hidden sm:inline">Sort by</span>
+                    <Select
+                      value={itemSort}
+                      onValueChange={(v) => setItemSort(v as ItemSortKey)}
+                    >
+                      <SelectTrigger className="w-[130px] h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">Newest</SelectItem>
+                        <SelectItem value="oldest">Oldest</SelectItem>
+                        <SelectItem value="name-asc">Name A-Z</SelectItem>
+                        <SelectItem value="name-desc">Name Z-A</SelectItem>
+                        <SelectItem value="type">Type</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
               <div className="border rounded-md divide-y bg-background">
                 {sortedItems.map((item) => {
@@ -176,25 +178,27 @@ export function FavoritesPage({
                     ({favoriteCollections.length})
                   </span>
                 </h2>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="hidden sm:inline">Sort by</span>
-                  <Select
-                    value={collectionSort}
-                    onValueChange={(v) =>
-                      setCollectionSort(v as CollectionSortKey)
-                    }
-                  >
-                    <SelectTrigger className="w-[130px] h-8 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="newest">Newest</SelectItem>
-                      <SelectItem value="oldest">Oldest</SelectItem>
-                      <SelectItem value="name-asc">Name A-Z</SelectItem>
-                      <SelectItem value="name-desc">Name Z-A</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {mounted && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="hidden sm:inline">Sort by</span>
+                    <Select
+                      value={collectionSort}
+                      onValueChange={(v) =>
+                        setCollectionSort(v as CollectionSortKey)
+                      }
+                    >
+                      <SelectTrigger className="w-[130px] h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">Newest</SelectItem>
+                        <SelectItem value="oldest">Oldest</SelectItem>
+                        <SelectItem value="name-asc">Name A-Z</SelectItem>
+                        <SelectItem value="name-desc">Name Z-A</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
               <div className="border rounded-md divide-y bg-background">
                 {sortedCollections.map((collection) => (

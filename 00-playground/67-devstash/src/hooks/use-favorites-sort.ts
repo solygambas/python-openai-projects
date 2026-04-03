@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export type ItemSortKey =
   | "newest"
@@ -46,11 +46,11 @@ const VALID_COLLECTION_KEYS = new Set<CollectionSortKey>([
   "name-desc",
 ]);
 
-function loadPreference(): FavoritesSortPreference {
-  if (typeof window === "undefined") return DEFAULT_PREFERENCE;
+function loadPreference(): FavoritesSortPreference | null {
+  if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_PREFERENCE;
+    if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<FavoritesSortPreference>;
     const items =
       parsed.items && VALID_ITEM_KEYS.has(parsed.items)
@@ -62,7 +62,7 @@ function loadPreference(): FavoritesSortPreference {
         : DEFAULT_PREFERENCE.collections;
     return { items, collections };
   } catch {
-    return DEFAULT_PREFERENCE;
+    return null;
   }
 }
 
@@ -142,9 +142,18 @@ export function sortCollections(
 }
 
 export function useFavoritesSort() {
-  const [preference, setPreference] = useState<FavoritesSortPreference>(() =>
-    loadPreference(),
-  );
+  const [preference, setPreference] =
+    useState<FavoritesSortPreference>(DEFAULT_PREFERENCE);
+  const [mounted, setMounted] = useState(false);
+
+  // Load preference from localStorage after mount to avoid hydration mismatch
+  useEffect(() => {
+    const stored = loadPreference();
+    if (stored) {
+      setPreference(stored);
+    }
+    setMounted(true);
+  }, []);
 
   const setItemSort = useCallback((key: ItemSortKey) => {
     setPreference((prev) => {
@@ -167,5 +176,6 @@ export function useFavoritesSort() {
     collectionSort: preference.collections,
     setItemSort,
     setCollectionSort,
+    mounted,
   };
 }

@@ -1,16 +1,28 @@
-# Current Feature
+# Current Feature: Homepage Navigation & Logo Color Consistency
 
 ## Status
 
-Not Started
+In Progress
 
 ## Goals
 
-<!-- Add goals here -->
+- [x] Add the homepage top nav to sign in and sign up pages
+- [x] Ensure sparkle logo has consistent color across all pages:
+  - [x] Created reusable `DevStashLogo` component with fixed blue color (`#3b82f6`)
+  - [x] Updated homepage TopBar to use `DevStashLogo`
+  - [x] Updated homepage Footer to use `DevStashLogo`
+  - [x] Updated dashboard TopBar to use `DevStashLogo`
+- [x] Create auth layout with homepage TopBar (nav links hidden)
+- [x] Fix favorites page padding (p-4 md:p-8)
+- [x] Fix hydration error in favorites page sort Select
 
 ## Notes
 
-<!-- Add notes here -->
+- Homepage TopBar now accepts `showNav` prop to conditionally hide nav links on auth pages
+- MobileMenu also accepts `showNav` prop for same purpose
+- Auth layout uses `<TopBar showNav={false} />` to show only logo and auth buttons
+- DevStashLogo component is in `src/components/home/devstash-logo.tsx`
+- Fixed hydration mismatch by using `mounted` flag in useFavoritesSort hook
 
 ## History
 

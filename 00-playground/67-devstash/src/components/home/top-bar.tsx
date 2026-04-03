@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { DevStashLogo } from "./devstash-logo";
 import { MobileMenu } from "./mobile-menu";
 
-export function TopBar() {
+interface TopBarProps {
+  /**
+   * Whether to show the navigation links (Features, AI Features, Pricing)
+   * @default true
+   */
+  showNav?: boolean;
+}
+
+export function TopBar({ showNav = true }: TopBarProps) {
   return (
     <>
       <nav
@@ -11,34 +19,31 @@ export function TopBar() {
         id="navbar"
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold">
-            <div className="bg-primary/10 text-primary p-1 rounded-md">
-              <Sparkles className="size-5" />
-            </div>
-            <span className="text-lg">DevStash</span>
-          </Link>
+          <DevStashLogo href="/" />
 
           {/* Desktop Nav */}
-          <div className="hidden items-center gap-6 md:flex">
-            <Link
-              href="#features"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Features
-            </Link>
-            <Link
-              href="#ai"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              AI Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Pricing
-            </Link>
-          </div>
+          {showNav && (
+            <div className="hidden items-center gap-6 md:flex">
+              <Link
+                href="#features"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Features
+              </Link>
+              <Link
+                href="#ai"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                AI Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Pricing
+              </Link>
+            </div>
+          )}
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 md:flex">
@@ -51,7 +56,7 @@ export function TopBar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <MobileMenu />
+          <MobileMenu showNav={showNav} />
         </div>
       </nav>
 

@@ -2,7 +2,6 @@
 
 import {
   Search,
-  Sparkles,
   PanelLeft,
   Menu,
   Star,
@@ -10,7 +9,6 @@ import {
   FolderPlus,
   FilePlus,
 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +30,7 @@ import { CreateItemDialog } from "@/components/dashboard/create-item-dialog";
 import { CreateCollectionDialog } from "@/components/dashboard/create-collection-dialog";
 import { useSidebar } from "./sidebar-provider";
 import { useSearch } from "@/components/search/search-provider";
+import { DevStashLogo } from "@/components/home/devstash-logo";
 
 export function DashboardTopBar() {
   const {
@@ -87,15 +86,7 @@ export function DashboardTopBar() {
       </Button>
 
       {/* Logo */}
-      <Link
-        href="/dashboard"
-        className="flex items-center gap-2 font-bold text-lg mr-4 hover:opacity-80 transition-opacity"
-      >
-        <div className="bg-primary/10 text-primary p-1 rounded-md">
-          <Sparkles className="h-5 w-5" />
-        </div>
-        <span className="hidden lg:inline-block">DevStash</span>
-      </Link>
+      <DevStashLogo href="/dashboard" className="mr-4" />
 
       {/* Search - Desktop */}
       <button

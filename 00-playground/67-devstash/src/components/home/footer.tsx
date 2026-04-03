@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { DevStashLogo } from "./devstash-logo";
 
 export function Footer() {
   return (
@@ -8,12 +8,7 @@ export function Footer() {
         <div className="mb-8 flex flex-col gap-8 md:flex-row md:justify-between">
           {/* Brand */}
           <div className="max-w-xs">
-            <Link href="/" className="mb-2 flex items-center gap-2 font-bold">
-              <div className="bg-primary/10 text-primary p-1 rounded-md">
-                <Sparkles className="size-5" />
-              </div>
-              <span>DevStash</span>
-            </Link>
+            <DevStashLogo href="/" className="mb-2" />
             <p className="text-sm text-muted-foreground">
               A unified hub for developer knowledge.
             </p>

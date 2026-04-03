@@ -5,7 +5,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
-export function MobileMenu() {
+interface MobileMenuProps {
+  /**
+   * Whether to show the navigation links (Features, AI Features, Pricing)
+   * @default true
+   */
+  showNav?: boolean;
+}
+
+export function MobileMenu({ showNav = true }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -24,30 +32,36 @@ export function MobileMenu() {
 
       {isOpen && (
         <div className="fixed inset-x-0 top-[65px] z-40 border-b border-border bg-background p-6">
-          <div className="flex flex-col gap-4">
-            <Link
-              href="#features"
-              className="text-base font-medium"
-              onClick={closeMenu}
-            >
-              Features
-            </Link>
-            <Link
-              href="#ai"
-              className="text-base font-medium"
-              onClick={closeMenu}
-            >
-              AI Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-base font-medium"
-              onClick={closeMenu}
-            >
-              Pricing
-            </Link>
-          </div>
-          <div className="mt-6 flex flex-col gap-3">
+          {showNav && (
+            <div className="flex flex-col gap-4">
+              <Link
+                href="#features"
+                className="text-base font-medium"
+                onClick={closeMenu}
+              >
+                Features
+              </Link>
+              <Link
+                href="#ai"
+                className="text-base font-medium"
+                onClick={closeMenu}
+              >
+                AI Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-base font-medium"
+                onClick={closeMenu}
+              >
+                Pricing
+              </Link>
+            </div>
+          )}
+          <div
+            className={
+              showNav ? "mt-6 flex flex-col gap-3" : "flex flex-col gap-3"
+            }
+          >
             <Button variant="ghost" className="w-full">
               <Link href="/sign-in">Sign In</Link>
             </Button>
