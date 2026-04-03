@@ -1,6 +1,8 @@
 {
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["neon"],
+  "enabledMcpjsonServers": [
+    "neon"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -23,6 +25,11 @@
           }
         ]
       }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)"
     ]
   }
 }
