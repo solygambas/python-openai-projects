@@ -1,16 +1,55 @@
 # Current Feature
 
+Stripe Integration - Phase 1
+
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
-<!-- Add goals here -->
+- [x] Implement core Stripe client library with price constants
+- [x] Create `POST /api/stripe/checkout` endpoint for checkout sessions
+- [x] Create `POST /api/stripe/portal` endpoint for billing portal sessions
+- [x] Implement `src/lib/usage-limits.ts` with 4 check functions (items, collections, files, AI)
+- [x] Update NextAuth session to include `isPro` boolean status from database
+- [x] Pass all 20+ unit tests for usage-limits module
+- [x] No TypeScript or ESLint errors; build succeeds
 
 ## Notes
 
-<!-- Add context and constraints here -->
+**Dependencies:**
+
+- Stripe account with test mode enabled
+- Product: "DevStash Pro" with monthly ($8) and yearly ($72) prices
+- Customer Portal configured in Stripe Dashboard
+- Environment variables: STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY, STRIPE_PRICE_MONTHLY, STRIPE_PRICE_YEARLY
+
+**Implementation Files:**
+
+- `src/lib/stripe.ts` - Stripe client and price constants
+- `src/app/api/stripe/checkout/route.ts` - Checkout API
+- `src/app/api/stripe/portal/route.ts` - Portal API
+- `src/lib/usage-limits.ts` - Usage limit check functions (checkItemLimit, checkCollectionLimit, canUploadFiles, canUseAI)
+- `src/auth.ts` - Add `isPro` to session callback
+- `src/types/next-auth.d.ts` - Extend Session/JWT with `isPro`
+
+**Free Tier Limits:**
+
+- Max 50 items, 3 collections
+- No file uploads, no AI features
+
+**Current Database User Record:**
+
+- Has `subscription` relation (one-to-one)
+- Subscription model has: `id`, `userId`, `stripeCustomerId`, `stripePriceId`, `stripeCurrentPeriodEnd`, `status`
+
+**Notes:**
+
+- This phase does NOT include webhook handling (Phase 2)
+- After checkout, users must manually refresh for Pro status update (webhooks in Phase 2)
+- Customer Portal handles subscription cancellation/updates natively
+- Usage limits enforced server-side only
 
 ## History
 

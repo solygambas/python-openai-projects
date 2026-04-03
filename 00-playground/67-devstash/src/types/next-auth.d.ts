@@ -1,4 +1,5 @@
 import { type DefaultSession } from "next-auth";
+import "next-auth/jwt";
 
 declare module "next-auth" {
   /**
@@ -6,8 +7,16 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
-      /** The user's postal address. */
+      /** The user's ID. */
       id: string;
+      /** Whether the user has an active Pro subscription. */
+      isPro: boolean;
     } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    isPro: boolean;
   }
 }

@@ -19,6 +19,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
+    async jwt({ token }) {
+      // Fetch isPro status from database if user exists
+      if (token.sub) {
+        const user = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { isPro: true },
+        });
+        token.isPro = user?.isPro ?? false;
+      }
+      return token;
+    },
     async signIn({ user, account }) {
       // Handle GitHub sign-in
       if (account?.provider === "github" && user.email) {
@@ -71,6 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
+        session.user.isPro = token.isPro ?? false;
       }
       return session;
     },
