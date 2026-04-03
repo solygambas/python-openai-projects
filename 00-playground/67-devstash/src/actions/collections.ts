@@ -120,7 +120,10 @@ export async function createCollection(
     return { success: true, data: newCollection };
   } catch (error) {
     console.error("CREATE_COLLECTION_ERROR", error);
-    return { success: false, error: "Failed to create collection" };
+    // Return the actual error message for limit errors
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to create collection";
+    return { success: false, error: errorMessage };
   }
 }
 

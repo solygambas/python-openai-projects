@@ -9,6 +9,10 @@ import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ITEMS_PER_PAGE } from "@/lib/utils";
+import UpgradePage from "./upgrade-page";
+
+// Pro-only item types
+const PRO_ONLY_TYPES = ["file", "files", "image", "images"];
 
 interface ItemsTypePageProps {
   params: Promise<{ type: string }>;
@@ -33,6 +37,13 @@ export default async function ItemsTypePage({
 
   // URL uses plural slug (e.g. "snippets") — strip trailing "s" to match DB name (e.g. "snippet")
   const typeName = type.replace(/s$/, "");
+
+  // Check if this is a Pro-only type and user is not Pro
+  if (PRO_ONLY_TYPES.includes(type) || PRO_ONLY_TYPES.includes(typeName)) {
+    if (!user.isPro) {
+      return <UpgradePage params={params} />;
+    }
+  }
 
   const [{ items, total }, itemTypes] = await Promise.all([
     getItemsByTypePaginated(user.id, typeName, page),

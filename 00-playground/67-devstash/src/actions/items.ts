@@ -212,7 +212,10 @@ export async function createItem(
     return { success: true, data: newItem };
   } catch (error) {
     console.error("CREATE_ITEM_ERROR", error);
-    return { success: false, error: "Failed to create item" };
+    // Return the actual error message for limit errors
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to create item";
+    return { success: false, error: errorMessage };
   }
 }
 

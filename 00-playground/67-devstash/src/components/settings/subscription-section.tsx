@@ -13,6 +13,7 @@ import { ProBadge } from "@/components/ui/pro-badge";
 import { Check, Loader2, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { FREE_TIER_LIMITS } from "@/lib/constants/limits";
+import { UpgradeCta } from "./upgrade-cta";
 
 interface SubscriptionSectionProps {
   isPro: boolean;
@@ -53,29 +54,6 @@ export function SubscriptionSection({
     } catch (error) {
       console.error("PORTAL_ERROR", error);
       toast.error("Failed to open billing portal. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUpgrade = async (plan: "monthly" | "yearly") => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
-      }
-
-      const { url } = await response.json();
-      window.location.href = url;
-    } catch (error) {
-      console.error("CHECKOUT_ERROR", error);
-      toast.error("Failed to start checkout. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -163,38 +141,7 @@ export function SubscriptionSection({
           </ul>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3">
-          <Button
-            onClick={() => handleUpgrade("monthly")}
-            disabled={isLoading}
-            variant="outline"
-            className="w-full"
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <Crown className="h-4 w-4 mr-2" />
-                Upgrade $8/month
-              </>
-            )}
-          </Button>
-          <Button
-            onClick={() => handleUpgrade("yearly")}
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <Crown className="h-4 w-4 mr-2" />
-                Upgrade $72/year
-                <span className="ml-1 text-xs opacity-80">(save 25%)</span>
-              </>
-            )}
-          </Button>
-        </div>
+        <UpgradeCta variant="side-by-side" />
       </CardContent>
     </Card>
   );
