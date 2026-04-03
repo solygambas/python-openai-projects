@@ -46,22 +46,26 @@ interface IconState {
   scaleDir: number;
 }
 
+// Static initial state for SSR consistency
+const getInitialIconStates = (): IconState[] =>
+  staticPositions.map((pos, index) => ({
+    x: pos.x,
+    y: pos.y,
+    vx: (index % 2 === 0 ? 0.5 : -0.5) * 0.75,
+    vy: (index % 3 === 0 ? 0.5 : -0.5) * 0.75,
+    rotation: (index - 4) * 2, // Deterministic: -8 to +8 degrees
+    rotationSpeed: (index % 2 === 0 ? 1 : -1) * 0.5,
+    scale: 1,
+    scaleDir: index % 2 === 0 ? 1 : -1,
+  }));
+
 export function ChaosAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [iconStates, setIconStates] = useState<IconState[]>(() =>
-    staticPositions.map((pos, index) => ({
-      x: pos.x,
-      y: pos.y,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: (Math.random() - 0.5) * 1.5,
-      rotation: Math.random() * 20 - 10,
-      rotationSpeed: (Math.random() - 0.5) * 2,
-      scale: 1,
-      scaleDir: index % 2 === 0 ? 1 : -1,
-    })),
-  );
+  const [iconStates, setIconStates] =
+    useState<IconState[]>(getInitialIconStates);
+  const initializedRef = useRef(false);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const frameRef = useRef<number | null>(null);
 
@@ -71,6 +75,19 @@ export function ChaosAnimation() {
     setReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     );
+
+    // Randomize velocities after hydration to avoid hydration mismatch
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      setIconStates((prev) =>
+        prev.map((icon) => ({
+          ...icon,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          rotationSpeed: (Math.random() - 0.5) * 2,
+        })),
+      );
+    }
   }, []);
 
   useEffect(() => {
