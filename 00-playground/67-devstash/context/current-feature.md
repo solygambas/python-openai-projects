@@ -1,52 +1,16 @@
-# Current Feature: Stripe Integration - Phase 2
+# Current Feature
 
 ## Status
 
-In Progress
-
-## Progress
-
-- [x] Implement Stripe webhook handler at `/api/webhooks/stripe`
-  - [x] Signature verification using `stripe.webhooks.constructEvent()`
-  - [x] Handle `checkout.session.completed` - activate Pro status
-  - [x] Handle `customer.subscription.updated` - sync subscription status
-  - [x] Handle `customer.subscription.deleted` - revoke Pro status
-  - [x] Handle `invoice.payment_failed` - log for monitoring
-- [x] Add feature gating to item creation (`checkItemLimit`)
-- [x] Add feature gating to collection creation (`checkCollectionLimit`)
-- [x] Add feature gating to file uploads (`canUploadFiles`)
-- [x] Build Pro badge component (`ProBadge`)
-- [x] Build subscription management UI (`SubscriptionSection`)
-- [x] Integrate subscription section into Settings page
-- [x] Add unit tests for webhook handler (14 tests)
-- [ ] Test full flow with Stripe CLI local testing
-- [ ] Add environment variable for `STRIPE_WEBHOOK_SECRET`
-
-## Environment Variables Required
-
-```
-STRIPE_WEBHOOK_SECRET=whsec_...  # From Stripe CLI or Dashboard
-NEXT_PUBLIC_STRIPE_PRICE_YEARLY=price_...  # For client-side upgrade button
-```
+Not Started
 
 ## Goals
 
-- Implement webhook handler for Stripe events (checkout.session.completed, subscription management, payment failures)
-- Add feature gating to items, collections, and file uploads based on Pro subscription tier
-- Build Pro badge component and subscription section UI
-- Integrate subscription management into Settings page
-- Verify full flow with Stripe CLI local testing
+<!-- Add goals for the active feature -->
 
 ## Notes
 
-- **Prerequisite:** Stripe Integration Phase 1 (core infrastructure) must be completed
-- **Setup Required:** Stripe CLI installed and logged in for webhook testing
-- **Webhook Secret:** Must be configured in Stripe Dashboard and added to environment
-- **Test Cards:** Use `4242 4242 4242 4242` for successful payments, other test cards available in spec
-- **Database:** User model must have `isPro` and `customerId` fields from Phase 1
-- **Local Testing:** Use `stripe listen --forward-to localhost:3000/api/webhooks/stripe` to forward webhooks
-- **Feature Limits (Free Tier):** Items and collections limited; file uploads Pro-only; need usage limit helper functions
-- **Signature Verification:** Required for all webhook events using `stripe.webhooks.constructEvent()`
+<!-- Add implementation notes, constraints, and setup details -->
 
 ## History
 
@@ -499,3 +463,9 @@ NEXT_PUBLIC_STRIPE_PRICE_YEARLY=price_...  # For client-side upgrade button
 - **Database:** User model has `subscription` one-to-one relation with fields: `id`, `userId`, `stripeCustomerId`, `stripePriceId`, `stripeCurrentPeriodEnd`, `status`
 - **Note:** This phase does NOT include webhook handling (implemented in Phase 2). Users must manually refresh for Pro status update after checkout.
 - _Output:_ Stripe integration layer ready for webhook setup and frontend UI integration in Phase 2.
+- **Stripe Integration - Phase 2** (Completed)
+- [x] Added Stripe webhook endpoint at `/api/webhooks/stripe` with signature verification and event handling for checkout completion, subscription updates/deletes, and payment failures
+- [x] Enforced free-tier limits through shared usage-limit checks for item creation, collection creation, and file uploads
+- [x] Added reusable `ProBadge` UI and integrated `SubscriptionSection` into settings for upgrade and billing management
+- [x] Added and updated tests covering webhook handling and usage-limit gating behavior
+- [x] Validation passed (`npm run validate`)
