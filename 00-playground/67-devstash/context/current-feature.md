@@ -1,33 +1,16 @@
-# Implement Prompt Optimization
+# Current Feature
 
 ## Status
 
-Complete
+Not Started
 
 ## Goals
 
-- Create `optimizePrompt` server action that takes current prompt text and refines it using Groq's GPT-OSS-120B model
-- Display before/after comparison of the original and optimized prompt
-- Allow user to approve/reject the optimized prompt and update it if desired
-- Add "Optimize" button in the prompt item header (similar to "Explain" button on snippets/commands)
-- Implement responsive modal or drawer that shows optimization results with accept/copy options
-- Ensure Pro-tier gating (requires Pro subscription to use optimization)
+- TBD
 
 ## Notes
 
-- **Model**: GPT-OSS-120B (best for meta-reasoning tasks, SWE-Bench: 62.4)
-- **Streaming**: Use streaming pattern for long responses (see ai-integration-plan.md section 3)
-- **Cost**: ~$15.33/month at 2 requests/day across all Pro users
-- **UI Pattern**: Match the existing "Explain" button from snippets/commands feature
-- **Flow**: User clicks "Optimize" → Shows loading state → Displays before/after → User can copy or accept changes
-- **Validation**: Validate and sanitize prompt text before sending to API
-- **Error Handling**: Handle rate limits, API errors, and connection issues gracefully
-- **Components to Create/Modify**:
-  - `src/actions/ai.ts` - Add `optimizePrompt` action (or extend existing)
-  - `src/components/PromptOptimizer.tsx` - New component for before/after display
-  - Item detail view for prompts - Add "Optimize" button in header
-- **Reference Docs**: @docs/ai-integration-plan.md (Phase 5, API patterns, model selection)
-- **Related Context**: Item types already exist; need to find prompt item display component
+- TBD
 
 ## History
 
@@ -537,3 +520,16 @@ Complete
 - [x] Handle errors via toast (Pro gating, rate limit, AI service errors)
 - [x] Added comprehensive unit tests for the server action and integration points
 - _Note:_ Explanations are NOT saved to the database — regenerated on each click. Pro-only feature. Reference: `docs/ai-integration-plan.md`
+- **Implement Prompt Optimization** (Completed)
+- [x] Created `optimizePrompt` server action in `src/actions/ai.ts` using Groq's GPT-OSS-120B model
+- [x] Implemented Pro-tier gating with authentication and rate limiting
+- [x] Added "Optimize" button (Wand2 icon) to prompt items in the drawer action bar
+- [x] Display before/after comparison modal with loading state and error handling
+- [x] Allow users to copy optimized text with toast notifications
+- [x] Show Crown icon with tooltip for free users ("AI features require Pro subscription")
+- [x] Created `PromptOptimizer` component for before/after display with modal dialog
+- [x] Added comprehensive unit tests for server action and integration points
+- [x] Wired "Optimize" button with `useItemDetail` hook for drawer state management
+- [x] Handle rate limits, API errors, and connection issues gracefully
+- _Implementation files:_ `src/actions/ai.ts` (optimizePrompt action), `src/components/items/prompt-optimizer.tsx`, `src/hooks/use-suggest-tags.ts` (updated), `src/components/items/item-drawer-action-bar.tsx` (updated)
+- _Note:_ Optimization is NOT saved to the database — requires explicit action or copy. Pro-only feature. Uses GPT-OSS-120B for meta-reasoning tasks. Estimated cost: ~$15.33/month at 2 requests/day across all Pro users.
