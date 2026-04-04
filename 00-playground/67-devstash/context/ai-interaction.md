@@ -78,5 +78,4 @@ A post-hook formats and injects updated file content into context after every Ed
 **Rules:**
 
 - Multiple changes to the same file → always use MultiEdit, never sequential Edits
-- Edit fails → re-read the file, then retry with exact string + 2–3 lines of context
-- Edit fails twice → use Write to overwrite (safe under 200 lines)
+- Edit fails → use Write to overwrite
