@@ -25,6 +25,9 @@
     "db:studio": "npm run prisma:base -- studio",
     "db:test": "node --experimental-strip-types --env-file=.env scripts/test-db.ts",
     "db:clean-users": "node --experimental-strip-types --env-file=.env scripts/clean-users.ts",
+    "stripe": ".\\bin\\stripe.exe",
+    "stripe:login": "npm run stripe -- login",
+    "stripe:listen": "npm run stripe -- listen --forward-to localhost:3000/api/webhooks/stripe",
     "postinstall": "npm run prisma:base -- generate"
   },
   "dependencies": {
