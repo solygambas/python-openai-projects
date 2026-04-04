@@ -18,7 +18,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/ui/file-upload";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { ItemTypeSelector, ItemContentEditor } from "@/components/items";
+import {
+  ItemTypeSelector,
+  ItemContentEditor,
+  LanguageSelector,
+} from "@/components/items";
 import { createItem } from "@/actions/items";
 import { useCollections } from "@/hooks/use-collections";
 
@@ -237,7 +241,17 @@ export function CreateItemDialog({
           {/* Content (for text types) */}
           {showContentField && (
             <div className="space-y-2">
-              <Label htmlFor="content">Content</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="content">Content</Label>
+                {showLanguageField && (
+                  <LanguageSelector
+                    value={language}
+                    onChange={setLanguage}
+                    placeholder="Select language"
+                    className="w-36"
+                  />
+                )}
+              </div>
               <ItemContentEditor
                 typeName={typeName}
                 value={content}
@@ -271,20 +285,6 @@ export function CreateItemDialog({
                 onUploadComplete={handleFileUploadComplete}
                 onUploadError={handleFileUploadError}
                 disabled={isPending}
-              />
-            </div>
-          )}
-
-          {/* Language (for snippet/command types) */}
-          {showLanguageField && (
-            <div className="space-y-2">
-              <Label htmlFor="language">Language</Label>
-              <Input
-                id="language"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                placeholder="e.g. typescript, python, bash"
-                className="lowercase"
               />
             </div>
           )}

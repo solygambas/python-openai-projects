@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CodeEditor } from "@/components/ui/code-editor";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
+import { LanguageSelector } from "@/components/items/language-selector";
 
 interface ItemDrawerContentProps {
   typeName: string;
@@ -22,6 +23,7 @@ interface ItemDrawerContentProps {
   editLanguage: string;
   onContentChange: (value: string) => void;
   onUrlChange: (value: string) => void;
+  onLanguageChange: (value: string) => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -30,7 +32,7 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
-function isCodeType(typeName: string): boolean {
+export function isCodeType(typeName: string): boolean {
   const lower = typeName.toLowerCase();
   return lower === "snippet" || lower === "command";
 }
@@ -40,7 +42,7 @@ function isMarkdownType(typeName: string): boolean {
   return lower === "note" || lower === "prompt";
 }
 
-function isFileType(typeName: string): boolean {
+export function isFileType(typeName: string): boolean {
   const lower = typeName.toLowerCase();
   return lower === "file" || lower === "image";
 }
@@ -60,6 +62,7 @@ export function ItemDrawerContent({
   editLanguage,
   onContentChange,
   onUrlChange,
+  onLanguageChange,
 }: ItemDrawerContentProps) {
   const typeLower = typeName.toLowerCase();
 
@@ -196,12 +199,17 @@ export function ItemDrawerContentSection({
   typeName,
   isEditing,
   children,
+  editLanguage,
+  onLanguageChange,
 }: {
   typeName: string;
   isEditing: boolean;
   children: React.ReactNode;
+  editLanguage?: string;
+  onLanguageChange?: (value: string) => void;
 }) {
   const isFile = isFileType(typeName);
+  const showLanguageSelector = isEditing && isCodeType(typeName);
 
   return (
     <section className="space-y-3">
@@ -209,6 +217,16 @@ export function ItemDrawerContentSection({
         <p className="text-muted-foreground text-sm">
           {isFile ? "File" : "Content"}
         </p>
+        {showLanguageSelector &&
+          editLanguage !== undefined &&
+          onLanguageChange && (
+            <LanguageSelector
+              value={editLanguage}
+              onChange={onLanguageChange}
+              placeholder="Select language"
+              className="w-36"
+            />
+          )}
         {isEditing && typeName.toLowerCase() === "link" && (
           <div className="flex items-center gap-2">
             <LinkIcon className="h-3 w-3 text-muted-foreground" />

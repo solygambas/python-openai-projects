@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { SheetTitle } from "@/components/ui/sheet";
+import { LanguageSelector } from "@/components/items/language-selector";
 import type { IconMap } from "@/types/dashboard";
 
 const iconMap: IconMap = {
@@ -83,11 +84,11 @@ export function ItemDrawerHeader({
             </Badge>
           )}
           {isEditing && isCodeType && (
-            <Input
+            <LanguageSelector
               value={editLanguage}
-              onChange={(e) => onLanguageChange(e.target.value)}
-              placeholder="Language (e.g. typescript)"
-              className="h-6 text-[10px] w-32 px-1.5 bg-background border-primary/20"
+              onChange={onLanguageChange}
+              placeholder="Language"
+              className="w-32"
             />
           )}
         </div>

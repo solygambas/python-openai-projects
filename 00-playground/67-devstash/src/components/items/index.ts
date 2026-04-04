@@ -12,6 +12,7 @@ export {
   ItemDrawerDetails,
 } from "./item-drawer-meta";
 export { ItemTypeSelector } from "./item-type-selector";
+export { LanguageSelector, type LanguageOption } from "./language-selector";
 export {
   ItemContentEditor,
   isCodeType,

@@ -185,6 +185,8 @@ export function GlobalItemDrawer() {
               <ItemDrawerContentSection
                 typeName={selectedItem.itemType.name}
                 isEditing={isEditing}
+                editLanguage={editLanguage}
+                onLanguageChange={setEditLanguage}
               >
                 <ItemDrawerContent
                   typeName={selectedItem.itemType.name}
@@ -201,6 +203,7 @@ export function GlobalItemDrawer() {
                   editLanguage={editLanguage}
                   onContentChange={setEditContent}
                   onUrlChange={setEditUrl}
+                  onLanguageChange={setEditLanguage}
                 />
               </ItemDrawerContentSection>
 
