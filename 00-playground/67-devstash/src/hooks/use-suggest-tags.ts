@@ -76,7 +76,7 @@ export function useSuggestTags({
       }
       return remaining;
     });
-    
+
     toast.success(`Added "${tag}" tag`);
   };
 

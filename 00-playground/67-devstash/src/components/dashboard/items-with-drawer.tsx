@@ -51,7 +51,7 @@ import { type DashboardItem, type IconMap } from "@/types/dashboard";
 import { type ItemsWithDrawerVariant } from "@/types/item-detail";
 import { useItemDetail } from "@/hooks/use-item-detail";
 import { useCollections } from "@/hooks/use-collections";
-import { toggleFavoriteItem } from "@/actions/items";
+import { toggleFavoriteItem, updateItem } from "@/actions/items";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -277,6 +277,35 @@ export function ItemsWithDrawer({
       }
     },
     [router],
+  );
+
+  const handleAcceptOptimization = useCallback(
+    async (newContent: string) => {
+      if (!selectedItem) return;
+
+      try {
+        const result = await updateItem({
+          itemId: selectedItem.id,
+          title: selectedItem.title,
+          description: selectedItem.description ?? undefined,
+          content: newContent,
+          url: selectedItem.url ?? undefined,
+          language: selectedItem.language ?? undefined,
+          tags: selectedItem.tags.map((t) => t.name),
+          collectionIds: selectedItem.collections.map((c) => c.collection.id),
+        });
+
+        if (result.success) {
+          toast.success("Prompt updated with optimized version");
+          router.refresh();
+        } else {
+          toast.error(result.error || "Failed to save optimized prompt");
+        }
+      } catch {
+        toast.error("An unexpected error occurred");
+      }
+    },
+    [selectedItem, router],
   );
 
   const itemCards = (() => {
@@ -525,6 +554,7 @@ export function ItemsWithDrawer({
                     onLanguageChange={setEditLanguage}
                     isPro={isPro}
                     itemTitle={selectedItem.title}
+                    onAcceptOptimization={handleAcceptOptimization}
                   />
                 </ItemDrawerContentSection>
 

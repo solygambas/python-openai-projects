@@ -24,6 +24,10 @@ const ExplainCodeSchema = z.object({
   language: z.string().optional(),
 });
 
+const OptimizePromptSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  content: z.string().min(1, "Prompt is required").max(10000),
+});
 
 interface AutoTagResult {
   success: boolean;
@@ -386,3 +390,121 @@ Rules:
   }
 }
 
+interface OptimizePromptResult {
+  success: boolean;
+  data?: {
+    optimizedPrompt: string;
+  };
+  error?: string;
+  remaining?: number;
+}
+
+/**
+ * Generate an AI-optimized version of an AI prompt
+ * Uses Groq's GPT-OSS-120B model for high-quality meta-reasoning
+ */
+export async function optimizePrompt(input: {
+  title: string;
+  content: string;
+}): Promise<OptimizePromptResult> {
+  // 1. Authentication check
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  // 2. Pro tier check
+  try {
+    await canUseAI(userId);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "AI features require Pro",
+    };
+  }
+
+  // 3. Rate limit check
+  const rateLimitResult = await checkRateLimit({
+    namespace: "ai-prompt-optimize",
+    limit: AI_RATE_LIMITS.promptOptimize.limit,
+    window: AI_RATE_LIMITS.promptOptimize.window,
+    identifier: userId,
+    includeIp: false,
+  });
+
+  if (!rateLimitResult.success) {
+    return {
+      success: false,
+      error: getRateLimitErrorMessage(rateLimitResult.reset),
+      remaining: 0,
+    };
+  }
+
+  // 4. Input validation
+  const validated = OptimizePromptSchema.safeParse(input);
+  if (!validated.success) {
+    return { success: false, error: validated.error.issues[0].message };
+  }
+
+  // 5. Prepare content for API
+  const { title, content } = validated.data;
+  const truncatedContent = content.slice(0, 5000);
+
+  try {
+    // 6. API call
+    const response = await groq.chat.completions.create({
+      model: GROQ_MODELS.PROMPT_OPTIMIZE,
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert prompt engineer. Your task is to rewrite and improve AI prompts stored in DevStash, a developer knowledge hub.
+
+Analyze the provided prompt and return an optimized version that:
+1. Has a clear, specific goal with measurable success criteria
+2. Provides helpful context and constraints for the AI
+3. Specifies the desired output format where useful
+4. Eliminates ambiguity while preserving the original intent
+5. Uses precise, professional language
+
+Rules:
+- Return ONLY the improved prompt text, no explanations or commentary
+- Preserve the core purpose and intent of the original prompt
+- Match the original tone (technical, creative, instructional, etc.)
+- Do NOT include <think> tags or internal reasoning
+- Output the pure improved prompt ready to be used`,
+        },
+        {
+          role: "user",
+          content: `Title: ${title}\n\nPrompt:\n${truncatedContent}`,
+        },
+      ],
+      temperature: 0.4,
+      max_tokens: 2000,
+    });
+
+    // 7. Extract response and strip <think> tags if present
+    let optimizedPrompt = response.choices[0]?.message?.content?.trim() || "";
+    optimizedPrompt = optimizedPrompt
+      .replace(/<think>[\s\S]*?<\/think>/g, "")
+      .trim();
+
+    if (!optimizedPrompt) {
+      throw new Error("Empty response from AI");
+    }
+
+    return {
+      success: true,
+      data: { optimizedPrompt },
+      remaining: rateLimitResult.remaining - 1,
+    };
+  } catch (error) {
+    console.error("OPTIMIZE_PROMPT_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to optimize prompt. Please try again.",
+      remaining: rateLimitResult.remaining,
+    };
+  }
+}

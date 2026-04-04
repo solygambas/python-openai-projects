@@ -112,7 +112,9 @@ export function CodeEditor({
 
   const handleCopy = async () => {
     if (!value) return;
-    await navigator.clipboard.writeText(activeTab === "code" ? value : (explanation || ""));
+    await navigator.clipboard.writeText(
+      activeTab === "code" ? value : explanation || "",
+    );
     setCopied(true);
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 2000);

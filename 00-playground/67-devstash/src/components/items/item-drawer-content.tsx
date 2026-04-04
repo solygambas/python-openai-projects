@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CodeEditor } from "@/components/ui/code-editor";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
+import { PromptOptimizer } from "@/components/items/prompt-optimizer";
 import { LanguageSelector } from "@/components/items/language-selector";
 
 interface ItemDrawerContentProps {
@@ -27,6 +28,8 @@ interface ItemDrawerContentProps {
   // AI Explain props
   isPro?: boolean;
   itemTitle?: string;
+  // AI Optimize props (prompt items)
+  onAcceptOptimization?: (content: string) => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -65,9 +68,10 @@ export function ItemDrawerContent({
   editLanguage,
   onContentChange,
   onUrlChange,
-  onLanguageChange,
+  onLanguageChange: _onLanguageChange,
   isPro = false,
   itemTitle = "Untitled",
+  onAcceptOptimization,
 }: ItemDrawerContentProps) {
   const typeLower = typeName.toLowerCase();
 
@@ -189,6 +193,18 @@ export function ItemDrawerContent({
 
   // View mode - Markdown display
   if (isMarkdownType(typeName)) {
+    const isPrompt = typeName.toLowerCase() === "prompt";
+    if (isPrompt) {
+      return (
+        <PromptOptimizer
+          content={content || ""}
+          title={itemTitle}
+          isPro={isPro}
+          maxHeight={400}
+          onAcceptOptimization={onAcceptOptimization}
+        />
+      );
+    }
     return (
       <MarkdownEditor value={content || ""} readOnly={true} maxHeight={400} />
     );

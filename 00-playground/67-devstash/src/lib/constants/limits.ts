@@ -9,4 +9,5 @@ export const AI_RATE_LIMITS = {
   autoTag: { limit: 20, window: "1 h" as const },
   summarize: { limit: 20, window: "1 h" as const },
   codeExplain: { limit: 20, window: "1 h" as const },
+  promptOptimize: { limit: 20, window: "1 h" as const },
 } as const;

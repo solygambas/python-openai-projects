@@ -18,6 +18,8 @@ interface MarkdownEditorProps {
   minHeight?: number;
   maxHeight?: number;
   debounceMs?: number;
+  showCopy?: boolean;
+  showHeader?: boolean;
 }
 
 export function MarkdownEditor({
@@ -28,6 +30,8 @@ export function MarkdownEditor({
   minHeight = 100,
   maxHeight = 400,
   debounceMs = 150,
+  showCopy = true,
+  showHeader = true,
 }: MarkdownEditorProps) {
   const [copied, setCopied] = useState(false);
   // In readonly mode, always show preview. In edit mode, default to write.
@@ -77,61 +81,65 @@ export function MarkdownEditor({
       )}
     >
       {/* macOS-style window header */}
-      <div className="flex items-center justify-between px-3 py-2 bg-secondary/40 border-b border-white/5 z-10">
-        {/* Window dots */}
-        <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors" />
-        </div>
+      {showHeader && (
+        <div className="flex items-center justify-between px-3 py-2 bg-secondary/40 border-b border-white/5 z-10">
+          {/* Window dots */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors" />
+            <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors" />
+          </div>
 
-        {/* Tabs and copy button */}
-        <div className="flex items-center gap-2">
-          {showTabs && (
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setActiveTab("write")}
-                className={cn(
-                  "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
-                  effectiveTab === "write"
-                    ? "bg-white/10 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
-                )}
-              >
-                <Pencil className="h-3 w-3" />
-                Write
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("preview")}
-                className={cn(
-                  "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
-                  effectiveTab === "preview"
-                    ? "bg-white/10 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
-                )}
-              >
-                <Eye className="h-3 w-3" />
-                Preview
-              </button>
-            </div>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            onClick={handleCopy}
-            disabled={!value}
-          >
-            {copied ? (
-              <Check className="h-3.5 w-3.5 text-green-500" />
-            ) : (
-              <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+          {/* Tabs and copy button */}
+          <div className="flex items-center gap-2">
+            {showTabs && (
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("write")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
+                    effectiveTab === "write"
+                      ? "bg-white/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+                  )}
+                >
+                  <Pencil className="h-3 w-3" />
+                  Write
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("preview")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2 py-1 text-xs rounded transition-colors",
+                    effectiveTab === "preview"
+                      ? "bg-white/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+                  )}
+                >
+                  <Eye className="h-3 w-3" />
+                  Preview
+                </button>
+              </div>
             )}
-          </Button>
+            {showCopy && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleCopy}
+                disabled={!value}
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-green-500" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                )}
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content area */}
       <div

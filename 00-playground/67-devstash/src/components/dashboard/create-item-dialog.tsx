@@ -203,7 +203,7 @@ export function CreateItemDialog({
     setIsUploading(false);
   };
 
-  const handleTagsChange = (newTags: string) => {
+  const _handleTagsChange = (newTags: string) => {
     setTags(newTags);
   };
 
@@ -260,7 +260,7 @@ export function CreateItemDialog({
               {isPro && (
                 <SummarizeButton
                   title={title}
-                  content={showContentField ? content : (showUrlField ? url : "")}
+                  content={showContentField ? content : showUrlField ? url : ""}
                   onSummaryGenerated={setDescription}
                   isPro={isPro}
                   disabled={isPending || isUploading}

@@ -8,9 +8,7 @@
     ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "neon"
-  ],
+  "enabledMcpjsonServers": ["neon"],
   "hooks": {
     "PreToolUse": [
       {

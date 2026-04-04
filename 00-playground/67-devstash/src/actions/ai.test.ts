@@ -38,10 +38,16 @@ vi.mock("@/lib/groq", () => ({
     AUTO_TAG: "meta-llama/llama-4-scout-17b-16e-instruct",
     SUMMARIZE: "openai/gpt-oss-120b",
     CODE_EXPLAIN: "qwen/qwen3-32b",
+    PROMPT_OPTIMIZE: "openai/gpt-oss-120b",
   },
 }));
 
-import { autoTagItem, explainCode, summarizeContent } from "@/actions/ai";
+import {
+  autoTagItem,
+  explainCode,
+  optimizePrompt,
+  summarizeContent,
+} from "@/actions/ai";
 
 describe("actions/autoTagItem", () => {
   beforeEach(() => {
@@ -475,7 +481,9 @@ describe("actions/explainCode", () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error).toBe("Failed to generate explanation. Please try again.");
+    expect(result.error).toBe(
+      "Failed to generate explanation. Please try again.",
+    );
   });
 });
 
@@ -570,4 +578,258 @@ describe("actions/summarizeContent", () => {
   });
 });
 
+describe("actions/optimizePrompt", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    canUseAIMock.mockReset();
+    checkRateLimitMock.mockReset();
+    groqChatCompletionsCreateMock.mockReset();
+    vi.restoreAllMocks();
+  });
 
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await optimizePrompt({
+      title: "Test Prompt",
+      content: "Write me a story",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+    expect(canUseAIMock).not.toHaveBeenCalled();
+  });
+
+  it("returns error when user is not Pro", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockRejectedValueOnce(
+      new Error(
+        "AI features are a Pro feature. Upgrade to Pro to use AI capabilities.",
+      ),
+    );
+
+    const result = await optimizePrompt({
+      title: "Test Prompt",
+      content: "Write me a story",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error:
+        "AI features are a Pro feature. Upgrade to Pro to use AI capabilities.",
+    });
+    expect(checkRateLimitMock).not.toHaveBeenCalled();
+  });
+
+  it("returns rate limit error when limit exceeded", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: false,
+      remaining: 0,
+      reset: Date.now() + 3600000,
+    });
+
+    const result = await optimizePrompt({
+      title: "Test Prompt",
+      content: "Write me a story",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("Too many attempts");
+    expect(result.remaining).toBe(0);
+    expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when title is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    const result = await optimizePrompt({
+      title: "",
+      content: "Some prompt content",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Title is required",
+    });
+    expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
+  });
+
+  it("returns zod validation error when content is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    const result = await optimizePrompt({
+      title: "My Prompt",
+      content: "",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Prompt is required",
+    });
+    expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
+  });
+
+  it("calls Groq API with correct model and returns optimized prompt", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content:
+              "You are a senior developer. Write a function that does X. Return only the code.",
+          },
+        },
+      ],
+    });
+
+    const result = await optimizePrompt({
+      title: "Code Generator",
+      content: "Write me some code",
+    });
+
+    expect(groqChatCompletionsCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: "openai/gpt-oss-120b",
+        messages: expect.arrayContaining([
+          expect.objectContaining({ role: "system" }),
+          expect.objectContaining({
+            role: "user",
+            content: expect.stringContaining("Code Generator"),
+          }),
+        ]),
+        temperature: 0.4,
+        max_tokens: 2000,
+      }),
+    );
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        optimizedPrompt:
+          "You are a senior developer. Write a function that does X. Return only the code.",
+      },
+      remaining: 19,
+    });
+  });
+
+  it("strips <think> tags from the optimized prompt", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: "<think>Internal reasoning</think>The optimized prompt.",
+          },
+        },
+      ],
+    });
+
+    const result = await optimizePrompt({
+      title: "Test",
+      content: "Some prompt",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.optimizedPrompt).toBe("The optimized prompt.");
+  });
+
+  it("truncates content to 5000 characters before API call", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [{ message: { content: "Optimized." } }],
+    });
+
+    const longContent = "a".repeat(6000);
+    await optimizePrompt({ title: "Test", content: longContent });
+
+    const callArgs = groqChatCompletionsCreateMock.mock.calls[0][0];
+    const userMessage = callArgs.messages.find(
+      (m: { role: string }) => m.role === "user",
+    );
+    // User message is "Title: Test\n\nPrompt:\n" + truncated content
+    const promptPart = userMessage.content.split("Prompt:\n")[1];
+    expect(promptPart.length).toBeLessThanOrEqual(5000);
+  });
+
+  it("returns error when API response is empty", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [{ message: { content: "" } }],
+    });
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const result = await optimizePrompt({
+      title: "Test",
+      content: "Some prompt",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Failed to optimize prompt. Please try again.");
+  });
+
+  it("returns error when Groq API throws", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockRejectedValueOnce(new Error("API error"));
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const result = await optimizePrompt({
+      title: "Test",
+      content: "Some prompt",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Failed to optimize prompt. Please try again.");
+    expect(result.remaining).toBe(20);
+  });
+});
