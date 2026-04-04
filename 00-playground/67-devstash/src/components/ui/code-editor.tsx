@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useContext } from "react";
-import { Copy, Check, Loader2 } from "lucide-react";
+import { Copy, Check, Loader2, Sparkles, Crown, Code } from "lucide-react";
 import Editor, { type OnMount, type BeforeMount } from "@monaco-editor/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { EditorPreferencesContext } from "@/contexts/editor-preferences-context";
 import { DEFAULT_EDITOR_PREFERENCES } from "@/types/editor-preferences";
+import { explainCode } from "@/actions/ai";
+import { cn } from "@/lib/utils";
 
 const handleBeforeMount: BeforeMount = (monaco) => {
   monaco.editor.defineTheme("monokai", {
@@ -77,6 +81,10 @@ interface CodeEditorProps {
   className?: string;
   minHeight?: number;
   maxHeight?: number;
+  // AI Explain props
+  showAIExplain?: boolean;
+  isPro?: boolean;
+  itemTitle?: string;
 }
 
 export function CodeEditor({
@@ -87,10 +95,16 @@ export function CodeEditor({
   className,
   minHeight = 100,
   maxHeight = 600,
+  showAIExplain = false,
+  isPro = false,
+  itemTitle = "Untitled",
 }: CodeEditorProps) {
   const [copied, setCopied] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [editorHeight, setEditorHeight] = useState(minHeight);
+  const [activeTab, setActiveTab] = useState<"code" | "explain">("code");
+  const [explanation, setExplanation] = useState<string | null>(null);
+  const [isExplaining, setIsExplaining] = useState(false);
   const editorRef = useRef<MonacoEditor | null>(null);
 
   const prefsCtx = useContext(EditorPreferencesContext);
@@ -98,10 +112,43 @@ export function CodeEditor({
 
   const handleCopy = async () => {
     if (!value) return;
-    await navigator.clipboard.writeText(value);
+    await navigator.clipboard.writeText(activeTab === "code" ? value : (explanation || ""));
     setCopied(true);
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleExplain = async () => {
+    if (!isPro) return;
+    if (isExplaining) return;
+
+    if (explanation) {
+      setActiveTab("explain");
+      return;
+    }
+
+    setIsExplaining(true);
+    setActiveTab("explain");
+
+    try {
+      const result = await explainCode({
+        title: itemTitle,
+        content: value,
+        language,
+      });
+
+      if (result.success && result.data) {
+        setExplanation(result.data.explanation);
+      } else {
+        toast.error(result.error || "Failed to generate explanation");
+        setActiveTab("code");
+      }
+    } catch {
+      toast.error("An unexpected error occurred");
+      setActiveTab("code");
+    } finally {
+      setIsExplaining(false);
+    }
   };
 
   const updateHeight = useCallback(() => {
@@ -137,83 +184,176 @@ export function CodeEditor({
 
   return (
     <div
-      className={`relative flex flex-col rounded-lg border border-white/10 overflow-hidden bg-[#1e1e1e] ${className ?? ""}`}
+      className={cn(
+        "relative flex flex-col rounded-lg border border-white/10 overflow-hidden bg-[#1e1e1e]",
+        className,
+      )}
     >
       {/* macOS-style window header */}
       <div className="flex items-center justify-between px-3 py-2 bg-secondary/40 border-b border-white/5 z-10">
-        {/* Window dots */}
-        <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors" />
+        {/* Window dots / Tabs */}
+        <div className="flex items-center gap-1.5 font-sans">
+          {explanation || isExplaining ? (
+            <div className="flex bg-background/40 rounded-md p-0.5 border border-white/5">
+              <button
+                type="button"
+                onClick={() => setActiveTab("code")}
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-[10px] font-medium transition-all",
+                  activeTab === "code"
+                    ? "bg-white/10 text-white shadow-sm"
+                    : "text-muted-foreground hover:text-white",
+                )}
+              >
+                <Code className="h-3 w-3" />
+                Code
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("explain")}
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-[10px] font-medium transition-all",
+                  activeTab === "explain"
+                    ? "bg-white/10 text-white shadow-sm"
+                    : "text-muted-foreground hover:text-white",
+                )}
+              >
+                <Sparkles className="h-3 w-3" />
+                Explain
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors" />
+              <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors" />
+            </div>
+          )}
         </div>
 
-        {/* Language badge and copy button */}
+        {/* Action buttons */}
         <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
-            {language}
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            onClick={handleCopy}
-            disabled={!value}
-          >
-            {copied ? (
-              <Check className="h-3.5 w-3.5 text-green-500" />
-            ) : (
-              <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+          {activeTab === "code" && (
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground font-medium">
+              {language}
+            </span>
+          )}
+
+          <div className="flex items-center bg-black/20 rounded-md border border-white/5 overflow-hidden">
+            {showAIExplain && activeTab === "code" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 flex items-center gap-1.5 hover:bg-white/5 rounded-none border-r border-white/5 text-[10px] font-medium uppercase tracking-wider"
+                onClick={handleExplain}
+                disabled={isExplaining}
+                title={
+                  isPro
+                    ? "Explain with AI"
+                    : "AI features require Pro subscription"
+                }
+              >
+                {isPro ? (
+                  <Sparkles
+                    className={cn(
+                      "h-3 w-3 text-purple-400",
+                      isExplaining && "animate-pulse",
+                    )}
+                  />
+                ) : (
+                  <Crown className="h-3 w-3 text-amber-500/50" />
+                )}
+                <span>Explain</span>
+              </Button>
             )}
-          </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 flex items-center gap-1.5 hover:bg-white/5 rounded-none text-[10px] font-medium uppercase tracking-wider"
+              onClick={handleCopy}
+              disabled={!value && activeTab === "code"}
+              title="Copy to clipboard"
+            >
+              {copied ? (
+                <Check className="h-3 w-3 text-green-500" />
+              ) : (
+                <Copy className="h-3 w-3 text-muted-foreground" />
+              )}
+              <span>Copy</span>
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="relative flex-1 min-h-0">
-        {!isLoaded && (
+      <div className="relative flex-1 min-h-0 bg-[#1e1e1e]">
+        {activeTab === "code" ? (
+          <>
+            {!isLoaded && (
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-[#1e1e1e] z-20"
+                style={{ height: minHeight }}
+              >
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            )}
+            <Editor
+              height={editorHeight}
+              defaultLanguage={language}
+              language={language}
+              value={value}
+              onChange={(v) => onChange?.(v ?? "")}
+              beforeMount={handleBeforeMount}
+              onMount={handleEditorDidMount}
+              theme={prefs.theme}
+              loading={<div />}
+              options={{
+                readOnly,
+                minimap: { enabled: prefs.minimap },
+                scrollBeyondLastLine: false,
+                lineNumbers: "on",
+                glyphMargin: false,
+                folding: true,
+                lineDecorationsWidth: 10,
+                lineNumbersMinChars: 3,
+                renderLineHighlight: "none",
+                scrollbar: {
+                  vertical: "auto",
+                  horizontal: "auto",
+                  verticalScrollbarSize: 8,
+                  horizontalScrollbarSize: 8,
+                  alwaysConsumeMouseWheel: false,
+                },
+                padding: { top: 12, bottom: 12 },
+                fontSize: prefs.fontSize,
+                tabSize: prefs.tabSize,
+                fontFamily:
+                  "JetBrains Mono, Menlo, Monaco, Courier New, monospace",
+                wordWrap: prefs.wordWrap ? "on" : "off",
+                automaticLayout: true,
+                fixedOverflowWidgets: true,
+              }}
+            />
+          </>
+        ) : (
           <div
-            className="absolute inset-0 flex items-center justify-center bg-[#1e1e1e] z-20"
-            style={{ height: minHeight }}
+            className="p-6 prose-invert max-w-none overflow-y-auto scrollbar-thin"
+            style={{ height: editorHeight, minHeight }}
           >
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            {isExplaining ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-3 text-muted-foreground animate-in fade-in duration-500">
+                <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
+                <p className="text-sm font-medium">Generating explanation...</p>
+              </div>
+            ) : explanation ? (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 markdown-preview p-0">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {explanation}
+                </ReactMarkdown>
+              </div>
+            ) : null}
           </div>
         )}
-        <Editor
-          height={editorHeight}
-          defaultLanguage={language}
-          language={language}
-          value={value}
-          onChange={(v) => onChange?.(v ?? "")}
-          beforeMount={handleBeforeMount}
-          onMount={handleEditorDidMount}
-          theme={prefs.theme}
-          loading={<div />}
-          options={{
-            readOnly,
-            minimap: { enabled: prefs.minimap },
-            scrollBeyondLastLine: false,
-            lineNumbers: "on",
-            glyphMargin: false,
-            folding: true,
-            lineDecorationsWidth: 10,
-            lineNumbersMinChars: 3,
-            renderLineHighlight: "none",
-            scrollbar: {
-              vertical: "auto",
-              horizontal: "auto",
-              verticalScrollbarSize: 8,
-              horizontalScrollbarSize: 8,
-              alwaysConsumeMouseWheel: false,
-            },
-            padding: { top: 12, bottom: 12 },
-            fontSize: prefs.fontSize,
-            tabSize: prefs.tabSize,
-            fontFamily: "JetBrains Mono, Menlo, Monaco, Courier New, monospace",
-            wordWrap: prefs.wordWrap ? "on" : "off",
-            automaticLayout: true,
-            fixedOverflowWidgets: true,
-          }}
-        />
       </div>
     </div>
   );

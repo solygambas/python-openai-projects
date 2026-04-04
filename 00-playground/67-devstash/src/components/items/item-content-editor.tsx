@@ -27,6 +27,10 @@ interface ItemContentEditorProps {
   placeholder?: string;
   maxHeight?: number;
   readOnly?: boolean;
+  // AI Explain props
+  showAIExplain?: boolean;
+  isPro?: boolean;
+  itemTitle?: string;
 }
 
 export function ItemContentEditor({
@@ -37,6 +41,9 @@ export function ItemContentEditor({
   placeholder = "Paste your content here...",
   maxHeight = 200,
   readOnly = false,
+  showAIExplain = false,
+  isPro = false,
+  itemTitle = "Untitled",
 }: ItemContentEditorProps) {
   const typeLower = typeName.toLowerCase();
 
@@ -49,6 +56,9 @@ export function ItemContentEditor({
         readOnly={readOnly}
         maxHeight={maxHeight}
         className="bg-secondary/20 border-primary/20"
+        showAIExplain={showAIExplain}
+        isPro={isPro}
+        itemTitle={itemTitle}
       />
     );
   }

@@ -24,6 +24,9 @@ interface ItemDrawerContentProps {
   onContentChange: (value: string) => void;
   onUrlChange: (value: string) => void;
   onLanguageChange: (value: string) => void;
+  // AI Explain props
+  isPro?: boolean;
+  itemTitle?: string;
 }
 
 function formatFileSize(bytes: number): string {
@@ -63,6 +66,8 @@ export function ItemDrawerContent({
   onContentChange,
   onUrlChange,
   onLanguageChange,
+  isPro = false,
+  itemTitle = "Untitled",
 }: ItemDrawerContentProps) {
   const typeLower = typeName.toLowerCase();
 
@@ -175,6 +180,9 @@ export function ItemDrawerContent({
         language={language || "plaintext"}
         readOnly={true}
         maxHeight={400}
+        showAIExplain={true}
+        isPro={isPro}
+        itemTitle={itemTitle}
       />
     );
   }

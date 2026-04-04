@@ -523,6 +523,8 @@ export function ItemsWithDrawer({
                     onContentChange={setEditContent}
                     onUrlChange={setEditUrl}
                     onLanguageChange={setEditLanguage}
+                    isPro={isPro}
+                    itemTitle={selectedItem.title}
                   />
                 </ItemDrawerContentSection>
 

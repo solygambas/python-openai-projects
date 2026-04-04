@@ -18,6 +18,13 @@ const SummarizeSchema = z.object({
   content: z.string().min(1, "Content is required").max(10000),
 });
 
+const ExplainCodeSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  content: z.string().min(1, "Code is required").max(10000),
+  language: z.string().optional(),
+});
+
+
 interface AutoTagResult {
   success: boolean;
   data?: {
@@ -257,3 +264,125 @@ Rules:
     };
   }
 }
+
+interface ExplainCodeResult {
+  success: boolean;
+  data?: {
+    explanation: string;
+  };
+  error?: string;
+  remaining?: number;
+}
+
+/**
+ * Generate AI-powered explanation for code snippets or commands
+ * Uses Groq's Qwen 3 32B model for high-quality technical explanations
+ */
+export async function explainCode(input: {
+  title: string;
+  content: string;
+  language?: string;
+}): Promise<ExplainCodeResult> {
+  // 1. Authentication check
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  // 2. Pro tier check
+  try {
+    await canUseAI(userId);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "AI features require Pro",
+    };
+  }
+
+  // 3. Rate limit check
+  const rateLimitResult = await checkRateLimit({
+    namespace: "ai-explain-code",
+    limit: AI_RATE_LIMITS.codeExplain.limit,
+    window: AI_RATE_LIMITS.codeExplain.window,
+    identifier: userId,
+    includeIp: false,
+  });
+
+  if (!rateLimitResult.success) {
+    return {
+      success: false,
+      error: getRateLimitErrorMessage(rateLimitResult.reset),
+      remaining: 0,
+    };
+  }
+
+  // 4. Input validation
+  const validated = ExplainCodeSchema.safeParse(input);
+  if (!validated.success) {
+    return { success: false, error: validated.error.issues[0].message };
+  }
+
+  // 5. Prepare content for API
+  const { title, content, language } = validated.data;
+  const truncatedCode = content.slice(0, 5000);
+
+  try {
+    // 6. API call
+    const response = await groq.chat.completions.create({
+      model: GROQ_MODELS.CODE_EXPLAIN,
+      messages: [
+        {
+          role: "system",
+          content: `You are a technical expert at DevStash, a knowledge hub for developers. 
+Your task is to provide a concise, high-quality explanation of the provided code or command.
+
+Target: ~200-300 words.
+Structure:
+1. Overview: What does this code do in 1-2 sentences.
+2. Key Concepts: Briefly explain the main logic, patterns, or tools used.
+3. Usage/Context: When or why would a developer use this.
+
+Rules:
+- Be precise and technical but accessible.
+- Use markdown for formatting (bold, code blocks, lists).
+- Do not repeat the code itself, focus on the 'how' and 'why'.
+- If the language is specified (${language || "unknown"}), use that context.
+- Output ONLY the final explanation. Do NOT include <think> tags, internal reasoning, or intros like "Here is the explanation...".`,
+        },
+
+        {
+          role: "user",
+          content: `Title: ${title}\nLanguage: ${language || "unknown"}\n\nCode:\n${truncatedCode}`,
+        },
+      ],
+      temperature: 0.4,
+      max_tokens: 1000,
+    });
+
+    // 7. Extract response and strip <think> tags if present
+    let explanation = response.choices[0]?.message?.content?.trim() || "";
+    explanation = explanation.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+
+    if (!explanation) {
+      throw new Error("Empty response from AI");
+    }
+
+    return {
+      success: true,
+      data: {
+        explanation,
+      },
+      remaining: rateLimitResult.remaining - 1,
+    };
+  } catch (error) {
+    console.error("EXPLAIN_CODE_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to generate explanation. Please try again.",
+      remaining: rateLimitResult.remaining,
+    };
+  }
+}
+

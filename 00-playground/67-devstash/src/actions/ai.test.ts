@@ -36,10 +36,12 @@ vi.mock("@/lib/groq", () => ({
   },
   GROQ_MODELS: {
     AUTO_TAG: "meta-llama/llama-4-scout-17b-16e-instruct",
+    SUMMARIZE: "openai/gpt-oss-120b",
+    CODE_EXPLAIN: "qwen/qwen3-32b",
   },
 }));
 
-import { autoTagItem } from "@/actions/ai";
+import { autoTagItem, explainCode, summarizeContent } from "@/actions/ai";
 
 describe("actions/autoTagItem", () => {
   beforeEach(() => {
@@ -356,3 +358,216 @@ describe("actions/autoTagItem", () => {
     expect(result.success).toBe(false);
   });
 });
+
+describe("actions/explainCode", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    canUseAIMock.mockReset();
+    checkRateLimitMock.mockReset();
+    groqChatCompletionsCreateMock.mockReset();
+    vi.restoreAllMocks();
+  });
+
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await explainCode({
+      title: "Test Item",
+      content: "Test content",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+  });
+
+  it("calls Groq API and returns explanation on success", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: "This is a detailed explanation of the code.",
+          },
+        },
+      ],
+    });
+
+    const result = await explainCode({
+      title: "React Component",
+      content: "const MyComp = () => <div>Hello</div>;",
+      language: "typescript",
+    });
+
+    expect(groqChatCompletionsCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: "qwen/qwen3-32b",
+        messages: expect.arrayContaining([
+          expect.objectContaining({ role: "system" }),
+          expect.objectContaining({
+            role: "user",
+            content: expect.stringContaining("React Component"),
+          }),
+        ]),
+      }),
+    );
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        explanation: "This is a detailed explanation of the code.",
+      },
+      remaining: 19,
+    });
+  });
+
+  it("strips <think> tags from the explanation content", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: "<think>Hidden reasoning</think>The actual explanation.",
+          },
+        },
+      ],
+    });
+
+    const result = await explainCode({
+      title: "Test",
+      content: "Content",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.explanation).toBe("The actual explanation.");
+  });
+
+  it("returns error when Groq API fails", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockRejectedValueOnce(new Error("API error"));
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const result = await explainCode({
+      title: "Test",
+      content: "Content",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Failed to generate explanation. Please try again.");
+  });
+});
+
+describe("actions/summarizeContent", () => {
+  beforeEach(() => {
+    authMock.mockReset();
+    canUseAIMock.mockReset();
+    checkRateLimitMock.mockReset();
+    groqChatCompletionsCreateMock.mockReset();
+    vi.restoreAllMocks();
+  });
+
+  it("returns unauthorized when no session user id exists", async () => {
+    authMock.mockResolvedValueOnce(null);
+
+    const result = await summarizeContent({
+      title: "Test Item",
+      content: "Test content",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: "Unauthorized",
+    });
+  });
+
+  it("calls Groq API and returns summary on success", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockResolvedValueOnce({
+      choices: [
+        {
+          message: {
+            content: "This is a concise summary of the content.",
+          },
+        },
+      ],
+    });
+
+    const result = await summarizeContent({
+      title: "DevStash Overview",
+      content: "DevStash is a developer knowledge hub...",
+    });
+
+    expect(groqChatCompletionsCreateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: "openai/gpt-oss-120b",
+        messages: expect.arrayContaining([
+          expect.objectContaining({ role: "system" }),
+          expect.objectContaining({
+            role: "user",
+            content: expect.stringContaining("DevStash Overview"),
+          }),
+        ]),
+      }),
+    );
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        summary: "This is a concise summary of the content.",
+      },
+      remaining: 19,
+    });
+  });
+
+  it("returns error when Groq API fails", async () => {
+    authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
+    canUseAIMock.mockResolvedValueOnce(true);
+    checkRateLimitMock.mockResolvedValueOnce({
+      success: true,
+      remaining: 20,
+      reset: Date.now() + 3600000,
+    });
+
+    groqChatCompletionsCreateMock.mockRejectedValueOnce(new Error("API error"));
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const result = await summarizeContent({
+      title: "Test",
+      content: "Content",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Failed to generate summary. Please try again.");
+  });
+});
+
+
