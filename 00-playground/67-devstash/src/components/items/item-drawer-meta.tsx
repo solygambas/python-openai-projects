@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { SuggestTagsButton } from "./suggest-tags-button";
+import { SuggestTagsTrigger, TagSuggestionsList } from "./suggest-tags-button";
+import { useSuggestTags } from "@/hooks/use-suggest-tags";
 
 interface TagItem {
   id: string;
@@ -73,7 +74,6 @@ export function ItemDrawerTags({
   itemDescription?: string;
   itemTypeName?: string;
 }) {
-  // Only show suggest button for text types in edit mode
   const showSuggestButton =
     isEditing &&
     isPro &&
@@ -81,11 +81,36 @@ export function ItemDrawerTags({
     itemContent &&
     ["snippet", "prompt", "command", "note"].includes(itemTypeName || "");
 
+  const {
+    isPending: isTagsPending,
+    suggestedTags,
+    showSuggestions,
+    handleSuggestTags,
+    handleAcceptTag,
+    handleRejectTag,
+    handleAcceptAll: handleAcceptAllTags,
+    handleClearSuggestions,
+  } = useSuggestTags({
+    title: itemTitle || "",
+    content: itemContent || "",
+    description: itemDescription,
+    currentTags: editTags,
+    onTagsChange: onTagsChange,
+  });
+
   return (
     <section className="space-y-2">
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-        <Tag className="h-4 w-4" />
-        <p>Tags</p>
+      <div className="flex items-center justify-between gap-2 text-muted-foreground text-sm">
+        <div className="flex items-center gap-2">
+          <Tag className="h-4 w-4" />
+          <p>Tags</p>
+        </div>
+        {showSuggestButton && (
+          <SuggestTagsTrigger
+            onSuggest={handleSuggestTags}
+            isPending={isTagsPending}
+          />
+        )}
       </div>
       {isEditing ? (
         <div className="pl-6 space-y-2">
@@ -95,14 +120,13 @@ export function ItemDrawerTags({
             placeholder="tag1, tag2, tag3"
             className="bg-secondary/20 border-primary/20"
           />
-          {showSuggestButton && (
-            <SuggestTagsButton
-              title={itemTitle}
-              content={itemContent}
-              description={itemDescription}
-              currentTags={editTags}
-              onTagsChange={onTagsChange}
-              isPro={isPro}
+          {showSuggestions && (
+            <TagSuggestionsList
+              tags={suggestedTags}
+              onAccept={handleAcceptTag}
+              onReject={handleRejectTag}
+              onAcceptAll={handleAcceptAllTags}
+              onClear={handleClearSuggestions}
             />
           )}
           <p className="text-[10px] text-muted-foreground mt-1.5">

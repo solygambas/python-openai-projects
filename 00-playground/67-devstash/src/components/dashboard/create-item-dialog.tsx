@@ -22,10 +22,13 @@ import {
   ItemTypeSelector,
   ItemContentEditor,
   LanguageSelector,
-  SuggestTagsButton,
+  SuggestTagsTrigger,
+  TagSuggestionsList,
+  SummarizeButton,
 } from "@/components/items";
 import { createItem } from "@/actions/items";
 import { useCollections } from "@/hooks/use-collections";
+import { useSuggestTags } from "@/hooks/use-suggest-tags";
 
 interface ItemType {
   id: string;
@@ -84,6 +87,24 @@ export function CreateItemDialog({
 
   // Fetch collections for the selector
   const { collections: allCollections } = useCollections();
+
+  // AI tag suggestions
+  const {
+    isPending: isTagsPending,
+    suggestedTags,
+    showSuggestions,
+    handleSuggestTags,
+    handleAcceptTag,
+    handleRejectTag,
+    handleAcceptAll: handleAcceptAllTags,
+    handleClearSuggestions,
+  } = useSuggestTags({
+    title,
+    content,
+    description,
+    currentTags: tags,
+    onTagsChange: setTags,
+  });
 
   const selectedType = itemTypes.find((t) => t.id === selectedTypeId);
   const typeName = selectedType?.name?.toLowerCase() || "";
@@ -234,7 +255,18 @@ export function CreateItemDialog({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">Description</Label>
+              {isPro && (
+                <SummarizeButton
+                  title={title}
+                  content={showContentField ? content : (showUrlField ? url : "")}
+                  onSummaryGenerated={setDescription}
+                  isPro={isPro}
+                  disabled={isPending || isUploading}
+                />
+              )}
+            </div>
             <Textarea
               id="description"
               value={description}
@@ -312,6 +344,13 @@ export function CreateItemDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="tags">Tags</Label>
+              {isPro && showContentField && (
+                <SuggestTagsTrigger
+                  onSuggest={handleSuggestTags}
+                  isPending={isTagsPending}
+                  disabled={isPending || isUploading}
+                />
+              )}
             </div>
             <Input
               id="tags"
@@ -319,18 +358,16 @@ export function CreateItemDialog({
               onChange={(e) => setTags(e.target.value)}
               placeholder="tag1, tag2, tag3"
             />
-            {isPro && showContentField && (
-              <SuggestTagsButton
-                title={title}
-                content={content}
-                description={description}
-                currentTags={tags}
-                onTagsChange={handleTagsChange}
-                isPro={isPro}
-                disabled={isPending || isUploading}
+            {showSuggestions && (
+              <TagSuggestionsList
+                tags={suggestedTags}
+                onAccept={handleAcceptTag}
+                onReject={handleRejectTag}
+                onAcceptAll={handleAcceptAllTags}
+                onClear={handleClearSuggestions}
               />
             )}
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground mt-1">
               Separate tags with commas
             </p>
           </div>

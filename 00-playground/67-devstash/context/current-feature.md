@@ -14,6 +14,14 @@ Not Started
 
 ## History
 
+- **AI Summary** (Completed)
+  - [x] Implement `summarizeContent` server action in `src/actions/ai.ts` using Groq's `GPT-OSS-120B` model.
+  - [x] Add AI summary button (magic icon) next to the description field in `ItemDrawer` and `CreateItemDialog`.
+  - [x] Ensure the AI summary button uses current input values (title and content) without requiring a save first.
+  - [x] Implement Pro gating and rate limiting (20 requests/hour).
+  - [x] Add toast notifications for success/error states.
+  - [x] Updated description field in item drawer to `textarea` for better editing experience.
+
 - Project setup and boilerplate cleanup
 - Created mock data at `src/lib/mock-data.ts`
 - Started Dashboard UI Phase 1 implementation

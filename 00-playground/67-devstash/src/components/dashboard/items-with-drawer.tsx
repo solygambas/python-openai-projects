@@ -44,6 +44,7 @@ import {
   ItemDrawerContent,
   ItemDrawerContentSection,
   ItemDrawerMeta,
+  SummarizeButton,
 } from "@/components/items";
 import { formatDate } from "@/lib/utils";
 import { type DashboardItem, type IconMap } from "@/types/dashboard";
@@ -474,10 +475,20 @@ export function ItemsWithDrawer({
             ) : selectedItem ? (
               <div className="space-y-6 pt-6 pb-4">
                 <section className="space-y-2">
-                  <p className="text-muted-foreground text-sm">Description</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-muted-foreground text-sm">Description</p>
+                    {isEditing && isPro && (
+                      <SummarizeButton
+                        title={editTitle}
+                        content={editContent || editUrl || ""}
+                        onSummaryGenerated={setEditDescription}
+                        isPro={isPro}
+                        disabled={isSaving}
+                      />
+                    )}
+                  </div>
                   {isEditing ? (
-                    <input
-                      type="text"
+                    <textarea
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
                       placeholder="Add a description..."

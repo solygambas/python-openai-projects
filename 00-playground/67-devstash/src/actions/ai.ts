@@ -13,6 +13,11 @@ const AutoTagSchema = z.object({
   description: z.string().max(2000).optional(),
 });
 
+const SummarizeSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  content: z.string().min(1, "Content is required").max(10000),
+});
+
 interface AutoTagResult {
   success: boolean;
   data?: {
@@ -136,6 +141,118 @@ Rules:
     return {
       success: false,
       error: "Failed to generate tags. Please try again.",
+      remaining: rateLimitResult.remaining,
+    };
+  }
+}
+
+interface SummarizeResult {
+  success: boolean;
+  data?: {
+    summary: string;
+  };
+  error?: string;
+  remaining?: number;
+}
+
+/**
+ * Generate AI-powered summary for an item
+ * Uses Groq's GPT-OSS-120B model for high-quality technical summaries
+ */
+export async function summarizeContent(input: {
+  title: string;
+  content: string;
+}): Promise<SummarizeResult> {
+  // 1. Authentication check
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const userId = session.user.id;
+
+  // 2. Pro tier check
+  try {
+    await canUseAI(userId);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "AI features require Pro",
+    };
+  }
+
+  // 3. Rate limit check
+  const rateLimitResult = await checkRateLimit({
+    namespace: "ai-summarize",
+    limit: AI_RATE_LIMITS.summarize.limit,
+    window: AI_RATE_LIMITS.summarize.window,
+    identifier: userId,
+    includeIp: false,
+  });
+
+  if (!rateLimitResult.success) {
+    return {
+      success: false,
+      error: getRateLimitErrorMessage(rateLimitResult.reset),
+      remaining: 0,
+    };
+  }
+
+  // 4. Input validation
+  const validated = SummarizeSchema.safeParse(input);
+  if (!validated.success) {
+    return { success: false, error: validated.error.issues[0].message };
+  }
+
+  // 5. Prepare content for API (truncate for token efficiency)
+  const { title, content } = validated.data;
+  const truncatedContent = `${title}\n\n${content}`.slice(0, 4000);
+
+  try {
+    // 6. API call
+    const response = await groq.chat.completions.create({
+      model: GROQ_MODELS.SUMMARIZE,
+      messages: [
+        {
+          role: "system",
+          content: `You are a technical writing assistant for a developer knowledge hub called DevStash. 
+Your task is to create a professional, concise 1-2 sentence summary of the provided content. 
+
+Rules:
+- Length: Strictly 1 to 2 sentences.
+- Tone: Professional, clear, and direct.
+- Focus: Highlight the core purpose or value of the snippet/note/content.
+- No intros: Don't start with "This snippet is..." or "The content is...". Just output the summary directly.
+- Language: Match the technical context (e.g., if it's code, explain what it builds or solves).`,
+        },
+        {
+          role: "user",
+          content: truncatedContent,
+        },
+      ],
+      temperature: 0.5,
+      max_tokens: 300,
+    });
+
+    // 7. Extract response
+    const summary = response.choices[0]?.message?.content?.trim() || "";
+
+    if (!summary) {
+      throw new Error("Empty response from AI");
+    }
+
+    return {
+      success: true,
+      data: {
+        summary,
+      },
+      remaining: rateLimitResult.remaining - 1,
+    };
+  } catch (error) {
+    console.error("SUMMARIZE_ERROR", error);
+    return {
+      success: false,
+      error: "Failed to generate summary. Please try again.",
       remaining: rateLimitResult.remaining,
     };
   }
