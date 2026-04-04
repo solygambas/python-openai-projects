@@ -4,9 +4,10 @@ import { ItemsWithDrawer } from "@/components/dashboard/items-with-drawer";
 
 interface PinnedItemProps {
   items: DashboardItem[];
+  isPro?: boolean;
 }
 
-export function PinnedItems({ items }: PinnedItemProps) {
+export function PinnedItems({ items, isPro = false }: PinnedItemProps) {
   if (items.length === 0) return null;
 
   return (
@@ -15,7 +16,7 @@ export function PinnedItems({ items }: PinnedItemProps) {
         <Pin className="h-4 w-4 text-blue-500 rotate-45" />
         <h2 className="text-xl font-semibold tracking-tight">Pinned</h2>
       </div>
-      <ItemsWithDrawer items={items} variant="pinned" />
+      <ItemsWithDrawer items={items} variant="pinned" isPro={isPro} />
     </section>
   );
 }

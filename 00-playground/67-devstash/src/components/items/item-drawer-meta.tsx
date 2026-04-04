@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { SuggestTagsButton } from "./suggest-tags-button";
 
 interface TagItem {
   id: string;
@@ -35,6 +36,12 @@ interface ItemDrawerMetaProps {
   allCollections?: CollectionOption[];
   editCollectionIds?: string[];
   onCollectionIdsChange?: (ids: string[]) => void;
+  // AI tag suggestions (Pro only)
+  isPro?: boolean;
+  itemTitle?: string;
+  itemContent?: string;
+  itemDescription?: string;
+  itemTypeName?: string;
 }
 
 function formatDetailsDate(date: string) {
@@ -50,12 +57,30 @@ export function ItemDrawerTags({
   isEditing,
   editTags,
   onTagsChange,
+  isPro,
+  itemTitle,
+  itemContent,
+  itemDescription,
+  itemTypeName,
 }: {
   tags: TagItem[];
   isEditing: boolean;
   editTags: string;
   onTagsChange: (value: string) => void;
+  isPro?: boolean;
+  itemTitle?: string;
+  itemContent?: string;
+  itemDescription?: string;
+  itemTypeName?: string;
 }) {
+  // Only show suggest button for text types in edit mode
+  const showSuggestButton =
+    isEditing &&
+    isPro &&
+    itemTitle &&
+    itemContent &&
+    ["snippet", "prompt", "command", "note"].includes(itemTypeName || "");
+
   return (
     <section className="space-y-2">
       <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -63,13 +88,23 @@ export function ItemDrawerTags({
         <p>Tags</p>
       </div>
       {isEditing ? (
-        <div className="pl-6">
+        <div className="pl-6 space-y-2">
           <Input
             value={editTags}
             onChange={(e) => onTagsChange(e.target.value)}
             placeholder="tag1, tag2, tag3"
             className="bg-secondary/20 border-primary/20"
           />
+          {showSuggestButton && (
+            <SuggestTagsButton
+              title={itemTitle}
+              content={itemContent}
+              description={itemDescription}
+              currentTags={editTags}
+              onTagsChange={onTagsChange}
+              isPro={isPro}
+            />
+          )}
           <p className="text-[10px] text-muted-foreground mt-1.5">
             Separate tags with commas
           </p>
@@ -191,6 +226,11 @@ export function ItemDrawerMeta({
   allCollections,
   editCollectionIds,
   onCollectionIdsChange,
+  isPro,
+  itemTitle,
+  itemContent,
+  itemDescription,
+  itemTypeName,
 }: ItemDrawerMetaProps) {
   return (
     <>
@@ -199,6 +239,11 @@ export function ItemDrawerMeta({
         isEditing={isEditing}
         editTags={editTags}
         onTagsChange={onTagsChange}
+        isPro={isPro}
+        itemTitle={itemTitle}
+        itemContent={itemContent}
+        itemDescription={itemDescription}
+        itemTypeName={itemTypeName}
       />
 
       <Separator />

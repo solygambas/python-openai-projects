@@ -134,7 +134,10 @@ export function DashboardTopBar() {
         {/* New Item - Desktop only */}
         {sidebarData && (
           <div className="hidden md:block">
-            <CreateItemDialog itemTypes={sidebarData.itemTypes} />
+            <CreateItemDialog
+              itemTypes={sidebarData.itemTypes}
+              isPro={sidebarData.user.isPro}
+            />
           </div>
         )}
 
@@ -161,6 +164,7 @@ export function DashboardTopBar() {
       {sidebarData && (
         <CreateItemDialog
           itemTypes={sidebarData.itemTypes}
+          isPro={sidebarData.user.isPro}
           open={showCreateItem}
           onOpenChange={setShowCreateItem}
         />

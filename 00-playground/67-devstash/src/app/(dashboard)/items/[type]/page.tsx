@@ -68,6 +68,7 @@ export default async function ItemsTypePage({
           <CreateItemDialog
             itemTypes={itemTypes}
             defaultTypeId={matchedType.id}
+            isPro={user.isPro}
             trigger={
               <Button size="sm">
                 <Plus className="mr-2 h-4 w-4" />
@@ -89,7 +90,7 @@ export default async function ItemsTypePage({
         </p>
       ) : (
         <>
-          <ItemsWithDrawer items={items} variant="grid" />
+          <ItemsWithDrawer items={items} variant="grid" isPro={user.isPro} />
           <PaginationControls
             currentPage={page}
             totalPages={totalPages}

@@ -22,6 +22,7 @@ import {
   ItemTypeSelector,
   ItemContentEditor,
   LanguageSelector,
+  SuggestTagsButton,
 } from "@/components/items";
 import { createItem } from "@/actions/items";
 import { useCollections } from "@/hooks/use-collections";
@@ -40,6 +41,7 @@ interface CreateItemDialogProps {
   trigger?: React.ReactElement;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  isPro?: boolean;
 }
 
 export function CreateItemDialog({
@@ -48,6 +50,7 @@ export function CreateItemDialog({
   trigger,
   open: controlledOpen,
   onOpenChange: setControlledOpen,
+  isPro = false,
 }: CreateItemDialogProps) {
   const router = useRouter();
   const [internalOpen, setInternalOpen] = useState(false);
@@ -179,6 +182,10 @@ export function CreateItemDialog({
     setIsUploading(false);
   };
 
+  const handleTagsChange = (newTags: string) => {
+    setTags(newTags);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {!isControlled && (
@@ -303,13 +310,26 @@ export function CreateItemDialog({
 
           {/* Tags */}
           <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="tags">Tags</Label>
+            </div>
             <Input
               id="tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="tag1, tag2, tag3"
             />
+            {isPro && showContentField && (
+              <SuggestTagsButton
+                title={title}
+                content={content}
+                description={description}
+                currentTags={tags}
+                onTagsChange={handleTagsChange}
+                isPro={isPro}
+                disabled={isPending || isUploading}
+              />
+            )}
             <p className="text-xs text-muted-foreground">
               Separate tags with commas
             </p>

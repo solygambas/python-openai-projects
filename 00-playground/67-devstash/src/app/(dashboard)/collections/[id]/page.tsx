@@ -109,7 +109,11 @@ export default async function CollectionPage({
           {imageItems.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold tracking-tight">Images</h2>
-              <ItemsWithDrawer items={imageItems} variant="grid" />
+              <ItemsWithDrawer
+                items={imageItems}
+                variant="grid"
+                isPro={user.isPro}
+              />
             </div>
           )}
 
@@ -117,7 +121,11 @@ export default async function CollectionPage({
           {fileItems.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold tracking-tight">Files</h2>
-              <ItemsWithDrawer items={fileItems} variant="list" />
+              <ItemsWithDrawer
+                items={fileItems}
+                variant="list"
+                isPro={user.isPro}
+              />
             </div>
           )}
 
@@ -129,7 +137,11 @@ export default async function CollectionPage({
                   Other Items
                 </h2>
               ) : null}
-              <ItemsWithDrawer items={otherItems} variant="grid" />
+              <ItemsWithDrawer
+                items={otherItems}
+                variant="grid"
+                isPro={user.isPro}
+              />
             </div>
           )}
 

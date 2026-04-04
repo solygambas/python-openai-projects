@@ -57,6 +57,7 @@ import { useRouter } from "next/navigation";
 interface ItemsWithDrawerProps {
   items: DashboardItem[];
   variant: ItemsWithDrawerVariant;
+  isPro?: boolean;
 }
 
 const iconMap: IconMap = {
@@ -212,7 +213,11 @@ function RecentItemCard({
   );
 }
 
-export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
+export function ItemsWithDrawer({
+  items,
+  variant,
+  isPro = false,
+}: ItemsWithDrawerProps) {
   const router = useRouter();
   const {
     open,
@@ -523,6 +528,11 @@ export function ItemsWithDrawer({ items, variant }: ItemsWithDrawerProps) {
                   allCollections={allCollections}
                   editCollectionIds={editCollectionIds}
                   onCollectionIdsChange={setEditCollectionIds}
+                  isPro={isPro}
+                  itemTitle={selectedItem.title}
+                  itemContent={selectedItem.content || undefined}
+                  itemDescription={selectedItem.description || undefined}
+                  itemTypeName={selectedItem.itemType.name}
                 />
               </div>
             ) : (

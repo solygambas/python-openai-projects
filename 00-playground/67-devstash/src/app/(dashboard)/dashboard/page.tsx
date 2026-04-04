@@ -56,17 +56,29 @@ async function RecentCollectionsSection({ userId }: { userId: string }) {
   );
 }
 
-async function PinnedItemsSection({ userId }: { userId: string }) {
+async function PinnedItemsSection({
+  userId,
+  isPro,
+}: {
+  userId: string;
+  isPro: boolean;
+}) {
   const pinnedItems = await getPinnedItems(userId);
-  return <PinnedItems items={pinnedItems} />;
+  return <PinnedItems items={pinnedItems} isPro={isPro} />;
 }
 
-async function RecentItemsSection({ userId }: { userId: string }) {
+async function RecentItemsSection({
+  userId,
+  isPro,
+}: {
+  userId: string;
+  isPro: boolean;
+}) {
   const recentItems = await getRecentItems(
     userId,
     DASHBOARD_RECENT_ITEMS_LIMIT,
   );
-  return <RecentItems items={recentItems} />;
+  return <RecentItems items={recentItems} isPro={isPro} />;
 }
 
 export default async function DashboardPage() {
@@ -80,6 +92,7 @@ export default async function DashboardPage() {
   if (!user) redirect("/sign-in?error=UserNotFound");
 
   const currentUserId = user.id;
+  const isPro = user.isPro;
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8">
@@ -97,11 +110,11 @@ export default async function DashboardPage() {
       </Suspense>
 
       <Suspense fallback={<ItemsListSkeleton />}>
-        <PinnedItemsSection userId={currentUserId} />
+        <PinnedItemsSection userId={currentUserId} isPro={isPro} />
       </Suspense>
 
       <Suspense fallback={<ItemsListSkeleton />}>
-        <RecentItemsSection userId={currentUserId} />
+        <RecentItemsSection userId={currentUserId} isPro={isPro} />
       </Suspense>
     </div>
   );
