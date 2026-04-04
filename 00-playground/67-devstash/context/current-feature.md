@@ -1,32 +1,16 @@
-# AI Explain Code
+# Current Feature
 
 ## Status
 
-Complete
+Not Started
 
 ## Goals
 
-- Create an `explainCode` server action with auth, Pro gating, Zod validation, and rate limiting
-- Add "Explain" button (Sparkles icon) to code editor window controls header (next to Copy button)
-- Only show Explain button for snippet and command types in the item drawer (not in create/edit forms)
-- After generating, show Code/Explain tabs in the editor header to toggle between views
-- Render explanation as markdown in the same container space as the code editor
-- Generate concise explanations (~200-300 words) covering what the code does and key concepts
-- Show loading state with Loader2 spinner while generating
-- Show Crown icon + tooltip for free users ("AI features require Pro subscription")
-- Handle errors via toast (Pro gating, rate limit, AI service errors)
-- Add unit tests for the server action
+<!-- Add goals for the next feature here -->
 
 ## Notes
 
-- Using "Qwen 3 32B" model for AI explanations
-- Explanations are NOT saved to the database — regenerated on each click
-- Only available in item drawer read view, not in create/edit forms
-- Only show for snippet and command types (prompts, notes, links, files, images are already human-readable)
-- Pro-only feature
-- `isPro` needs to be passed as a prop to the item drawer / code editor
-- Follow existing patterns established in the codebase
-- Reference: `docs/ai-integration-plan.md` for full architectural context
+<!-- Add implementation notes and constraints for the next feature here -->
 
 ## History
 
@@ -524,3 +508,15 @@ Complete
 - [x] Extract tag suggestion logic into reusable `useSuggestTags` hook for better code organization.
 - [x] Refactor suggest tags button component for better separation of concerns.
 - Implementation files: `src/components/items/summarize-button.tsx`, `src/hooks/use-suggest-tags.ts`
+- **AI Explain Code** (Completed)
+- [x] Created `explainCode` server action with auth, Pro gating, Zod validation, and rate limiting
+- [x] Added "Explain" button (Sparkles icon) to code editor window controls header (next to Copy button)
+- [x] Only show Explain button for snippet and command types in the item drawer (not in create/edit forms)
+- [x] Added Code/Explain tabs in the editor header to toggle between views
+- [x] Rendered explanation as markdown in the same container space as the code editor
+- [x] Generating explanations (~200-300 words) covering what the code does and key concepts using "Qwen 3 32B" model
+- [x] Show loading state with Loader2 spinner while generating
+- [x] Show Crown icon + tooltip for free users ("AI features require Pro subscription")
+- [x] Handle errors via toast (Pro gating, rate limit, AI service errors)
+- [x] Added comprehensive unit tests for the server action and integration points
+- _Note:_ Explanations are NOT saved to the database — regenerated on each click. Pro-only feature. Reference: `docs/ai-integration-plan.md`
