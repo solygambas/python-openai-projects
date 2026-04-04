@@ -1,9 +1,16 @@
 {
   "permissions": {
-    "allow": ["Bash(git checkout:*)", "Bash(npm run:*)"]
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:groq.com)",
+      "WebFetch(domain:console.groq.com)"
+    ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["neon"],
+  "enabledMcpjsonServers": [
+    "neon"
+  ],
   "hooks": {
     "PreToolUse": [
       {
