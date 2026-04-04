@@ -453,12 +453,12 @@ Not Started
 - [x] Passed all 20+ unit tests for usage-limits module
 - [x] No TypeScript or ESLint errors; build succeeds
 - **Implementation Files:**
-  - `src/lib/stripe.ts` - Stripe client and price constants
-  - `src/app/api/stripe/checkout/route.ts` - Checkout API
-  - `src/app/api/stripe/portal/route.ts` - Portal API
-  - `src/lib/usage-limits.ts` and `src/lib/usage-limits.test.ts` - Usage limit check functions and tests
-  - `src/auth.ts` - Extended with `isPro` to session callback
-  - `src/types/next-auth.d.ts` - Extended Session/JWT with `isPro`
+- `src/lib/stripe.ts` - Stripe client and price constants
+- `src/app/api/stripe/checkout/route.ts` - Checkout API
+- `src/app/api/stripe/portal/route.ts` - Portal API
+- `src/lib/usage-limits.ts` and `src/lib/usage-limits.test.ts` - Usage limit check functions and tests
+- `src/auth.ts` - Extended with `isPro` to session callback
+- `src/types/next-auth.d.ts` - Extended Session/JWT with `isPro`
 - **Free Tier Limits:** Max 50 items, 3 collections, no file uploads, no AI features
 - **Database:** User model has `subscription` one-to-one relation with fields: `id`, `userId`, `stripeCustomerId`, `stripePriceId`, `stripeCurrentPeriodEnd`, `status`
 - **Note:** This phase does NOT include webhook handling (implemented in Phase 2). Users must manually refresh for Pro status update after checkout.
@@ -475,7 +475,15 @@ Not Started
 - [x] Improved user-friendly error messages - Updated server actions and upload API to return actual error messages from limit checks instead of generic messages
 - **UpgradeCta Component** (Completed)
 - [x] Created UpgradeCta component - Reusable pricing buttons with two variants:
-  - stacked (default): Single column layout, used on upgrade page
-  - side-by-side: Two columns on md and up, single column on mobile, used in settings
+- stacked (default): Single column layout, used on upgrade page
+- side-by-side: Two columns on md and up, single column on mobile, used in settings
 - **SubscriptionSection Update** (Completed)
 - [x] Updated SubscriptionSection - Now uses the new UpgradeCta component with side-by-side variant
+- **Language Selector for Code Editor** (Completed)
+- [x] Created `LanguageSelector` component with dropdown for 32 common programming languages
+- [x] Created `src/lib/constants/languages.ts` with language options (TypeScript, Python, Bash, etc.)
+- [x] Moved language selector to inline with "Content" label in both create dialog and edit drawer
+- [x] Fixed Base UI Select controlled/uncontrolled warning by using `null` for unselected state
+- [x] Updated `ItemDrawerContentSection` to accept `editLanguage` and `onLanguageChange` props
+- [x] Language selector appears above code editor for snippets and commands with instant syntax highlighting
+- _Note:_ Build passes. 2 new files created, 6 files modified.
