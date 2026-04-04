@@ -14,14 +14,6 @@ Not Started
 
 ## History
 
-- **AI Summary** (Completed)
-  - [x] Implement `summarizeContent` server action in `src/actions/ai.ts` using Groq's `GPT-OSS-120B` model.
-  - [x] Add AI summary button (magic icon) next to the description field in `ItemDrawer` and `CreateItemDialog`.
-  - [x] Ensure the AI summary button uses current input values (title and content) without requiring a save first.
-  - [x] Implement Pro gating and rate limiting (20 requests/hour).
-  - [x] Add toast notifications for success/error states.
-  - [x] Updated description field in item drawer to `textarea` for better editing experience.
-
 - Project setup and boilerplate cleanup
 - Created mock data at `src/lib/mock-data.ts`
 - Started Dashboard UI Phase 1 implementation
@@ -506,3 +498,13 @@ Not Started
 - [x] Updated `src/lib/constants/limits.ts` with AI rate limit configuration
 - [x] Created feature spec at `context/features/ai-auto-tag-spec.md`
 - _Note:_ Build and all tests pass. Establishes AI foundation for future enhancements.
+- **AI Summary** (Completed)
+- [x] Implement `summarizeContent` server action in `src/actions/ai.ts` using Groq's `GPT-OSS-120B` model.
+- [x] Add AI summary button (magic icon) next to the description field in `ItemDrawer` and `CreateItemDialog`.
+- [x] Ensure the AI summary button uses current input values (title and content) without requiring a save first.
+- [x] Implement Pro gating and rate limiting (20 requests/hour).
+- [x] Add toast notifications for success/error states.
+- [x] Updated description field in item drawer to `textarea` for better editing experience.
+- [x] Extract tag suggestion logic into reusable `useSuggestTags` hook for better code organization.
+- [x] Refactor suggest tags button component for better separation of concerns.
+- Implementation files: `src/components/items/summarize-button.tsx`, `src/hooks/use-suggest-tags.ts`
