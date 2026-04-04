@@ -6,11 +6,11 @@ Not Started
 
 ## Goals
 
-<!-- Add goals for the active feature -->
+<!-- Add feature goals here -->
 
 ## Notes
 
-<!-- Add implementation notes, constraints, and setup details -->
+<!-- Add feature notes/constraints here -->
 
 ## History
 
@@ -487,3 +487,14 @@ Not Started
 - [x] Updated `ItemDrawerContentSection` to accept `editLanguage` and `onLanguageChange` props
 - [x] Language selector appears above code editor for snippets and commands with instant syntax highlighting
 - _Note:_ Build passes. 2 new files created, 6 files modified.
+- **AI Auto-Tagging** (Completed)
+- [x] Integrated Groq SDK with Llama 4 Scout model for AI-powered tag suggestions
+- [x] Created `src/lib/groq.ts` with Groq client and TruncatedContent utility (2000 char limit)
+- [x] Implemented `suggestTags` server action in `src/actions/ai.ts` with Pro gating and rate limiting
+- [x] Created `SuggestTagsButton` UI component in item create dialog and item drawer edit mode
+- [x] Added AI rate limiting (20 requests/hour per user via Upstash)
+- [x] Implemented comprehensive test suite with refactored test structure by file module
+- [x] Reorganized test files: `actions/*`, `lib/db/*` per-function tests for better maintainability
+- [x] Updated `src/lib/constants/limits.ts` with AI rate limit configuration
+- [x] Created feature spec at `context/features/ai-auto-tag-spec.md`
+- _Note:_ Build and all tests pass. Establishes AI foundation for future enhancements.
