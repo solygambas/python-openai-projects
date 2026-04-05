@@ -41,11 +41,11 @@ export function useSuggestTags({
         description: description?.trim(),
       });
 
-      if (result.success && result.data) {
+      if (result.success) {
         setSuggestedTags(result.data.tags);
         setShowSuggestions(true);
 
-        if (result.remaining !== undefined && result.remaining <= 2) {
+        if (result.remaining <= 2) {
           toast.success(
             `Suggested ${result.data.tags.length} tags (${result.remaining} requests remaining this hour)`,
           );
@@ -53,7 +53,7 @@ export function useSuggestTags({
           toast.success(`Suggested ${result.data.tags.length} tags`);
         }
       } else {
-        toast.error(result.error || "Failed to generate tags");
+        toast.error(result.error);
       }
     });
   };

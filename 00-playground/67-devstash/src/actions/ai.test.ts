@@ -108,10 +108,8 @@ describe("actions/autoTagItem", () => {
       content: "Test content",
     });
 
-    expect(result).toEqual({
-      success: false,
-      error: "Title is required",
-    });
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Title is required");
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -129,10 +127,8 @@ describe("actions/autoTagItem", () => {
       content: "",
     });
 
-    expect(result).toEqual({
-      success: false,
-      error: "Content is required",
-    });
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Content is required");
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -401,7 +397,9 @@ describe("actions/explainCode", () => {
       choices: [
         {
           message: {
-            content: "This is a detailed explanation of the code.",
+            content: JSON.stringify({
+              explanation: "This is a detailed explanation of the code.",
+            }),
           },
         },
       ],
@@ -435,7 +433,7 @@ describe("actions/explainCode", () => {
     });
   });
 
-  it("strips <think> tags from the explanation content", async () => {
+  it("strips <tool_call> tags from the explanation content", async () => {
     authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
     canUseAIMock.mockResolvedValueOnce(true);
     checkRateLimitMock.mockResolvedValueOnce({
@@ -448,7 +446,9 @@ describe("actions/explainCode", () => {
       choices: [
         {
           message: {
-            content: "<think>Hidden reasoning</think>The actual explanation.",
+            content: JSON.stringify({
+              explanation: "The actual explanation.",
+            }),
           },
         },
       ],
@@ -523,7 +523,9 @@ describe("actions/summarizeContent", () => {
       choices: [
         {
           message: {
-            content: "This is a concise summary of the content.",
+            content: JSON.stringify({
+              summary: "This is a concise summary of the content.",
+            }),
           },
         },
       ],
@@ -657,10 +659,8 @@ describe("actions/optimizePrompt", () => {
       content: "Some prompt content",
     });
 
-    expect(result).toEqual({
-      success: false,
-      error: "Title is required",
-    });
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Title is required");
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -678,10 +678,8 @@ describe("actions/optimizePrompt", () => {
       content: "",
     });
 
-    expect(result).toEqual({
-      success: false,
-      error: "Prompt is required",
-    });
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Prompt is required");
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -698,8 +696,10 @@ describe("actions/optimizePrompt", () => {
       choices: [
         {
           message: {
-            content:
-              "You are a senior developer. Write a function that does X. Return only the code.",
+            content: JSON.stringify({
+              optimizedPrompt:
+                "You are a senior developer. Write a function that does X. Return only the code.",
+            }),
           },
         },
       ],
@@ -735,7 +735,7 @@ describe("actions/optimizePrompt", () => {
     });
   });
 
-  it("strips <think> tags from the optimized prompt", async () => {
+  it("strips <tool_call> tags from the optimized prompt", async () => {
     authMock.mockResolvedValueOnce({ user: { id: "user-1" } });
     canUseAIMock.mockResolvedValueOnce(true);
     checkRateLimitMock.mockResolvedValueOnce({
@@ -748,7 +748,9 @@ describe("actions/optimizePrompt", () => {
       choices: [
         {
           message: {
-            content: "<think>Internal reasoning</think>The optimized prompt.",
+            content: JSON.stringify({
+              optimizedPrompt: "The optimized prompt.",
+            }),
           },
         },
       ],
@@ -773,7 +775,13 @@ describe("actions/optimizePrompt", () => {
     });
 
     groqChatCompletionsCreateMock.mockResolvedValueOnce({
-      choices: [{ message: { content: "Optimized." } }],
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({ optimizedPrompt: "Optimized." }),
+          },
+        },
+      ],
     });
 
     const longContent = "a".repeat(6000);
@@ -783,7 +791,6 @@ describe("actions/optimizePrompt", () => {
     const userMessage = callArgs.messages.find(
       (m: { role: string }) => m.role === "user",
     );
-    // User message is "Title: Test\n\nPrompt:\n" + truncated content
     const promptPart = userMessage.content.split("Prompt:\n")[1];
     expect(promptPart.length).toBeLessThanOrEqual(5000);
   });
@@ -798,7 +805,7 @@ describe("actions/optimizePrompt", () => {
     });
 
     groqChatCompletionsCreateMock.mockResolvedValueOnce({
-      choices: [{ message: { content: "" } }],
+      choices: [{ message: { content: JSON.stringify({}) } }],
     });
     vi.spyOn(console, "error").mockImplementation(() => undefined);
 

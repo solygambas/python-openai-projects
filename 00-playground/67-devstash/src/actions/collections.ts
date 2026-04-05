@@ -9,6 +9,11 @@ import {
 } from "@/lib/db/collections";
 import { checkCollectionLimit } from "@/lib/usage-limits";
 import { z } from "zod";
+import { validate, type ActionResult } from "@/lib/action-helpers";
+
+// ============================================================================
+// Schemas
+// ============================================================================
 
 const CreateCollectionSchema = z.object({
   name: z
@@ -37,124 +42,76 @@ const ToggleFavoriteCollectionSchema = z.object({
   collectionId: z.string().min(1, "Collection ID is required"),
 });
 
-type CreateCollectionInput = z.infer<typeof CreateCollectionSchema>;
-type UpdateCollectionInput = z.infer<typeof UpdateCollectionSchema>;
-type DeleteCollectionInput = z.infer<typeof DeleteCollectionSchema>;
-type ToggleFavoriteCollectionInput = z.infer<
-  typeof ToggleFavoriteCollectionSchema
->;
+// ============================================================================
+// Types
+// ============================================================================
 
-interface CreateCollectionResult {
-  success: boolean;
-  data?: {
-    id: string;
-    name: string;
-    description: string | null;
-    isFavorite: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    itemCount: number;
-  };
-  error?: string;
+interface CollectionData {
+  id: string;
+  name: string;
+  description: string | null;
+  isFavorite: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  itemCount: number;
 }
 
-interface UpdateCollectionResult {
-  success: boolean;
-  data?: {
-    id: string;
-    name: string;
-    description: string | null;
-    isFavorite: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    itemCount: number;
-  };
-  error?: string;
-}
-
-interface DeleteCollectionResult {
-  success: boolean;
-  data?: { id: string };
-  error?: string;
-}
-
-interface ToggleFavoriteCollectionResult {
-  success: boolean;
-  data?: {
-    id: string;
-    isFavorite: boolean;
-  };
-  error?: string;
-}
+// ============================================================================
+// Actions
+// ============================================================================
 
 export async function createCollection(
-  input: CreateCollectionInput,
-): Promise<CreateCollectionResult> {
+  input: z.infer<typeof CreateCollectionSchema>,
+): Promise<ActionResult<CollectionData>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = CreateCollectionSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(CreateCollectionSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const { name, description } = validatedFields.data;
-
   try {
-    // Check collection limit for free tier users
     await checkCollectionLimit(userId);
-
     const newCollection = await createCollectionQuery(userId, {
-      name,
-      description: description || null,
+      name: validated.name,
+      description: validated.description || null,
     });
-
     return { success: true, data: newCollection };
   } catch (error) {
     console.error("CREATE_COLLECTION_ERROR", error);
-    // Return the actual error message for limit errors
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to create collection";
-    return { success: false, error: errorMessage };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to create collection",
+    };
   }
 }
 
 export async function updateCollection(
-  input: UpdateCollectionInput,
-): Promise<UpdateCollectionResult> {
+  input: z.infer<typeof UpdateCollectionSchema>,
+): Promise<ActionResult<CollectionData>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = UpdateCollectionSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(UpdateCollectionSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
-
-  const { collectionId, name, description } = validatedFields.data;
 
   try {
     const updatedCollection = await updateCollectionQuery(
       userId,
-      collectionId,
+      validated.collectionId,
       {
-        name,
-        description: description || null,
+        name: validated.name,
+        description: validated.description || null,
       },
     );
 
@@ -177,28 +134,21 @@ export async function updateCollection(
 }
 
 export async function deleteCollection(
-  input: DeleteCollectionInput,
-): Promise<DeleteCollectionResult> {
+  input: z.infer<typeof DeleteCollectionSchema>,
+): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = DeleteCollectionSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(DeleteCollectionSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const { collectionId } = validatedFields.data;
-
   try {
-    const result = await deleteCollectionQuery(userId, collectionId);
+    const result = await deleteCollectionQuery(userId, validated.collectionId);
     return { success: true, data: result };
   } catch (error) {
     console.error("DELETE_COLLECTION_ERROR", error);
@@ -207,32 +157,24 @@ export async function deleteCollection(
 }
 
 export async function toggleFavoriteCollection(
-  input: ToggleFavoriteCollectionInput,
-): Promise<ToggleFavoriteCollectionResult> {
+  input: z.infer<typeof ToggleFavoriteCollectionSchema>,
+): Promise<ActionResult<{ id: string; isFavorite: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = ToggleFavoriteCollectionSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(ToggleFavoriteCollectionSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
-
-  const { collectionId } = validatedFields.data;
 
   try {
     const updatedCollection = await toggleCollectionFavoriteQuery(
       userId,
-      collectionId,
+      validated.collectionId,
     );
-
     return {
       success: true,
       data: {
@@ -242,9 +184,6 @@ export async function toggleFavoriteCollection(
     };
   } catch (error) {
     console.error("TOGGLE_FAVORITE_COLLECTION_ERROR", error);
-    return {
-      success: false,
-      error: "Failed to toggle favorite",
-    };
+    return { success: false, error: "Failed to toggle favorite" };
   }
 }

@@ -11,15 +11,18 @@ import {
 import { deleteFromR2, extractKeyFromUrl } from "@/lib/r2";
 import { checkItemLimit, canUploadFiles } from "@/lib/usage-limits";
 import { z } from "zod";
+import { validate, type ActionResult } from "@/lib/action-helpers";
 
-// Custom URL validation that blocks dangerous protocols
+// ============================================================================
+// Schemas
+// ============================================================================
+
 const safeUrlSchema = z
   .string()
   .url("Invalid URL format")
   .refine(
     (url) => {
       const lower = url.toLowerCase();
-      // Block dangerous protocols that could be used for XSS
       const dangerousProtocols = [
         "javascript:",
         "data:",
@@ -56,70 +59,6 @@ const TogglePinItemSchema = z.object({
   itemId: z.string().min(1, "Item ID is required"),
 });
 
-type UpdateItemInput = z.infer<typeof UpdateItemSchema>;
-type DeleteItemInput = z.infer<typeof DeleteItemSchema>;
-type ToggleFavoriteItemInput = z.infer<typeof ToggleFavoriteItemSchema>;
-type TogglePinItemInput = z.infer<typeof TogglePinItemSchema>;
-
-interface UpdateItemResult {
-  success: boolean;
-  data?: {
-    id: string;
-    title: string;
-    description: string | null;
-    contentType: string;
-    content: string | null;
-    url: string | null;
-    language: string | null;
-    isFavorite: boolean;
-    isPinned: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    itemType: {
-      id: string;
-      name: string;
-      icon: string;
-      color: string;
-    };
-    tags: Array<{
-      id: string;
-      name: string;
-    }>;
-    collections: Array<{
-      collection: {
-        id: string;
-        name: string;
-      };
-    }>;
-  };
-  error?: string;
-}
-
-interface DeleteItemResult {
-  success: boolean;
-  data?: { id: string };
-  error?: string;
-}
-
-interface ToggleFavoriteItemResult {
-  success: boolean;
-  data?: {
-    id: string;
-    isFavorite: boolean;
-  };
-  error?: string;
-}
-
-interface TogglePinItemResult {
-  success: boolean;
-  data?: {
-    id: string;
-    isPinned: boolean;
-  };
-  error?: string;
-}
-
-// Create Item Schema and types
 const CreateItemSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().nullish(),
@@ -128,277 +67,208 @@ const CreateItemSchema = z.object({
   language: z.string().trim().nullish(),
   tags: z.array(z.string().trim().min(1)).default([]),
   typeId: z.string().min(1, "Type is required"),
-  // File upload fields
   fileUrl: z.string().url().nullish(),
   fileName: z.string().nullish(),
   fileSize: z.number().int().positive().nullish(),
-  // Collection associations
   collectionIds: z.array(z.string().min(1)).optional(),
 });
 
-type CreateItemInput = z.infer<typeof CreateItemSchema>;
+// ============================================================================
+// Types
+// ============================================================================
 
-interface CreateItemResult {
-  success: boolean;
-  data?: {
-    id: string;
-    title: string;
-    description: string | null;
-    contentType: string;
-    content: string | null;
-    url: string | null;
-    language: string | null;
-    itemType: { id: string; name: string; icon: string; color: string };
-    tags: Array<{ id: string; name: string }>;
-  };
-  error?: string;
+interface ItemData {
+  id: string;
+  title: string;
+  description: string | null;
+  contentType: string;
+  content: string | null;
+  url: string | null;
+  language: string | null;
+  isFavorite: boolean;
+  isPinned: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  itemType: { id: string; name: string; icon: string; color: string };
+  tags: Array<{ id: string; name: string }>;
+  collections: Array<{ collection: { id: string; name: string } }>;
 }
 
+interface CreateItemData {
+  id: string;
+  title: string;
+  description: string | null;
+  contentType: string;
+  content: string | null;
+  url: string | null;
+  language: string | null;
+  itemType: { id: string; name: string; icon: string; color: string };
+  tags: Array<{ id: string; name: string }>;
+}
+
+// ============================================================================
+// Actions
+// ============================================================================
+
 export async function createItem(
-  input: CreateItemInput,
-): Promise<CreateItemResult> {
+  input: z.infer<typeof CreateItemSchema>,
+): Promise<ActionResult<CreateItemData>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = CreateItemSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(CreateItemSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const {
-    title,
-    description,
-    content,
-    url,
-    language,
-    tags,
-    typeId,
-    fileUrl,
-    fileName,
-    fileSize,
-    collectionIds,
-  } = validatedFields.data;
-
   try {
-    // Check item limit for free tier users
     await checkItemLimit(userId);
-
-    // Check file upload permissions if this is a file/image type
-    if (fileUrl) {
+    if (validated.fileUrl) {
       await canUploadFiles(userId);
     }
+
     const newItem = await createItemQuery(userId, {
-      title,
-      description: description || null,
-      content: content || null,
-      url: url || null,
-      language: language || null,
-      tags,
-      typeId,
-      fileUrl: fileUrl || null,
-      fileName: fileName || null,
-      fileSize: fileSize || null,
-      collectionIds,
+      title: validated.title,
+      description: validated.description || null,
+      content: validated.content || null,
+      url: validated.url || null,
+      language: validated.language || null,
+      tags: validated.tags,
+      typeId: validated.typeId,
+      fileUrl: validated.fileUrl || null,
+      fileName: validated.fileName || null,
+      fileSize: validated.fileSize || null,
+      collectionIds: validated.collectionIds,
     });
 
     return { success: true, data: newItem };
   } catch (error) {
     console.error("CREATE_ITEM_ERROR", error);
-    // Return the actual error message for limit errors
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to create item";
-    return { success: false, error: errorMessage };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create item",
+    };
   }
 }
 
 export async function updateItem(
-  input: UpdateItemInput,
-): Promise<UpdateItemResult> {
+  input: z.infer<typeof UpdateItemSchema>,
+): Promise<ActionResult<ItemData>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = UpdateItemSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(UpdateItemSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const {
-    itemId,
-    title,
-    description,
-    content,
-    url,
-    language,
-    tags,
-    collectionIds,
-  } = validatedFields.data;
-
   try {
-    const updatedItem = await updateItemQuery(userId, itemId, {
-      title,
-      description: description || null,
-      content: content || null,
-      url: url || null,
-      language: language || null,
-      tags,
-      collectionIds,
+    const updatedItem = await updateItemQuery(userId, validated.itemId, {
+      title: validated.title,
+      description: validated.description || null,
+      content: validated.content || null,
+      url: validated.url || null,
+      language: validated.language || null,
+      tags: validated.tags,
+      collectionIds: validated.collectionIds,
     });
 
-    return {
-      success: true,
-      data: updatedItem,
-    };
+    return { success: true, data: updatedItem };
   } catch (error) {
     console.error("UPDATE_ITEM_ERROR", error);
-    return {
-      success: false,
-      error: "Failed to update item",
-    };
+    return { success: false, error: "Failed to update item" };
   }
 }
 
 export async function deleteItem(
-  input: DeleteItemInput,
-): Promise<DeleteItemResult> {
+  input: z.infer<typeof DeleteItemSchema>,
+): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = DeleteItemSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(DeleteItemSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const { itemId } = validatedFields.data;
-
   try {
-    const result = await deleteItemQuery(userId, itemId);
+    const result = await deleteItemQuery(userId, validated.itemId);
 
-    // Delete file from R2 if it exists
     if (result.fileUrl) {
       const key = extractKeyFromUrl(result.fileUrl);
       if (key) {
         try {
           await deleteFromR2(key);
         } catch (r2Error) {
-          // Log but don't fail - the item is already deleted
           console.error("R2_DELETE_ERROR", r2Error);
         }
       }
     }
 
-    return {
-      success: true,
-      data: result,
-    };
+    return { success: true, data: result };
   } catch (error) {
     console.error("DELETE_ITEM_ERROR", error);
-    return {
-      success: false,
-      error: "Failed to delete item",
-    };
+    return { success: false, error: "Failed to delete item" };
   }
 }
 
 export async function toggleFavoriteItem(
-  input: ToggleFavoriteItemInput,
-): Promise<ToggleFavoriteItemResult> {
+  input: z.infer<typeof ToggleFavoriteItemSchema>,
+): Promise<ActionResult<{ id: string; isFavorite: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = ToggleFavoriteItemSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(ToggleFavoriteItemSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const { itemId } = validatedFields.data;
-
   try {
-    const updatedItem = await toggleItemFavoriteQuery(userId, itemId);
-
+    const updatedItem = await toggleItemFavoriteQuery(userId, validated.itemId);
     return {
       success: true,
-      data: {
-        id: updatedItem.id,
-        isFavorite: updatedItem.isFavorite,
-      },
+      data: { id: updatedItem.id, isFavorite: updatedItem.isFavorite },
     };
   } catch (error) {
     console.error("TOGGLE_FAVORITE_ITEM_ERROR", error);
-    return {
-      success: false,
-      error: "Failed to toggle favorite",
-    };
+    return { success: false, error: "Failed to toggle favorite" };
   }
 }
 
 export async function toggleItemPin(
-  input: TogglePinItemInput,
-): Promise<TogglePinItemResult> {
+  input: z.infer<typeof TogglePinItemSchema>,
+): Promise<ActionResult<{ id: string; isPinned: boolean }>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
-
   const userId = session.user.id;
 
-  const validatedFields = TogglePinItemSchema.safeParse(input);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      error: validatedFields.error.issues[0].message,
-    };
+  const validated = validate(TogglePinItemSchema, input);
+  if ("error" in validated) {
+    return { success: false, error: validated.error };
   }
 
-  const { itemId } = validatedFields.data;
-
   try {
-    const updatedItem = await toggleItemPinQuery(userId, itemId);
-
+    const updatedItem = await toggleItemPinQuery(userId, validated.itemId);
     return {
       success: true,
-      data: {
-        id: updatedItem.id,
-        isPinned: updatedItem.isPinned,
-      },
+      data: { id: updatedItem.id, isPinned: updatedItem.isPinned },
     };
   } catch (error) {
     console.error("TOGGLE_PIN_ITEM_ERROR", error);
-    return {
-      success: false,
-      error: "Failed to toggle pin",
-    };
+    return { success: false, error: "Failed to toggle pin" };
   }
 }

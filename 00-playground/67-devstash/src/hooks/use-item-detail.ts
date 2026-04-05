@@ -122,7 +122,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         collectionIds: editCollectionIds,
       });
 
-      if (result.success && result.data) {
+      if (result.success) {
         const updatedItem = {
           ...result.data,
           createdAt: result.data.createdAt.toISOString(),
@@ -141,7 +141,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         router.refresh();
         options.onUpdateSuccess?.();
       } else {
-        toast.error(result.error || "Failed to update item");
+        toast.error(result.error);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -177,7 +177,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         router.refresh();
         options.onDeleteSuccess?.();
       } else {
-        toast.error(result.error || "Failed to delete item");
+        toast.error(result.error);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -222,7 +222,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     try {
       const result = await toggleFavoriteItem({ itemId: selectedItem.id });
 
-      if (result.success && result.data) {
+      if (result.success) {
         setSelectedItem({
           ...selectedItem,
           isFavorite: result.data.isFavorite,
@@ -234,7 +234,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         );
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to toggle favorite");
+        toast.error(result.error);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
@@ -248,7 +248,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
     try {
       const result = await toggleItemPin({ itemId: selectedItem.id });
 
-      if (result.success && result.data) {
+      if (result.success) {
         setSelectedItem({
           ...selectedItem,
           isPinned: result.data.isPinned,
@@ -256,7 +256,7 @@ export function useItemDetail(options: UseItemDetailOptions = {}) {
         toast.success(result.data.isPinned ? "Pinned item" : "Unpinned item");
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to toggle pin");
+        toast.error(result.error);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");

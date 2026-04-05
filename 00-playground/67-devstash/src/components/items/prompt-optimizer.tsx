@@ -39,7 +39,6 @@ export function PromptOptimizer({
   const [optimizedContent, setOptimizedContent] = useState<string | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [copied, setCopied] = useState(false);
-  // Local content mirrors prop but updates immediately on accept
   const [localContent, setLocalContent] = useState(content);
 
   const handleOptimize = async () => {
@@ -56,9 +55,9 @@ export function PromptOptimizer({
     try {
       const result = await optimizePrompt({ title, content: localContent });
 
-      if (result.success && result.data) {
+      if (result.success) {
         setOptimizedContent(result.data.optimizedPrompt);
-        if (result.remaining !== undefined && result.remaining <= 2) {
+        if (result.remaining <= 2) {
           toast.success(
             `Prompt optimized (${result.remaining} requests remaining this hour)`,
           );
@@ -66,7 +65,7 @@ export function PromptOptimizer({
           toast.success("Prompt optimized");
         }
       } else {
-        toast.error(result.error || "Failed to optimize prompt");
+        toast.error(result.error);
         setActiveTab("original");
       }
     } catch {
@@ -90,7 +89,6 @@ export function PromptOptimizer({
 
   const handleAccept = () => {
     if (!optimizedContent || !onAcceptOptimization) return;
-    // Update local display immediately so the user sees the change right away
     setLocalContent(optimizedContent);
     setOptimizedContent(null);
     setActiveTab("original");
@@ -101,7 +99,7 @@ export function PromptOptimizer({
 
   return (
     <div className="flex flex-col gap-0">
-      {/* Single unified header row — mirrors code editor layout */}
+      {/* Single unified header row */}
       <div className="flex items-center justify-between px-3 py-2 rounded-t-lg border border-white/10 bg-secondary/40 border-b-0">
         {/* Left: macOS dots */}
         <div className="flex items-center gap-1.5">

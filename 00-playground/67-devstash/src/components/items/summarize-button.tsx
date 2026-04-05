@@ -35,10 +35,10 @@ export function SummarizeButton({
         content: content.trim() || "No content provided.",
       });
 
-      if (result.success && result.data) {
+      if (result.success) {
         onSummaryGenerated(result.data.summary);
 
-        if (result.remaining !== undefined && result.remaining <= 2) {
+        if (result.remaining <= 2) {
           toast.success(
             `Summary generated (${result.remaining} requests remaining this hour)`,
           );
@@ -46,12 +46,11 @@ export function SummarizeButton({
           toast.success("Summary generated");
         }
       } else {
-        toast.error(result.error || "Failed to generate summary");
+        toast.error(result.error);
       }
     });
   };
 
-  // Don't render if not Pro
   if (!isPro) {
     return null;
   }

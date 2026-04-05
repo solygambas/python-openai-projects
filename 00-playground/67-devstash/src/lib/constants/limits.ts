@@ -11,3 +11,5 @@ export const AI_RATE_LIMITS = {
   codeExplain: { limit: 20, window: "1 h" as const },
   promptOptimize: { limit: 20, window: "1 h" as const },
 } as const;
+
+export type AIRateLimitKey = keyof typeof AI_RATE_LIMITS;

@@ -139,10 +139,10 @@ export function CodeEditor({
         language,
       });
 
-      if (result.success && result.data) {
+      if (result.success) {
         setExplanation(result.data.explanation);
       } else {
-        toast.error(result.error || "Failed to generate explanation");
+        toast.error(result.error);
         setActiveTab("code");
       }
     } catch {
