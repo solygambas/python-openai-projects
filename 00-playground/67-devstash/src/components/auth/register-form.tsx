@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { User, Mail, Lock, AlertCircle } from "lucide-react";
+import { User, Mail, Lock, AlertCircle, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -172,6 +173,28 @@ export function RegisterForm() {
             {isLoading ? "Creating account..." : "Register"}
           </Button>
         </form>
+
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full"
+          onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+          disabled={isLoading}
+        >
+          <Github className="mr-2 h-4 w-4" />
+          GitHub
+        </Button>
       </CardContent>
       <CardFooter>
         <div className="text-sm text-center w-full text-muted-foreground">
