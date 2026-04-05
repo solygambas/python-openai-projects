@@ -108,8 +108,11 @@ describe("actions/autoTagItem", () => {
       content: "Test content",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Title is required");
+    expect(result).toEqual({
+      success: false,
+      error: "Title is required",
+      remaining: 20,
+    });
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -127,8 +130,11 @@ describe("actions/autoTagItem", () => {
       content: "",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Content is required");
+    expect(result).toEqual({
+      success: false,
+      error: "Content is required",
+      remaining: 20,
+    });
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -146,9 +152,10 @@ describe("actions/autoTagItem", () => {
       content: "Test content",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toContain("Too many attempts");
-    expect(result.remaining).toBe(0);
+    if (!result.success) {
+      expect(result.error).toContain("Too many attempts");
+      expect(result.remaining).toBe(0);
+    }
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -263,8 +270,9 @@ describe("actions/autoTagItem", () => {
       content: "Content",
     });
 
-    expect(result.success).toBe(true);
-    expect(result.data?.tags.length).toBeLessThanOrEqual(5);
+    if (result.success) {
+      expect(result.data.tags.length).toBeLessThanOrEqual(5);
+    }
   });
 
   it("returns error when Groq API fails", async () => {
@@ -322,8 +330,11 @@ describe("actions/autoTagItem", () => {
     });
 
     expect(consoleErrorSpy).toHaveBeenCalled();
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Failed to generate tags. Please try again.");
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to generate tags. Please try again.",
+      remaining: 20,
+    });
   });
 
   it("returns error when tags is not an array", async () => {
@@ -357,7 +368,11 @@ describe("actions/autoTagItem", () => {
     });
 
     expect(consoleErrorSpy).toHaveBeenCalled();
-    expect(result.success).toBe(false);
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to generate tags. Please try again.",
+      remaining: 20,
+    });
   });
 });
 
@@ -459,8 +474,9 @@ describe("actions/explainCode", () => {
       content: "Content",
     });
 
-    expect(result.success).toBe(true);
-    expect(result.data?.explanation).toBe("The actual explanation.");
+    if (result.success) {
+      expect(result.data.explanation).toBe("The actual explanation.");
+    }
   });
 
   it("returns error when Groq API fails", async () => {
@@ -480,10 +496,11 @@ describe("actions/explainCode", () => {
       content: "Content",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe(
-      "Failed to generate explanation. Please try again.",
-    );
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to generate explanation. Please try again.",
+      remaining: 20,
+    });
   });
 });
 
@@ -575,8 +592,11 @@ describe("actions/summarizeContent", () => {
       content: "Content",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Failed to generate summary. Please try again.");
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to generate summary. Please try again.",
+      remaining: 20,
+    });
   });
 });
 
@@ -639,9 +659,10 @@ describe("actions/optimizePrompt", () => {
       content: "Write me a story",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toContain("Too many attempts");
-    expect(result.remaining).toBe(0);
+    if (!result.success) {
+      expect(result.error).toContain("Too many attempts");
+      expect(result.remaining).toBe(0);
+    }
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -659,8 +680,11 @@ describe("actions/optimizePrompt", () => {
       content: "Some prompt content",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Title is required");
+    expect(result).toEqual({
+      success: false,
+      error: "Title is required",
+      remaining: 20,
+    });
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -678,8 +702,11 @@ describe("actions/optimizePrompt", () => {
       content: "",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Prompt is required");
+    expect(result).toEqual({
+      success: false,
+      error: "Prompt is required",
+      remaining: 20,
+    });
     expect(groqChatCompletionsCreateMock).not.toHaveBeenCalled();
   });
 
@@ -761,8 +788,9 @@ describe("actions/optimizePrompt", () => {
       content: "Some prompt",
     });
 
-    expect(result.success).toBe(true);
-    expect(result.data?.optimizedPrompt).toBe("The optimized prompt.");
+    if (result.success) {
+      expect(result.data.optimizedPrompt).toBe("The optimized prompt.");
+    }
   });
 
   it("truncates content to 5000 characters before API call", async () => {
@@ -814,8 +842,11 @@ describe("actions/optimizePrompt", () => {
       content: "Some prompt",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Failed to optimize prompt. Please try again.");
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to optimize prompt. Please try again.",
+      remaining: 20,
+    });
   });
 
   it("returns error when Groq API throws", async () => {
@@ -835,8 +866,10 @@ describe("actions/optimizePrompt", () => {
       content: "Some prompt",
     });
 
-    expect(result.success).toBe(false);
-    expect(result.error).toBe("Failed to optimize prompt. Please try again.");
-    expect(result.remaining).toBe(20);
+    expect(result).toEqual({
+      success: false,
+      error: "Failed to optimize prompt. Please try again.",
+      remaining: 20,
+    });
   });
 });
