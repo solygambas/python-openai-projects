@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import { useSidebar } from "./dashboard/sidebar-provider";
 
 const iconMap: Record<string, LucideIcon> = {
   Code,
@@ -69,9 +70,16 @@ const NavItem = ({
   isCollapsed,
   isActive,
 }: NavItemProps) => {
+  const { setIsMobileOpen } = useSidebar();
+
+  const handleClick = () => {
+    setIsMobileOpen(false);
+  };
+
   return (
     <Link
       href={href}
+      onClick={handleClick}
       className={cn(
         "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm transition-colors group",
         isActive
@@ -177,6 +185,7 @@ export function DashboardSidebar({
   recentCollections,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const { setIsMobileOpen } = useSidebar();
   const [isTypesOpen, setIsTypesOpen] = React.useState(true);
   const [isCollectionsOpen, setIsCollectionsOpen] = React.useState(true);
 
@@ -373,6 +382,7 @@ export function DashboardSidebar({
               className={cn(
                 pathname === "/profile" && "bg-primary/10 text-primary",
               )}
+              onClick={() => setIsMobileOpen(false)}
             >
               <Link href="/profile" className="flex items-center gap-2 w-full">
                 <User className="h-4 w-4" />
@@ -383,6 +393,7 @@ export function DashboardSidebar({
               className={cn(
                 pathname === "/settings" && "bg-primary/10 text-primary",
               )}
+              onClick={() => setIsMobileOpen(false)}
             >
               <Link href="/settings" className="flex items-center gap-2 w-full">
                 <Settings className="h-4 w-4" />
