@@ -8,6 +8,20 @@ export const proxy = auth((req) => {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
+  // Auth pages that should redirect to dashboard if already logged in
+  const authPages = [
+    "/sign-in",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+    "/verify-email",
+  ];
+
+  if (isLoggedIn && authPages.some((page) => pathname.startsWith(page))) {
+    const dashboardUrl = new URL("/dashboard", req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+
   // Protect /dashboard, /profile, /settings, and /favorites routes
   if (
     (pathname.startsWith("/dashboard") ||
