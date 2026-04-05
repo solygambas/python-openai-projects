@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X, File, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { cn, formatFileSize } from "@/lib/utils";
 
 interface FileUploadProps {
   type: "file" | "image";
@@ -149,12 +149,6 @@ export function FileUpload({
       inputRef.current.value = "";
     }
   }, [previewUrl]);
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
 
   return (
     <div className={cn("space-y-3", className)}>

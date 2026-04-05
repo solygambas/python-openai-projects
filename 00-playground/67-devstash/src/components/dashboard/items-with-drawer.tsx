@@ -1,18 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
-  Pin,
-  Star,
-  Copy,
-} from "lucide-react";
+import { File, Pin, Star, Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,11 +36,13 @@ import {
   SummarizeButton,
 } from "@/components/items";
 import { formatDate } from "@/lib/utils";
-import { type DashboardItem, type IconMap } from "@/types/dashboard";
+import { ICON_MAP } from "@/lib/constants/item-types";
+import { type DashboardItem } from "@/types/dashboard";
 import { type ItemsWithDrawerVariant } from "@/types/item-detail";
 import { useItemDetail } from "@/hooks/use-item-detail";
 import { useCollections } from "@/hooks/use-collections";
-import { toggleFavoriteItem, updateItem } from "@/actions/items";
+import { useFavoriteToggle } from "@/hooks/use-favorite-toggle";
+import { updateItem } from "@/actions/items";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -60,16 +51,6 @@ interface ItemsWithDrawerProps {
   variant: ItemsWithDrawerVariant;
   isPro?: boolean;
 }
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-};
 
 // Pinned item card component
 function PinnedItemCard({
@@ -82,7 +63,7 @@ function PinnedItemCard({
   onCopy: () => void;
 }) {
   const itemType = item.itemType;
-  const Icon = iconMap[itemType?.icon || "File"] || File;
+  const Icon = ICON_MAP[itemType?.icon] || File;
   const borderColor = itemType?.color || "#6b7280";
 
   return (
@@ -157,7 +138,7 @@ function RecentItemCard({
   onCopy: () => void;
 }) {
   const itemType = item.itemType;
-  const Icon = iconMap[itemType?.icon || "File"] || File;
+  const Icon = ICON_MAP[itemType?.icon] || File;
   const borderColor = itemType?.color || "#6b7280";
 
   return (
@@ -257,27 +238,7 @@ export function ItemsWithDrawer({
   } = useItemDetail();
 
   const { collections: allCollections } = useCollections();
-
-  const toggleItemFavorite = useCallback(
-    async (itemId: string) => {
-      try {
-        const result = await toggleFavoriteItem({ itemId });
-        if (result.success) {
-          toast.success(
-            result.data?.isFavorite
-              ? "Added to favorites"
-              : "Removed from favorites",
-          );
-          router.refresh();
-        } else {
-          toast.error(result.error || "Failed to toggle favorite");
-        }
-      } catch {
-        toast.error("An unexpected error occurred");
-      }
-    },
-    [router],
-  );
+  const { toggle: toggleItemFavorite } = useFavoriteToggle({ type: "item" });
 
   const handleAcceptOptimization = useCallback(
     async (newContent: string) => {
@@ -364,7 +325,7 @@ export function ItemsWithDrawer({
             <ItemCard
               key={item.id}
               item={item}
-              iconMap={iconMap}
+              iconMap={ICON_MAP}
               onClick={() => openItem(item.id)}
               onCopy={() => copyItem(item.id)}
               onToggleFavorite={() => toggleItemFavorite(item.id)}

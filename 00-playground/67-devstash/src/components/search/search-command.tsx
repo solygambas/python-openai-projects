@@ -2,16 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
-  Folder,
-} from "lucide-react";
+import { Folder } from "lucide-react";
 import {
   Command,
   CommandDialog,
@@ -23,18 +14,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { useItemDrawer } from "@/contexts/item-drawer-context";
-import type { IconMap } from "@/types/dashboard";
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-  Folder,
-};
+import { ICON_MAP } from "@/lib/constants/item-types";
 
 interface SearchItem {
   id: string;
@@ -146,8 +126,7 @@ export function SearchCommand({ items, collections }: SearchCommandProps) {
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Items">
             {items.slice(0, 10).map((item) => {
-              const IconComponent =
-                iconMap[item.itemType.icon as keyof typeof iconMap];
+              const IconComponent = ICON_MAP[item.itemType.icon];
               return (
                 <CommandItem
                   key={item.id}

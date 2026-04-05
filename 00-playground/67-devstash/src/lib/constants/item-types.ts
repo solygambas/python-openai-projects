@@ -6,6 +6,8 @@ import {
   File,
   Image,
   Link,
+  Folder,
+  type LucideIcon,
 } from "lucide-react";
 
 export const ITEM_TYPE_ICONS = {
@@ -41,3 +43,32 @@ export const ITEM_TYPE_LABELS = {
 export type ItemTypeName = keyof typeof ITEM_TYPE_COLORS;
 
 export const PRO_COLOR = "#8b5cf6";
+
+// Icon map for Lucide icons used across the app
+// Maps icon names (stored in DB) to actual Lucide components
+export const ICON_MAP: Record<string, LucideIcon> = {
+  Code,
+  Sparkles,
+  Terminal,
+  StickyNote,
+  File,
+  Image,
+  Link,
+  Folder,
+};
+
+// Type helpers for determining item content display
+export function isCodeType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "snippet" || lower === "command";
+}
+
+export function isMarkdownType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "note" || lower === "prompt";
+}
+
+export function isFileType(typeName: string): boolean {
+  const lower = typeName.toLowerCase();
+  return lower === "file" || lower === "image";
+}

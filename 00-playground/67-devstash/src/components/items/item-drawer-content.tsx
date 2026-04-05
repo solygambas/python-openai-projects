@@ -8,6 +8,12 @@ import { CodeEditor } from "@/components/ui/code-editor";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { PromptOptimizer } from "@/components/items/prompt-optimizer";
 import { LanguageSelector } from "@/components/items/language-selector";
+import { formatFileSize } from "@/lib/utils";
+import {
+  isCodeType,
+  isMarkdownType,
+  isFileType,
+} from "@/lib/constants/item-types";
 
 interface ItemDrawerContentProps {
   typeName: string;
@@ -30,27 +36,6 @@ interface ItemDrawerContentProps {
   itemTitle?: string;
   // AI Optimize props (prompt items)
   onAcceptOptimization?: (content: string) => void;
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-}
-
-export function isCodeType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "snippet" || lower === "command";
-}
-
-function isMarkdownType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "note" || lower === "prompt";
-}
-
-export function isFileType(typeName: string): boolean {
-  const lower = typeName.toLowerCase();
-  return lower === "file" || lower === "image";
 }
 
 export function ItemDrawerContent({

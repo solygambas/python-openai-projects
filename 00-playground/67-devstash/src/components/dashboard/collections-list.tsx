@@ -9,38 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Star,
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
-} from "lucide-react";
+import { Star, File } from "lucide-react";
 
 import { CollectionActionsDropdown } from "@/components/collections/collection-actions-dropdown";
 import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
-import { toggleFavoriteCollection } from "@/actions/collections";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { ICON_MAP } from "@/lib/constants/item-types";
+import { useFavoriteToggle } from "@/hooks/use-favorite-toggle";
 
-import {
-  type Collection,
-  type ItemType,
-  type IconMap,
-} from "@/types/dashboard";
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-};
+import { type Collection, type ItemType } from "@/types/dashboard";
 
 interface CollectionsListProps {
   collections: Collection[];
@@ -51,8 +27,8 @@ export function CollectionsList({
   collections,
   itemTypes,
 }: CollectionsListProps) {
-  const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const { toggle: toggleFavorite } = useFavoriteToggle({ type: "collection" });
 
   const handleToggleFavorite = async (
     collectionId: string,
@@ -60,21 +36,7 @@ export function CollectionsList({
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    try {
-      const result = await toggleFavoriteCollection({ collectionId });
-      if (result.success) {
-        toast.success(
-          result.data?.isFavorite
-            ? "Added to favorites"
-            : "Removed from favorites",
-        );
-        router.refresh();
-      } else {
-        toast.error(result.error || "Failed to toggle favorite");
-      }
-    } catch {
-      toast.error("An unexpected error occurred");
-    }
+    await toggleFavorite(collectionId);
   };
 
   return (
@@ -135,7 +97,7 @@ export function CollectionsList({
                   <div className="flex gap-2 mt-4">
                     {collection.itemTypeIds.map((typeId) => {
                       const type = itemTypes.find((t) => t.id === typeId);
-                      const Icon = iconMap[type?.icon || "File"] || File;
+                      const Icon = ICON_MAP[type?.icon || ""] || File;
                       return (
                         <Icon
                           key={typeId}

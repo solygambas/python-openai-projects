@@ -4,20 +4,14 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
   Star,
   ChevronDown,
   ChevronRight,
   User,
   LogOut,
   Settings,
-  LucideIcon,
+  File,
+  type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -32,16 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSidebar } from "./dashboard/sidebar-provider";
-
-const iconMap: Record<string, LucideIcon> = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-};
+import { ICON_MAP } from "@/lib/constants/item-types";
 
 interface NavItemProps {
   href: string;
@@ -233,7 +218,7 @@ export function DashboardSidebar({
                   <NavItem
                     key={type.id}
                     href={`/items/${type.name}s`}
-                    icon={iconMap[type.icon] || File}
+                    icon={ICON_MAP[type.icon as string] || File}
                     iconColor={type.color}
                     count={itemTypeCounts[type.name] || 0}
                     isCollapsed={isCollapsed}

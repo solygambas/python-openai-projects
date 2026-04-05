@@ -10,38 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Star,
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image as ImageIcon,
-  Link as LinkIcon,
-} from "lucide-react";
+import { Star, File } from "lucide-react";
 
 import { CollectionActionsDropdown } from "@/components/collections/collection-actions-dropdown";
 import { EditCollectionDialog } from "@/components/collections/edit-collection-dialog";
+import { ICON_MAP } from "@/lib/constants/item-types";
+import { useFavoriteToggle } from "@/hooks/use-favorite-toggle";
 
-import {
-  type Collection,
-  type ItemType,
-  type IconMap,
-} from "@/types/dashboard";
-import { toggleFavoriteCollection } from "@/actions/collections";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-
-const iconMap: IconMap = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image: ImageIcon,
-  Link: LinkIcon,
-};
+import { type Collection, type ItemType } from "@/types/dashboard";
 
 interface RecentCollectionsProps {
   collections: Collection[];
@@ -52,8 +28,8 @@ export function RecentCollections({
   collections,
   itemTypes,
 }: RecentCollectionsProps) {
-  const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const { toggle: toggleFavorite } = useFavoriteToggle({ type: "collection" });
 
   const handleToggleFavorite = async (
     collectionId: string,
@@ -61,21 +37,7 @@ export function RecentCollections({
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    try {
-      const result = await toggleFavoriteCollection({ collectionId });
-      if (result.success) {
-        toast.success(
-          result.data?.isFavorite
-            ? "Added to favorites"
-            : "Removed from favorites",
-        );
-        router.refresh();
-      } else {
-        toast.error(result.error || "Failed to toggle favorite");
-      }
-    } catch {
-      toast.error("An unexpected error occurred");
-    }
+    await toggleFavorite(collectionId);
   };
   return (
     <section className="space-y-4">
@@ -141,7 +103,7 @@ export function RecentCollections({
                 <div className="flex gap-2 mt-4">
                   {collection.itemTypeIds.map((typeId) => {
                     const type = itemTypes.find((t) => t.id === typeId);
-                    const Icon = iconMap[type?.icon || "File"] || File;
+                    const Icon = ICON_MAP[type?.icon || ""] || File;
                     return (
                       <Icon
                         key={typeId}

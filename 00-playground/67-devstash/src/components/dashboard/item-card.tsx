@@ -1,14 +1,13 @@
 "use client";
 
-import { Copy, Star, Pin } from "lucide-react";
+import { Copy, Star, Pin, File, type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { File } from "lucide-react";
-import { type DashboardItem, type IconMap } from "@/types/dashboard";
+import { type DashboardItem } from "@/types/dashboard";
 import { formatDate } from "@/lib/utils";
 
 interface ItemCardProps {
   item: DashboardItem;
-  iconMap: IconMap;
+  iconMap: Record<string, LucideIcon>;
   onClick?: () => void;
   onCopy?: () => void;
   onToggleFavorite?: () => void;
@@ -22,7 +21,7 @@ export function ItemCard({
   onToggleFavorite,
 }: ItemCardProps) {
   const itemType = item.itemType;
-  const Icon = iconMap[itemType?.icon || "File"] || File;
+  const Icon = iconMap[itemType?.icon] || File;
   const borderColor = itemType?.color || "#6b7280";
 
   return (
